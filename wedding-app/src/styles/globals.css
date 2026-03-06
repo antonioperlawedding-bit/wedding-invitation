@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =============================================
+   CSS CUSTOM PROPERTIES
+============================================= */
+:root {
+  --color-dark: #050d0a;
+  --color-dark-2: #0a1a12;
+  --color-emerald: #2d6a4f;
+  --color-emerald-light: #40916c;
+  --color-gold: #c9a84c;
+  --color-gold-light: #f0d080;
+  --color-gold-pale: #e8d5a3;
+  --color-ivory: #faf8f0;
+  --color-ivory-warm: #f5f0e8;
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-jost: 'Jost', system-ui, sans-serif;
+}
+
+/* =============================================
+   BASE RESET
+============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-jost);
+  background: var(--color-dark);
+  color: var(--color-ivory);
+  overflow-x: hidden;
+}
+
+/* Hide scrollbar but keep functionality */
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+/* =============================================
+   TYPOGRAPHY UTILITIES
+============================================= */
+.font-cormorant { font-family: var(--font-cormorant); }
+.font-jost { font-family: var(--font-jost); }
+
+/* =============================================
+   SHIMMER TEXT EFFECT
+============================================= */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-gold) 0%,
+    var(--color-gold-light) 30%,
+    #fff8e1 50%,
+    var(--color-gold-light) 70%,
+    var(--color-gold) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+/* =============================================
+   GOLDEN DIVIDER
+============================================= */
+.gold-divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.gold-divider::before,
+.gold-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+/* =============================================
+   GLASS MORPHISM
+============================================= */
+.glass {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,168,76,0.2);
+}
+
+.glass-dark {
+  background: rgba(5,13,10,0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201,168,76,0.15);
+}
+
+/* =============================================
+   SECTION HEADERS
+============================================= */
+.section-tag {
+  font-family: var(--font-jost);
+  font-weight: 300;
+  letter-spacing: 0.5em;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.section-title {
+  font-family: var(--font-cormorant);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+/* =============================================
+   ANIMATED CHARS (for GSAP SplitText alternative)
+============================================= */
+.char {
+  display: inline-block;
+  transform-origin: bottom;
+  will-change: transform, opacity;
+}
+
+/* =============================================
+   PARALLAX WRAPPERS
+============================================= */
+.parallax-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.parallax-inner {
+  will-change: transform;
+}
+
+/* =============================================
+   BUTTON STYLES
+============================================= */
+.btn-gold {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2.5rem;
+  font-family: var(--font-jost);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold), var(--color-gold-light));
+  background-size: 200% 100%;
+  border: none;
+  cursor: pointer;
+  transition: background-position 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.btn-gold:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+}
+
+.btn-outline-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2.5rem;
+  font-family: var(--font-jost);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  background: transparent;
+  border: 1px solid var(--color-gold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background: var(--color-gold);
+  color: var(--color-dark);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+}
+
+/* =============================================
+   FORM ELEMENTS
+============================================= */
+.form-group {
+  position: relative;
+}
+
+.form-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(201,168,76,0.4);
+  padding: 1.25rem 0 0.625rem;
+  font-family: var(--font-jost);
+  font-weight: 300;
+  font-size: 1rem;
+  color: var(--color-dark);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  border-bottom-color: var(--color-gold);
+}
+
+.form-label {
+  position: absolute;
+  top: 1.25rem;
+  left: 0;
+  font-family: var(--font-jost);
+  font-weight: 300;
+  font-size: 0.875rem;
+  color: rgba(42,42,42,0.5);
+  pointer-events: none;
+  transition: all 0.3s ease;
+  letter-spacing: 0.1em;
+}
+
+.form-input:focus ~ .form-label,
+.form-input:not(:placeholder-shown) ~ .form-label {
+  top: 0;
+  font-size: 0.7rem;
+  color: var(--color-gold-600, #b8943a);
+  letter-spacing: 0.2em;
+}
+
+.form-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-gold);
+  transition: width 0.4s ease;
+}
+
+.form-input:focus ~ .form-line {
+  width: 100%;
+}
+
+/* =============================================
+   SCROLL INDICATOR
+============================================= */
+.scroll-indicator {
+  width: 24px;
+  height: 40px;
+  border: 1px solid rgba(201,168,76,0.6);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+}
+
+.scroll-indicator::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 8px;
+  background: var(--color-gold);
+  border-radius: 2px;
+  animation: scrollDot 2s ease-in-out infinite;
+}
+
+@keyframes scrollDot {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+  100% { transform: translateX(-50%) translateY(14px); opacity: 0; }
+}
+
+/* =============================================
+   LOADING SCREEN
+============================================= */
+.loading-ring {
+  fill: none;
+  stroke: var(--color-gold);
+  stroke-linecap: round;
+  stroke-dasharray: 283;
+  stroke-dashoffset: 283;
+  animation: ringDraw 1.5s ease-out forwards;
+}
+
+@keyframes ringDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* =============================================
+   CHATBOT
+============================================= */
+.chat-bubble-user {
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  color: var(--color-dark);
+  border-radius: 18px 18px 4px 18px;
+}
+
+.chat-bubble-bot {
+  background: rgba(5,13,10,0.8);
+  color: var(--color-ivory);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 18px 18px 18px 4px;
+}
+
+/* =============================================
+   TIMELINE PATH
+============================================= */
+.timeline-path {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  transition: stroke-dashoffset 0.01s;
+}
+
+/* =============================================
+   GALLERY ITEM HOVER
+============================================= */
+.gallery-item {
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.gallery-item img {
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5,13,10,0.9) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+  opacity: 1;
+}
+
+/* =============================================
+   3D CARD TILT
+============================================= */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+/* =============================================
+   FLOATING ANIMATION VARIANT DELAYS
+============================================= */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* =============================================
+   SELECTION STYLE
+============================================= */
+::selection {
+  background: rgba(201,168,76,0.3);
+  color: var(--color-ivory);
+}

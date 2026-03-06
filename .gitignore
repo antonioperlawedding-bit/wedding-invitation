@@ -1,0 +1,14 @@
+# Environment variables — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# Build output
+wedding-app/dist/
+
+# Dependencies
+wedding-app/node_modules/
+
+# Editor / OS
+.DS_Store
+*.log
