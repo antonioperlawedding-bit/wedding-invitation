@@ -44,18 +44,18 @@ const VERTEX_SHADER = /* glsl */`
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
 
     // Point-size scales with camera distance + particle-size attr
-    gl_PointSize = aSize * (250.0 / -mvPosition.z);
+    gl_PointSize = aSize * (320.0 / -mvPosition.z);
     gl_Position  = projectionMatrix * mvPosition;
 
     // Colour: shimmer between the two golds, rare white sparkles
     float shimmer = sin(uTime * 1.8 + aPhase * 6.28) * 0.5 + 0.5;
     vColor = mix(gold1, gold2, shimmer);
-    if (aRandom > 0.88) vColor = white;
+    if (aRandom > 0.85) vColor = white;
 
     // Alpha: fade near top/bottom of field
     float ny = clamp((pos.y + 6.0) / 12.0, 0.0, 1.0);
     vAlpha = 1.0 - abs(ny * 2.0 - 1.0);
-    vAlpha = pow(vAlpha, 0.4) * 0.75;
+    vAlpha = pow(vAlpha, 0.35) * 0.85;
   }
 `;
 
@@ -118,7 +118,7 @@ export default function ParticleField({ count = 1200, className = '' }) {
       positions[i * 3 + 1] = (Math.random() - 0.5) * 12;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 5 - 1;
 
-      sizes[i]   = Math.random() * 2.5 + 0.8;
+      sizes[i]   = Math.random() * 3.5 + 1.0;
       speeds[i]  = Math.random() * 0.5 + 0.2;
       phases[i]  = Math.random() * Math.PI * 2;
       randoms[i] = Math.random();

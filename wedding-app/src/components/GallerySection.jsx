@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { AnimatePresence, motion } from 'framer-motion';
 import config from '@config';
+import { useDriveImages, driveThumbUrl } from '../hooks/useDriveImages';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -135,7 +136,7 @@ function GalleryItem({ item, index, onOpen }) {
         aspectRatio: isLarge ? '16/9' : '1/1',
         position: 'relative',
         cursor: 'zoom-in',
-        background: 'linear-gradient(135deg, #0a2a1a 0%, #163b25 60%, #0d2015 100%)',
+        background: 'linear-gradient(135deg, #144030 0%, #1e5c3a 60%, #112b1e 100%)',
         overflow: 'hidden',
       }}
     >
@@ -221,7 +222,19 @@ function GalleryItem({ item, index, onOpen }) {
 export default function GallerySection() {
   const sectionRef    = useRef(null);
   const [selected, setSelected] = useState(null);
-  const gallery = config.events.gallery;
+
+  const driveRoot = config.google_drive?.root_folder_id;
+  const { images: driveFiles, loading: driveLoading } = useDriveImages(driveRoot, 'memories');
+
+  // Map Drive files to gallery shape; fall back to static config when Drive is not ready
+  const gallery = driveFiles.length > 0
+    ? driveFiles.map((f, i) => ({
+        id: f.id,
+        src: driveThumbUrl(f.id, 'w1600'),
+        alt: f.name?.replace(/\.[^/.]+$/, '') || `Memory ${i + 1}`,
+        caption: (f.name?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || 'A beautiful moment'),
+      }))
+    : (config.events.gallery || []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -256,7 +269,7 @@ export default function GallerySection() {
         id="gallery"
         ref={sectionRef}
         style={{
-          background: '#030a06',
+          background: '#112b1e',
           padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
           position: 'relative',
           overflow: 'hidden',
@@ -303,15 +316,38 @@ export default function GallerySection() {
               gap: '0.75rem',
             }}
           >
-            {gallery.map((item, i) => (
-              <GalleryItem
-                key={item.id}
-                item={item}
-                index={i}
-                onOpen={setSelected}
-              />
-            ))}
+            {driveLoading && driveFiles.length === 0 ? (
+              // Loading skeleton
+              Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  style={{
+                    gridColumn: i === 0 || i === 4 ? 'span 2' : 'span 1',
+                    aspectRatio: i === 0 || i === 4 ? '16/9' : '1/1',
+                    background: 'linear-gradient(90deg, rgba(201,168,76,0.04) 25%, rgba(201,168,76,0.08) 50%, rgba(201,168,76,0.04) 75%)',
+                    backgroundSize: '200% 100%',
+                    animation: 'shimmer 1.8s infinite',
+                    borderRadius: '2px',
+                  }}
+                />
+              ))
+            ) : (
+              gallery.map((item, i) => (
+                <GalleryItem
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  onOpen={setSelected}
+                />
+              ))
+            )}
           </div>
+          <style>{`
+            @keyframes shimmer {
+              0%   { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          `}</style>
         </div>
       </section>
 

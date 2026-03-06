@@ -6,8 +6,8 @@
    CSS CUSTOM PROPERTIES
 ============================================= */
 :root {
-  --color-dark: #050d0a;
-  --color-dark-2: #0a1a12;
+  --color-dark: #081a13;
+  --color-dark-2: #102e20;
   --color-emerald: #2d6a4f;
   --color-emerald-light: #40916c;
   --color-gold: #c9a84c;
@@ -383,4 +383,52 @@ body {
 ::selection {
   background: rgba(201,168,76,0.3);
   color: var(--color-ivory);
+}
+
+/* =============================================
+   AURORA GLOW ANIMATION
+============================================= */
+@keyframes auroraFloat {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(3%, -2%) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-2%, 3%) scale(0.98);
+    opacity: 0.8;
+  }
+}
+
+/* =============================================
+   CHATBOT ANIMATIONS
+============================================= */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes pulseGold {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-4px); }
+}
+
+/* =============================================
+   3D SECTION REVEAL ANIMATIONS
+============================================= */
+@keyframes shimmer {
+  to { background-position: -200% center; }
 }

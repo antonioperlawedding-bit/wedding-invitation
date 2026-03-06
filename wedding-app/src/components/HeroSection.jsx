@@ -142,7 +142,7 @@ export default function HeroSection() {
         height: '100svh',
         minHeight: '600px',
         overflow: 'hidden',
-        background: '#050d0a',
+        background: '#081a13',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -157,7 +157,7 @@ export default function HeroSection() {
           willChange: 'transform',
         }}
       >
-        <ParticleField count={1400} />
+        <ParticleField count={1800} />
       </div>
 
       {/* ── Gradient overlays ── */}
@@ -166,13 +166,40 @@ export default function HeroSection() {
           position: 'absolute',
           inset: 0,
           background: `
-            radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45,106,79,0.18) 0%, transparent 70%),
-            linear-gradient(to bottom, rgba(5,13,10,0.2) 0%, transparent 40%, rgba(5,13,10,0.85) 100%)
+            radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45,106,79,0.25) 0%, transparent 70%),
+            linear-gradient(to bottom, rgba(8,26,19,0.2) 0%, transparent 40%, rgba(8,26,19,0.85) 100%)
           `,
           zIndex: 1,
           pointerEvents: 'none',
         }}
       />
+
+      {/* ── Animated aurora glow ── */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          pointerEvents: 'none',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            width: '120%',
+            height: '120%',
+            top: '-10%',
+            left: '-10%',
+            background: `
+              radial-gradient(ellipse 40% 35% at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 35% 40% at 70% 45%, rgba(45,106,79,0.12) 0%, transparent 70%),
+              radial-gradient(ellipse 30% 25% at 50% 30%, rgba(240,208,128,0.06) 0%, transparent 60%)
+            `,
+            animation: 'auroraFloat 12s ease-in-out infinite alternate',
+          }}
+        />
+      </div>
 
       {/* ── Mid decorative layer — floating leaf motifs (CSS) ── */}
       <div
@@ -255,7 +282,7 @@ export default function HeroSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: '#050d0a',
+          background: '#081a13',
           zIndex: 3,
           pointerEvents: 'none',
           opacity: 0,

@@ -15,6 +15,7 @@ import RSVPSection      from './components/RSVPSection';
 import ListeDeMariageSection from './components/ListeDeMariageSection';
 import FooterSection    from './components/FooterSection';
 import ChatbotWidget    from './components/ChatbotWidget';
+import SectionReveal    from './components/SectionReveal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,13 +80,13 @@ export default function App() {
 
         <main>
           <HeroSection />
-          <CountdownSection />
-          <CoupleSection />
-          <EventsSection />
-          <TimelineSection />
-          <GallerySection />
-          <ListeDeMariageSection />
-          <RSVPSection />
+          <SectionReveal><CountdownSection /></SectionReveal>
+          <SectionReveal><CoupleSection /></SectionReveal>
+          <SectionReveal><EventsSection /></SectionReveal>
+          <SectionReveal><TimelineSection /></SectionReveal>
+          <SectionReveal><GallerySection /></SectionReveal>
+          <SectionReveal><ListeDeMariageSection /></SectionReveal>
+          <SectionReveal><RSVPSection /></SectionReveal>
           <FooterSection />
         </main>
 

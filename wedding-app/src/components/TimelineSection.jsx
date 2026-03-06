@@ -77,7 +77,7 @@ export default function TimelineSection() {
       id="timeline"
       ref={sectionRef}
       style={{
-        background: '#0a2a1a',
+        background: '#144030',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
@@ -214,7 +214,7 @@ export default function TimelineSection() {
                     height: '14px',
                     borderRadius: '50%',
                     border: '2px solid #c9a84c',
-                    background: '#0a2a1a',
+                    background: '#144030',
                     zIndex: 2,
                     boxShadow: '0 0 12px rgba(201,168,76,0.4)',
                   }}

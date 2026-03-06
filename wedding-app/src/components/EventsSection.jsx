@@ -293,7 +293,7 @@ export default function EventsSection() {
       id="events"
       ref={sectionRef}
       style={{
-        background: '#050d0a',
+        background: '#143526',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
         position: 'relative',
         overflow: 'hidden',

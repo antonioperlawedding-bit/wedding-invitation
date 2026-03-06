@@ -18,8 +18,12 @@
       rel="stylesheet"
     />
   </head>
-  <body>
+  <body style="margin:0;background:#081a13">
+    <!-- Dark overlay — prevents white flash while JS loads, removed by React -->
+    <div id="preloader" style="position:fixed;inset:0;z-index:9999;background:#081a13"></div>
+
     <div id="root"></div>
+    <script>window.__loadStart=Date.now();</script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

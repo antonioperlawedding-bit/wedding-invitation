@@ -179,7 +179,7 @@ export default function CountdownSection() {
     <section
       ref={sectionRef}
       style={{
-        background: '#050d0a',
+        background: '#143526',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,4rem)',
         position: 'relative',
         overflow: 'hidden',

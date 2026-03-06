@@ -41,7 +41,7 @@ export default function ListeDeMariageSection() {
       id="liste-mariage"
       ref={sectionRef}
       style={{
-        background: '#0a1a12',
+        background: '#1a3d2a',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
@@ -140,8 +140,7 @@ export default function ListeDeMariageSection() {
             }}
           >
             Your presence on our special day is the greatest gift of all.
-            Should you wish to honor us with a gesture of generosity,
-            we invite you to contribute to our shared future through our Wish Account.
+            If you would like to contribute to our journey and future together, a Wish Account is available below.
           </p>
 
           {/* Divider */}
@@ -183,7 +182,7 @@ export default function ListeDeMariageSection() {
                 marginBottom: '1rem',
               }}
             >
-              Wish Account &nbsp;·&nbsp; OMT
+              Wish Account
             </p>
 
             <p
@@ -196,7 +195,13 @@ export default function ListeDeMariageSection() {
                 marginBottom: '0.5rem',
               }}
             >
-              {config.events.rsvp.phone1}
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                {config.events.rsvp.phone1}
+              </a>
             </p>
 
             <p
@@ -221,20 +226,6 @@ export default function ListeDeMariageSection() {
               textAlign: 'center',
             }}
           >
-            <p
-              style={{
-                fontFamily: 'Jost, sans-serif',
-                fontWeight: 200,
-                fontSize: '0.72rem',
-                color: 'rgba(250,248,240,0.35)',
-                letterSpacing: '0.1em',
-                lineHeight: 1.8,
-              }}
-            >
-              For any questions or assistance with the transfer,
-              <br />
-              please do not hesitate to reach out to us.
-            </p>
           </div>
         </div>
       </div>

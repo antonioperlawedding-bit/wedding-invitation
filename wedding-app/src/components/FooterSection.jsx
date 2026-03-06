@@ -32,7 +32,7 @@ export default function FooterSection() {
     <footer
       ref={sectionRef}
       style={{
-        background: '#050d0a',
+        background: '#143526',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,4rem)',
         position: 'relative',
         overflow: 'hidden',
@@ -154,7 +154,9 @@ export default function FooterSection() {
           </a>
           <span style={{ color: 'rgba(201,168,76,0.3)', fontSize: '0.7rem' }}>·</span>
           <a
-            href={`tel:${config.events.rsvp.phone1}`}
+            href="https://wa.me/96171054630"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,
@@ -171,7 +173,9 @@ export default function FooterSection() {
           </a>
           <span style={{ color: 'rgba(201,168,76,0.3)', fontSize: '0.7rem' }}>·</span>
           <a
-            href={`tel:${config.events.rsvp.phone2}`}
+            href="https://wa.me/96171981734"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,

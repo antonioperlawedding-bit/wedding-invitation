@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import config from '@config';
+import { useDriveImages, driveThumbUrl } from '../hooks/useDriveImages';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -91,26 +92,41 @@ function PersonCard({ person, role, side, photo }) {
             }}
           />
         ))}
-        {/* Photo placeholder with initials */}
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            background: role === 'Bride'
-              ? 'linear-gradient(160deg, #0a2a1a 0%, #1a4a2e 40%, #2d6a4f 100%)'
-              : 'linear-gradient(160deg, #050d0a 0%, #0d2b1a 40%, #1a4a2e 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 'clamp(4rem,12vw,8rem)',
-            fontFamily: '"Cormorant Garamond", serif',
-            fontWeight: 300,
-            color: 'rgba(201,168,76,0.3)',
-            userSelect: 'none',
-          }}
-        >
-          {person.firstName[0]}
-        </div>
+        {/* Photo — Drive image when available, initials placeholder otherwise */}
+        {photo ? (
+          <img
+            src={photo}
+            alt={person.firstName}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              display: 'block',
+            }}
+            onError={e => { e.currentTarget.style.display = 'none'; }}
+          />
+        ) : (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              background: role === 'Bride'
+                ? 'linear-gradient(160deg, #144030 0%, #1e5c3a 40%, #2d6a4f 100%)'
+                : 'linear-gradient(160deg, #081a13 0%, #143526 40%, #1e5c3a 100%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 'clamp(4rem,12vw,8rem)',
+              fontFamily: '"Cormorant Garamond", serif',
+              fontWeight: 300,
+              color: 'rgba(201,168,76,0.3)',
+              userSelect: 'none',
+            }}
+          >
+            {person.firstName[0]}
+          </div>
+        )}
         {/* Role badge */}
         <div
           style={{
@@ -220,6 +236,13 @@ export default function CoupleSection() {
   const centerRef  = useRef(null);
   const tagRef     = useRef(null);
 
+  const driveRoot = config.google_drive?.root_folder_id;
+  const { images: perlaImgs }   = useDriveImages(driveRoot, 'perla');
+  const { images: antonioImgs } = useDriveImages(driveRoot, 'antonio');
+
+  const bridePhoto  = perlaImgs[0]   ? driveThumbUrl(perlaImgs[0].id,   'w1200') : null;
+  const groomPhoto  = antonioImgs[0] ? driveThumbUrl(antonioImgs[0].id, 'w1200') : null;
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from([tagRef.current, centerRef.current], {
@@ -242,7 +265,7 @@ export default function CoupleSection() {
       id="couple"
       ref={sectionRef}
       style={{
-        background: '#0a1a12',
+        background: '#102e20',
         padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
@@ -307,6 +330,7 @@ export default function CoupleSection() {
             person={config.couple.bride}
             role="Bride"
             side="left"
+            photo={bridePhoto}
           />
 
           {/* Center heart divider (desktop only) */}
@@ -346,6 +370,7 @@ export default function CoupleSection() {
             person={config.couple.groom}
             role="Groom"
             side="right"
+            photo={groomPhoto}
           />
         </div>
       </div>
