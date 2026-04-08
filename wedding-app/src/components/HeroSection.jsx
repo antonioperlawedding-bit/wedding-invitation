@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ParticleField from './three/ParticleField';
 import { SplitChars } from '../utils/animations';
+import config from '@config';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,7 @@ export default function HeroSection() {
   const locationRef = useRef(null);
   const scrollIndRef= useRef(null);
   const overlayRef  = useRef(null);
+  const glowRef     = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -36,9 +38,11 @@ export default function HeroSection() {
         .from(chars, {
           yPercent: 110,
           opacity: 0,
+          rotateX: -60,
           duration: 1.4,
           stagger: { each: 0.04, from: 'start' },
           ease: 'expo.out',
+          transformOrigin: 'bottom center',
         }, '-=0.3')
         .from(dividerRef.current, {
           scaleX: 0,
@@ -55,6 +59,7 @@ export default function HeroSection() {
         .from(dateRef.current, {
           opacity: 0,
           y: 20,
+          scale: 0.95,
           duration: 0.7,
           ease: 'expo.out',
         }, '-=0.4')
@@ -71,22 +76,24 @@ export default function HeroSection() {
           ease: 'expo.out',
         }, '-=0.1');
 
-      // === PARALLAX ON SCROLL ===
-      // Background particle layer moves slowest
+      // === ENHANCED 3D PARALLAX ON SCROLL ===
+      // Background particle layer — deep, slowest
       gsap.to(bgLayerRef.current, {
-        yPercent: 35,
+        yPercent: 50,
+        scale: 1.15,
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
-          scrub: 1,
+          scrub: 1.2,
           start: 'top top',
           end: 'bottom top',
         },
       });
 
-      // Mid decorative layer — slightly faster
+      // Mid decorative layer — moderate depth
       gsap.to(midLayerRef.current, {
-        yPercent: 18,
+        yPercent: 25,
+        rotateX: 2,
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -96,9 +103,24 @@ export default function HeroSection() {
         },
       });
 
-      // Content fades out and rises as user scrolls
+      // Ambient glow pulse follows scroll
+      gsap.to(glowRef.current, {
+        scale: 1.6,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          scrub: 1.5,
+          start: 'top top',
+          end: '70% top',
+        },
+      });
+
+      // Content — 3D perspective lift and fade as user scrolls
       gsap.to(contentRef.current, {
-        yPercent: 12,
+        yPercent: -15,
+        rotateX: 8,
+        scale: 0.92,
         opacity: 0,
         ease: 'none',
         scrollTrigger: {
@@ -111,7 +133,7 @@ export default function HeroSection() {
 
       // Vignette overlay darkens as we leave
       gsap.to(overlayRef.current, {
-        opacity: 0.7,
+        opacity: 0.85,
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -140,12 +162,13 @@ export default function HeroSection() {
       style={{
         position: 'relative',
         height: '100svh',
-        minHeight: '600px',
+        minHeight: '500px',
         overflow: 'hidden',
-        background: '#081a13',
+        background: '#1a2e14',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        perspective: '1000px',
       }}
     >
       {/* ── Particle field (deepest, slowest parallax) ── */}
@@ -153,12 +176,30 @@ export default function HeroSection() {
         ref={bgLayerRef}
         style={{
           position: 'absolute',
-          inset: '-20% 0',
+          inset: '-30% -10%',
           willChange: 'transform',
         }}
       >
-        <ParticleField count={1800} />
+        <ParticleField count={1400} />
       </div>
+
+      {/* ── Ambient center glow ── */}
+      <div
+        ref={glowRef}
+        style={{
+          position: 'absolute',
+          top: '35%',
+          left: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: 'min(600px, 80vw)',
+          height: 'min(600px, 80vw)',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(204,158,36,0.12) 0%, rgba(156,175,19,0.06) 40%, transparent 70%)',
+          filter: 'blur(40px)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* ── Gradient overlays ── */}
       <div
@@ -166,40 +207,14 @@ export default function HeroSection() {
           position: 'absolute',
           inset: 0,
           background: `
-            radial-gradient(ellipse 80% 60% at 50% 40%, rgba(45,106,79,0.25) 0%, transparent 70%),
-            linear-gradient(to bottom, rgba(8,26,19,0.2) 0%, transparent 40%, rgba(8,26,19,0.85) 100%)
+            radial-gradient(ellipse 80% 60% at 50% 40%, rgba(107,122,21,0.2) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 40% at 30% 70%, rgba(204,158,36,0.08) 0%, transparent 60%),
+            linear-gradient(to bottom, rgba(26,46,20,0.2) 0%, transparent 40%, rgba(26,46,20,0.9) 100%)
           `,
           zIndex: 1,
           pointerEvents: 'none',
         }}
       />
-
-      {/* ── Animated aurora glow ── */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 1,
-          pointerEvents: 'none',
-          overflow: 'hidden',
-        }}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            width: '120%',
-            height: '120%',
-            top: '-10%',
-            left: '-10%',
-            background: `
-              radial-gradient(ellipse 40% 35% at 30% 50%, rgba(201,168,76,0.08) 0%, transparent 70%),
-              radial-gradient(ellipse 35% 40% at 70% 45%, rgba(45,106,79,0.12) 0%, transparent 70%),
-              radial-gradient(ellipse 30% 25% at 50% 30%, rgba(240,208,128,0.06) 0%, transparent 60%)
-            `,
-            animation: 'auroraFloat 12s ease-in-out infinite alternate',
-          }}
-        />
-      </div>
 
       {/* ── Mid decorative layer — floating leaf motifs (CSS) ── */}
       <div
@@ -210,6 +225,7 @@ export default function HeroSection() {
           zIndex: 2,
           pointerEvents: 'none',
           overflow: 'hidden',
+          transformStyle: 'preserve-3d',
         }}
       >
         {/* Left vine ornament */}
@@ -218,14 +234,14 @@ export default function HeroSection() {
             position: 'absolute',
             left: 'clamp(1rem,4vw,3rem)',
             top: '15%',
-            opacity: 0.18,
+            opacity: 0.22,
             width: 'clamp(40px, 6vw, 80px)',
           }}
           viewBox="0 0 60 200" fill="none"
         >
           <path
             d="M30 200 C30 160 10 140 15 110 C20 80 40 70 35 40 C30 10 20 5 30 0"
-            stroke="#c9a84c"
+            stroke="#cc9e24"
             strokeWidth="1.5"
             fill="none"
           />
@@ -236,7 +252,7 @@ export default function HeroSection() {
               cy={y}
               rx="12"
               ry="7"
-              fill="#40916c"
+              fill="#9caf13"
               opacity={0.6}
               transform={`rotate(${i%2===0?-20:20} ${i%2===0?20:40} ${y})`}
             />
@@ -249,7 +265,7 @@ export default function HeroSection() {
             position: 'absolute',
             right: 'clamp(1rem,4vw,3rem)',
             top: '15%',
-            opacity: 0.18,
+            opacity: 0.22,
             width: 'clamp(40px, 6vw, 80px)',
             transform: 'scaleX(-1)',
           }}
@@ -257,7 +273,7 @@ export default function HeroSection() {
         >
           <path
             d="M30 200 C30 160 10 140 15 110 C20 80 40 70 35 40 C30 10 20 5 30 0"
-            stroke="#c9a84c"
+            stroke="#cc9e24"
             strokeWidth="1.5"
             fill="none"
           />
@@ -268,12 +284,54 @@ export default function HeroSection() {
               cy={y}
               rx="12"
               ry="7"
-              fill="#40916c"
+              fill="#9caf13"
               opacity={0.6}
               transform={`rotate(${i%2===0?-20:20} ${i%2===0?20:40} ${y})`}
             />
           ))}
         </svg>
+
+        {/* Floating corner accents */}
+        <div style={{
+          position: 'absolute',
+          top: 'clamp(2rem,6vw,5rem)',
+          left: 'clamp(2rem,6vw,5rem)',
+          width: '40px',
+          height: '40px',
+          borderTop: '1px solid rgba(204,158,36,0.3)',
+          borderLeft: '1px solid rgba(204,158,36,0.3)',
+          opacity: 0.5,
+        }} />
+        <div style={{
+          position: 'absolute',
+          top: 'clamp(2rem,6vw,5rem)',
+          right: 'clamp(2rem,6vw,5rem)',
+          width: '40px',
+          height: '40px',
+          borderTop: '1px solid rgba(204,158,36,0.3)',
+          borderRight: '1px solid rgba(204,158,36,0.3)',
+          opacity: 0.5,
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: 'clamp(2rem,6vw,5rem)',
+          left: 'clamp(2rem,6vw,5rem)',
+          width: '40px',
+          height: '40px',
+          borderBottom: '1px solid rgba(204,158,36,0.3)',
+          borderLeft: '1px solid rgba(204,158,36,0.3)',
+          opacity: 0.5,
+        }} />
+        <div style={{
+          position: 'absolute',
+          bottom: 'clamp(2rem,6vw,5rem)',
+          right: 'clamp(2rem,6vw,5rem)',
+          width: '40px',
+          height: '40px',
+          borderBottom: '1px solid rgba(204,158,36,0.3)',
+          borderRight: '1px solid rgba(204,158,36,0.3)',
+          opacity: 0.5,
+        }} />
       </div>
 
       {/* ── Scroll-exit vignette ── */}
@@ -282,7 +340,7 @@ export default function HeroSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: '#081a13',
+          background: '#1a2e14',
           zIndex: 3,
           pointerEvents: 'none',
           opacity: 0,
@@ -299,6 +357,7 @@ export default function HeroSection() {
           padding: '0 clamp(1.5rem,5vw,4rem)',
           width: '100%',
           maxWidth: '900px',
+          transformStyle: 'preserve-3d',
         }}
       >
         {/* Tag */}
@@ -309,12 +368,12 @@ export default function HeroSection() {
             fontWeight: 200,
             fontSize: '0.7rem',
             letterSpacing: '0.55em',
-            color: 'rgba(201,168,76,0.8)',
+            color: 'rgba(204,158,36,0.85)',
             textTransform: 'uppercase',
             marginBottom: '1.5rem',
           }}
         >
-          Together We Begin
+          {config.ui.hero.tag}
         </p>
 
         {/* Names — the biggest visual element */}
@@ -328,10 +387,11 @@ export default function HeroSection() {
             color: '#faf8f0',
             letterSpacing: '-0.01em',
             overflow: 'hidden',
+            transformStyle: 'preserve-3d',
           }}
         >
           <span style={{ display: 'block' }}>
-            <SplitChars text="Perla" />
+            <SplitChars text={config.couple.groom.firstName} />
           </span>
           <span
             style={{
@@ -339,7 +399,7 @@ export default function HeroSection() {
               fontStyle: 'italic',
               fontSize: '0.55em',
               fontWeight: 300,
-              color: '#c9a84c',
+              color: '#cc9e24',
               letterSpacing: '0.12em',
               margin: '0.2em 0',
             }}
@@ -347,7 +407,7 @@ export default function HeroSection() {
             &amp;
           </span>
           <span style={{ display: 'block' }}>
-            <SplitChars text="Antonio" />
+            <SplitChars text={config.couple.bride.firstName} />
           </span>
         </h1>
 
@@ -357,7 +417,7 @@ export default function HeroSection() {
           style={{
             width: 'clamp(80px,20vw,160px)',
             height: '1px',
-            background: 'linear-gradient(90deg, transparent, #c9a84c, #f0d080, #c9a84c, transparent)',
+            background: 'linear-gradient(90deg, transparent, #cc9e24, #f9cc01, #cc9e24, transparent)',
             margin: '2rem auto',
           }}
         />
@@ -375,8 +435,8 @@ export default function HeroSection() {
             marginBottom: '2rem',
           }}
         >
-          <span style={{ display: 'block' }}>Mr. &amp; Mrs. Hayek Atallah</span>
-          <span style={{ display: 'block' }}>Mr. &amp; Mrs. Tannoury Tannoury</span>
+          <span style={{ display: 'block' }}>{config.couple.groom.parentsDisplay}</span>
+          <span style={{ display: 'block' }}>{config.couple.bride.parentsDisplay}</span>
         </p>
 
         {/* Date */}
@@ -390,9 +450,7 @@ export default function HeroSection() {
               letterSpacing: '0.06em',
             }}
           >
-            Saturday, June 6
-            <span style={{ color: '#c9a84c' }}>,</span>
-            {' '}2026
+            {config.wedding.dateFormatted}
           </p>
         </div>
 
@@ -404,12 +462,16 @@ export default function HeroSection() {
             fontWeight: 200,
             fontSize: '0.72rem',
             letterSpacing: '0.45em',
-            color: 'rgba(201,168,76,0.7)',
+            color: 'rgba(204,158,36,0.7)',
             textTransform: 'uppercase',
-            marginBottom: '3.5rem',
+            marginBottom: 'clamp(1.5rem,5vw,3.5rem)',
           }}
         >
-          Lebanon &nbsp;·&nbsp; Qaa El Rim &nbsp;·&nbsp; Chtaura
+          {config.wedding.locationFull.split(' · ').reduce((acc, part, i) => {
+            if (i > 0) acc.push(<span key={`sep-${i}`}>&nbsp;·&nbsp;</span>);
+            acc.push(<span key={`loc-${i}`}>{part}</span>);
+            return acc;
+          }, [])}
         </p>
 
         {/* Scroll indicator */}
@@ -434,7 +496,7 @@ export default function HeroSection() {
               fontWeight: 200,
               fontSize: '0.62rem',
               letterSpacing: '0.45em',
-              color: '#c9a84c',
+              color: '#cc9e24',
               textTransform: 'uppercase',
             }}
           >
@@ -458,11 +520,11 @@ export default function HeroSection() {
           fontWeight: 100,
           fontSize: '0.62rem',
           letterSpacing: '0.4em',
-          color: 'rgba(201,168,76,0.4)',
+          color: 'rgba(204,158,36,0.4)',
           textTransform: 'uppercase',
         }}
       >
-        Lebanon · 2026
+        {config.wedding.location} · {config.wedding.year}
       </div>
 
       {/* Vertical "Made For Each Other" — right edge */}
@@ -481,7 +543,7 @@ export default function HeroSection() {
           color: 'rgba(250,248,240,0.2)',
         }}
       >
-        Made for Each Other
+        {config.ui.hero.sideTextLeft}
       </div>
     </section>
   );

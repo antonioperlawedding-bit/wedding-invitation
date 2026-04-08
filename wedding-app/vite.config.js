@@ -10,11 +10,14 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
-      '@config': path.resolve(__dirname, '../configs.json'),
+      '@config': path.resolve(__dirname, './configs.json'),
     },
   },
   server: {
     host: '0.0.0.0',
     port: 6626,
+    proxy: {
+      '/api': 'http://localhost:7626',
+    },
   },
 });

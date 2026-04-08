@@ -1,107 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { AnimatePresence, motion } from 'framer-motion';
 import config from '@config';
 import { useDriveImages, driveThumbUrl } from '../hooks/useDriveImages';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function Lightbox({ item, onClose }) {
-  return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        onClick={onClose}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 5000,
-          background: 'rgba(5,10,8,0.96)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'zoom-out',
-          padding: '1.5rem',
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0.88, opacity: 0 }}
-          animate={{ scale: 1,    opacity: 1 }}
-          exit={{    scale: 0.88, opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.25,0.46,0.45,0.94] }}
-          style={{
-            position: 'relative',
-            maxWidth: '90vw',
-            maxHeight: '85vh',
-          }}
-          onClick={e => e.stopPropagation()}
-        >
-          <img
-            src={item.src}
-            alt={item.alt}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '80vh',
-              objectFit: 'contain',
-              display: 'block',
-              border: '1px solid rgba(201,168,76,0.25)',
-            }}
-          />
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '-2.5rem',
-              left: 0,
-              right: 0,
-              textAlign: 'center',
-            }}
-          >
-            <p
-              style={{
-                fontFamily: '"Cormorant Garamond", serif',
-                fontStyle: 'italic',
-                fontSize: '1rem',
-                color: 'rgba(250,248,240,0.55)',
-              }}
-            >
-              {item.caption}
-            </p>
-          </div>
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            style={{
-              position: 'absolute',
-              top: '-3rem',
-              right: 0,
-              background: 'none',
-              border: '1px solid rgba(201,168,76,0.4)',
-              color: '#c9a84c',
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.85rem',
-              transition: 'all 0.3s',
-            }}
-            aria-label="Close"
-          >
-            ✕
-          </button>
-        </motion.div>
-      </motion.div>
-    </AnimatePresence>
-  );
-}
-
-function GalleryItem({ item, index, onOpen }) {
+function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
   const itemRef = useRef(null);
 
   useEffect(() => {
@@ -124,19 +29,15 @@ function GalleryItem({ item, index, onOpen }) {
     );
   }, [index]);
 
-  const isLarge = index === 0 || index === 4;
-
   return (
     <div
       ref={itemRef}
       className="gallery-item"
-      onClick={() => onOpen(item)}
       style={{
-        gridColumn: isLarge ? 'span 2' : 'span 1',
-        aspectRatio: isLarge ? '16/9' : '1/1',
+        gridColumn: `span ${colSpan}`,
+        aspectRatio: aspect,
         position: 'relative',
-        cursor: 'zoom-in',
-        background: 'linear-gradient(135deg, #144030 0%, #1e5c3a 60%, #112b1e 100%)',
+        background: 'linear-gradient(135deg, #2a4a1e 0%, #3a5a28 60%, #1e3216 100%)',
         overflow: 'hidden',
       }}
     >
@@ -147,6 +48,7 @@ function GalleryItem({ item, index, onOpen }) {
           width: '100%',
           height: '100%',
           objectFit: 'cover',
+          objectPosition: item.objectPosition || 'center center',
           display: 'block',
         }}
         loading="lazy"
@@ -183,18 +85,6 @@ function GalleryItem({ item, index, onOpen }) {
         >
           {item.caption}
         </p>
-        <p
-          style={{
-            fontFamily: 'Jost, sans-serif',
-            fontWeight: 200,
-            fontSize: '0.62rem',
-            letterSpacing: '0.35em',
-            color: 'rgba(201,168,76,0.8)',
-            textTransform: 'uppercase',
-          }}
-        >
-          View Photo
-        </p>
       </div>
 
       {/* Gold border reveal on hover */}
@@ -202,7 +92,7 @@ function GalleryItem({ item, index, onOpen }) {
         style={{
           position: 'absolute',
           inset: 0,
-          border: '1px solid rgba(201,168,76,0.5)',
+          border: '1px solid rgba(204,158,36,0.5)',
           opacity: 0,
           transition: 'opacity 0.4s ease',
           pointerEvents: 'none',
@@ -221,10 +111,11 @@ function GalleryItem({ item, index, onOpen }) {
 
 export default function GallerySection() {
   const sectionRef    = useRef(null);
-  const [selected, setSelected] = useState(null);
 
   const driveRoot = config.google_drive?.root_folder_id;
   const { images: driveFiles, loading: driveLoading } = useDriveImages(driveRoot, 'memories');
+
+  const imgPos = config.imagePositions || {};
 
   // Map Drive files to gallery shape; fall back to static config when Drive is not ready
   const gallery = driveFiles.length > 0
@@ -233,8 +124,20 @@ export default function GallerySection() {
         src: driveThumbUrl(f.id, 'w1600'),
         alt: f.name?.replace(/\.[^/.]+$/, '') || `Memory ${i + 1}`,
         caption: (f.name?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || 'A beautiful moment'),
+        objectPosition: imgPos[`gallery_${f.id}`],
       }))
     : (config.events.gallery || []);
+
+  const galleryLayout = config.galleryLayout || {};
+  const galleryOrder = config.galleryOrder || [];
+  const sortedGallery = [...gallery].sort((a, b) => {
+    const ai = galleryOrder.indexOf(a.id);
+    const bi = galleryOrder.indexOf(b.id);
+    if (ai === -1 && bi === -1) return 0;
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
+  });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -253,24 +156,13 @@ export default function GallerySection() {
     return () => ctx.revert();
   }, []);
 
-  // Lock scroll when lightbox open
-  useEffect(() => {
-    if (selected) {
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.documentElement.style.overflow = '';
-    }
-    return () => { document.documentElement.style.overflow = ''; };
-  }, [selected]);
-
   return (
-    <>
-      <section
+    <section
         id="gallery"
         ref={sectionRef}
         style={{
-          background: '#112b1e',
-          padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+          background: '#1e3518',
+          padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -282,7 +174,7 @@ export default function GallerySection() {
             style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,4.5rem)' }}
           >
             <p className="section-tag" style={{ marginBottom: '0.75rem' }}>
-              Memories
+              {config.ui.gallery.tag}
             </p>
             <h2
               style={{
@@ -292,7 +184,7 @@ export default function GallerySection() {
                 color: '#faf8f0',
               }}
             >
-              Our Story in Frames
+              {config.ui.gallery.title}
             </h2>
             <p
               style={{
@@ -304,15 +196,16 @@ export default function GallerySection() {
                 letterSpacing: '0.15em',
               }}
             >
-              Click any photo to view full size
+              {config.ui.gallery.subtitle}
             </p>
           </div>
 
-          {/* Grid — 2-column baseline for predictable span behaviour */}
+          {/* Grid — responsive photo wall driven by config.galleryLayout */}
           <div
+            className="gallery-grid"
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
+              gridTemplateColumns: 'repeat(6, 1fr)',
               gap: '0.75rem',
             }}
           >
@@ -322,9 +215,9 @@ export default function GallerySection() {
                 <div
                   key={i}
                   style={{
-                    gridColumn: i === 0 || i === 4 ? 'span 2' : 'span 1',
-                    aspectRatio: i === 0 || i === 4 ? '16/9' : '1/1',
-                    background: 'linear-gradient(90deg, rgba(201,168,76,0.04) 25%, rgba(201,168,76,0.08) 50%, rgba(201,168,76,0.04) 75%)',
+                    gridColumn: 'span 3',
+                    aspectRatio: '1/1',
+                    background: 'linear-gradient(90deg, rgba(204,158,36,0.04) 25%, rgba(204,158,36,0.08) 50%, rgba(204,158,36,0.04) 75%)',
                     backgroundSize: '200% 100%',
                     animation: 'shimmer 1.8s infinite',
                     borderRadius: '2px',
@@ -332,14 +225,18 @@ export default function GallerySection() {
                 />
               ))
             ) : (
-              gallery.map((item, i) => (
-                <GalleryItem
-                  key={item.id}
-                  item={item}
-                  index={i}
-                  onOpen={setSelected}
-                />
-              ))
+              sortedGallery.map((item, i) => {
+                const lay = galleryLayout[item.id] || { cols: 3, aspect: '1/1' };
+                return (
+                  <GalleryItem
+                    key={item.id}
+                    item={item}
+                    index={i}
+                    colSpan={lay.cols}
+                    aspect={lay.aspect}
+                  />
+                );
+              })
             )}
           </div>
           <style>{`
@@ -347,14 +244,11 @@ export default function GallerySection() {
               0%   { background-position: 200% 0; }
               100% { background-position: -200% 0; }
             }
+            @media (max-width: 640px) {
+              .gallery-grid { gap: 0.35rem !important; }
+            }
           `}</style>
         </div>
       </section>
-
-      {/* Lightbox (portal-like — rendered outside section) */}
-      {selected && (
-        <Lightbox item={selected} onClose={() => setSelected(null)} />
-      )}
-    </>
   );
 }

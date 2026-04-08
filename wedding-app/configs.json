@@ -2,20 +2,41 @@
   "google_drive": {
     "root_folder_id": "1ZP2UHG4zdlaNBT7PylLzR05g4ANKuxSc"
   },
+  "wedding": {
+    "date": "2026-06-06",
+    "dateFormatted": "Saturday, June 6, 2026",
+    "dateShort": "06.06.26",
+    "dateTime": "2026-06-06T17:00:00",
+    "year": "2026",
+    "location": "Lebanon",
+    "locationFull": "Lebanon · Qaa El Rim · Chtaura"
+  },
   "couple": {
     "bride": {
       "firstName": "Perla",
-      "lastName": "Hayek",
-      "fullName": "Perla Toni Hayek",
-      "parents": "Mr. & Mrs. Hayek Atallah",
+      "lastName": "HAYEK",
+      "fullName": "Perla Antoine Hayek",
+      "parents": "  ",
+      "parentsDisplay": "Antoine & Nour Hayek ",
       "bio": "Perla is a warm and vibrant colorful soul who lights up every room she enters. She like the yellow color, choco prince chocolate, and cooks delicious food. She is known for her infectious laughter, creative spirit, and kind heart. She is an agricultural engineer and an organic farmer, her sole enemies are worms and insects. She has also a great analytical mind and a great problem solver. She loves excel sheets and pie charts"
     },
     "groom": {
       "firstName": "Antonio",
       "lastName": "Tannoury",
       "fullName": "Antonio Edward Tannoury",
-      "parents": "Mr. & Mrs. Tannoury Tannoury",
+      "parents": "  ",
+      "parentsDisplay": "Edward & Sanaa Tannoury",
       "bio": "Antonio is a dedicated professional with a passion for AI and Data. He likes cycling, hiking, nature. He is known for his analytical mind, loyalty to those he loves, and his ability to make people smile. He enjoys problem-solving, outdoor adventures, and quality time with loved ones. He loves excel sheets and pie charts."
+    }
+  },
+  "honor": {
+    "bestMan": {
+      "name": "Charbel Tannoury",
+      "relationship": "Brother of the groom"
+    },
+    "maidOfHonor": {
+      "name": "Rebecca Hayek",
+      "relationship": "Sister of the bride"
     }
   },
   "events": {
@@ -155,5 +176,148 @@
       "placeholderText": "Ask me about the wedding...",
       "customInstructions": "Additional Guidelines:\n- Theme: Our wedding has a beautiful sunflower theme 🌻\n- Dress Code: Semi-formal/Garden party attire (mention comfortable footwear for outdoor grass)\n- Photography: Professional photographer will capture the ceremony, guests can take photos during reception\n- Adults-only celebration\n- Parking and valet service available on-site\n- Shuttle service from recommended hotels\n- Full dinner and drinks will be served\n\nBe extra warm and enthusiastic! This is a celebration of love! 💐✨"
     }
-  }
+  },
+  "ui": {
+    "hero": {
+      "tag": "TOGETHER WE BEGIN",
+      "sideTextLeft": "Made for Each Other"
+    },
+    "countdown": {
+      "tag": "Counting Down To",
+      "title": "Our Special Day"
+    },
+    "events": {
+      "tag": "Join Us",
+      "title": "The Celebration",
+      "subtitle": "Two moments. One magical day."
+    },
+    "timeline": {
+      "tag": "The Day Of",
+      "title": "Wedding Day Schedule"
+    },
+    "gallery": {
+      "tag": "Memories",
+      "title": "Our Story in Frames",
+      "subtitle": ""
+    },
+    "rsvp": {
+      "tag": "Kindly Reply",
+      "title": "Will You Join Us?",
+      "attendanceOptions": [
+        "Joyfully Accepts",
+        "Regretfully Declines"
+      ],
+      "successMessage": "Your RSVP has been sent. We can't wait to celebrate with you!"
+    },
+    "listeDeMariage": {
+      "tag": "Liste de Mariage",
+      "title": "Our Wish List",
+      "message": "Your presence on our special day is the greatest gift of all. Our Whish Account is available below.",
+      "accountName": "  ",
+      "accountLabel": "Whish Account"
+    },
+    "footer": {
+      "quote": "Two people, one shared heartbeat, one beautiful forever beginning."
+    },
+    "loading": {
+      "subtitle": "Are Getting Married"
+    }
+  },
+  "navigation": [
+    {
+      "label": "Our Story",
+      "href": "#couple"
+    },
+    {
+      "label": "Events",
+      "href": "#events"
+    },
+    {
+      "label": "Timeline",
+      "href": "#timeline"
+    },
+    {
+      "label": "Gallery",
+      "href": "#gallery"
+    },
+    {
+      "label": "RSVP",
+      "href": "#rsvp",
+      "highlight": true
+    }
+  ],
+  "imagePositions": {
+    "couple_groom": "0.0% 25.0%",
+    "couple_bride": "100.0% 1.9%",
+    "gallery_1n-9TxulKEyjZqFI-o7lzWg239fu2lWpv": "52.0% 58.8%",
+    "gallery_1v9OfHkadQTXykxrkxiHZhZJ3kXCyWNBn": "27.8% 25.1%",
+    "gallery_1k1QOOHQjsnIq6nfe71Q780DwHTYk3jjR": "48.0% 89.1%",
+    "gallery_1mUHfDJhrBZJ2hCZQf6trRo6tn4xodJh5": "48.7% 38.2%",
+    "gallery_1ApaIeMtGk_W_bC-9HPHUm_NsSb2SpkUM": "45.0% 49.8%",
+    "gallery_1e8rYRiB4vdxz7e0spMmgkGYsvlOm07k_": "51.1% 39.0%",
+    "gallery_1h1VEF0tunIPx_2reDDvSfJYTaxAaDKlV": "35.1% 59.3%",
+    "gallery_1fjWJ4IMXnZ2bbrTipX-G0Ww0jOO23sW6": "34.3% 50.6%"
+  },
+  "galleryLayout": {
+    "1n-9TxulKEyjZqFI-o7lzWg239fu2lWpv": {
+      "cols": 6,
+      "aspect": "16/9"
+    },
+    "1oy1khkgkaLULtukbDvgrHKaBHUpdiLpW": {
+      "cols": 6,
+      "aspect": "16/9"
+    },
+    "1mUHfDJhrBZJ2hCZQf6trRo6tn4xodJh5": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1Bm3omUeISUspEPUp4c-bc3FLdoh99bFa": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1v9OfHkadQTXykxrkxiHZhZJ3kXCyWNBn": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1ApaIeMtGk_W_bC-9HPHUm_NsSb2SpkUM": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1vBCaaBqXv0HuTISYg9NjpVHLNC3WiXB1": {
+      "cols": 6,
+      "aspect": "16/9"
+    },
+    "1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf": {
+      "cols": 6,
+      "aspect": "16/9"
+    },
+    "1e8rYRiB4vdxz7e0spMmgkGYsvlOm07k_": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1h1VEF0tunIPx_2reDDvSfJYTaxAaDKlV": {
+      "cols": 6,
+      "aspect": "16/9"
+    },
+    "14IGZx8I8w1fFg5SewW8XVo2rJtGs-Iek": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1fjWJ4IMXnZ2bbrTipX-G0Ww0jOO23sW6": {
+      "cols": 3,
+      "aspect": "3/4"
+    },
+    "1QPA1Mj-W97NZivc57Gy7jP5MAGOjXYx1": {
+      "cols": 3,
+      "aspect": "3/4"
+    }
+  },
+  "galleryOrder": [
+    "1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf",
+    "14IGZx8I8w1fFg5SewW8XVo2rJtGs-Iek",
+    "1QPA1Mj-W97NZivc57Gy7jP5MAGOjXYx1",
+    "1h1VEF0tunIPx_2reDDvSfJYTaxAaDKlV",
+    "1e8rYRiB4vdxz7e0spMmgkGYsvlOm07k_",
+    "1fjWJ4IMXnZ2bbrTipX-G0Ww0jOO23sW6"
+  ]
 }

@@ -5,14 +5,6 @@ import config from '@config';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ICON_MAP = {
-  guests:  '\u2736',
-  church:  '\u2020',
-  drinks:  '\u25C6',
-  dinner:  '\u22C6',
-  dance:   '\u2727',
-};
-
 export default function TimelineSection() {
   const sectionRef = useRef(null);
   const pathRef    = useRef(null);
@@ -77,8 +69,8 @@ export default function TimelineSection() {
       id="timeline"
       ref={sectionRef}
       style={{
-        background: '#144030',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -105,7 +97,7 @@ export default function TimelineSection() {
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,5rem)' }}>
           <p className="section-tag timeline-header-child" style={{ marginBottom: '0.75rem' }}>
-            The Day Of
+            {config.ui.timeline.tag}
           </p>
           <h2
             className="timeline-header-child"
@@ -116,7 +108,7 @@ export default function TimelineSection() {
               color: '#faf8f0',
             }}
           >
-            Wedding Day Schedule
+            {config.ui.timeline.title}
           </h2>
           <p
             className="timeline-header-child"
@@ -129,7 +121,7 @@ export default function TimelineSection() {
               letterSpacing: '0.15em',
             }}
           >
-            Saturday, June 6, 2026
+            {config.wedding.dateFormatted}
           </p>
         </div>
 
@@ -168,10 +160,10 @@ export default function TimelineSection() {
             />
             <defs>
               <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stopColor="rgba(201,168,76,0)" />
-                <stop offset="30%"  stopColor="rgba(201,168,76,0.6)" />
-                <stop offset="70%"  stopColor="rgba(201,168,76,0.6)" />
-                <stop offset="100%" stopColor="rgba(201,168,76,0)" />
+                <stop offset="0%"   stopColor="rgba(204,158,36,0)" />
+                <stop offset="30%"  stopColor="rgba(204,158,36,0.6)" />
+                <stop offset="70%"  stopColor="rgba(204,158,36,0.6)" />
+                <stop offset="100%" stopColor="rgba(204,158,36,0)" />
               </linearGradient>
             </defs>
           </svg>
@@ -180,7 +172,7 @@ export default function TimelineSection() {
           <style>{`
             @media (max-width: 640px) {
               .timeline-row { justify-content: flex-start !important; }
-              .timeline-card { width: calc(100% - 2.5rem) !important; margin-left: 2.5rem !important; margin-right: 0 !important; text-align: left !important; }
+              .timeline-card { width: calc(100% - 2rem) !important; margin-left: 2rem !important; margin-right: 0 !important; text-align: left !important; }
               .timeline-dot  { left: 0 !important; transform: translate(0,-50%) !important; }
               .timeline-svg  { left: 0 !important; transform: none !important; }
             }
@@ -213,10 +205,10 @@ export default function TimelineSection() {
                     width: '14px',
                     height: '14px',
                     borderRadius: '50%',
-                    border: '2px solid #c9a84c',
-                    background: '#144030',
+                    border: '2px solid #cc9e24',
+                    background: '#1e3518',
                     zIndex: 2,
-                    boxShadow: '0 0 12px rgba(201,168,76,0.4)',
+                    boxShadow: '0 0 12px rgba(204,158,36,0.4)',
                   }}
                 />
 
@@ -227,20 +219,11 @@ export default function TimelineSection() {
                     width: 'calc(50% - 2.5rem)',
                     padding: 'clamp(1.2rem,3vw,1.8rem)',
                     background: 'rgba(250,248,240,0.04)',
-                    border: '1px solid rgba(201,168,76,0.18)',
+                    border: '1px solid rgba(204,158,36,0.18)',
                     ...(isLeft ? { marginRight: '2.5rem', textAlign: 'right' } : { marginLeft: '2.5rem', textAlign: 'left' }),
                     position: 'relative',
                   }}
                 >
-                  {/* Icon */}
-                  <div
-                    style={{
-                      fontSize: '1.5rem',
-                      marginBottom: '0.5rem',
-                    }}
-                  >
-                    {ICON_MAP[item.icon] ?? '✨'}
-                  </div>
                   {/* Time */}
                   <p
                     style={{
@@ -248,7 +231,7 @@ export default function TimelineSection() {
                       fontWeight: 200,
                       fontSize: '0.62rem',
                       letterSpacing: '0.45em',
-                      color: '#c9a84c',
+                      color: '#cc9e24',
                       textTransform: 'uppercase',
                       marginBottom: '0.4rem',
                     }}

@@ -8,18 +8,18 @@ gsap.registerPlugin(ScrollTrigger);
 /* ── Elegant SVG icons (no emojis) ── */
 const CeremonyIcon = () => (
   <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
-    <line x1="17" y1="3" x2="17" y2="31" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
-    <line x1="9" y1="11" x2="25" y2="11" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="17" y1="3" x2="17" y2="31" stroke="#cc9e24" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="9" y1="11" x2="25" y2="11" stroke="#cc9e24" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 
 const ReceptionIcon = () => (
   <svg width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
-    <path d="M10 4 C9 10 9 16 14 19 L14 28" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M20 4 C21 10 21 16 16 19 L16 28" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
-    <line x1="11" y1="28" x2="19" y2="28" stroke="#c9a84c" strokeWidth="1.5" strokeLinecap="round"/>
-    <circle cx="14" cy="8" r="1" fill="#c9a84c" opacity="0.7"/>
-    <circle cx="20" cy="6" r="0.8" fill="#c9a84c" opacity="0.7"/>
+    <path d="M10 4 C9 10 9 16 14 19 L14 28" stroke="#cc9e24" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M20 4 C21 10 21 16 16 19 L16 28" stroke="#cc9e24" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="11" y1="28" x2="19" y2="28" stroke="#cc9e24" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="14" cy="8" r="1" fill="#cc9e24" opacity="0.7"/>
+    <circle cx="20" cy="6" r="0.8" fill="#cc9e24" opacity="0.7"/>
   </svg>
 );
 
@@ -28,8 +28,14 @@ function EventCard({ event, label, icon }) {
   const cardRef    = useRef(null);
   const glowRef    = useRef(null);
   const [hovered, setHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const handleMouseMove = (e) => {
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
+
+  const handlePointerMove = (e) => {
+    if (isTouchDevice) return;
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -59,7 +65,8 @@ function EventCard({ event, label, icon }) {
     }
   };
 
-  const handleMouseLeave = () => {
+  const handlePointerLeave = () => {
+    if (isTouchDevice) return;
     gsap.to(cardRef.current, {
       rotateX: 0,
       rotateY: 0,
@@ -72,13 +79,13 @@ function EventCard({ event, label, icon }) {
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={handlePointerMove}
+      onMouseEnter={() => !isTouchDevice && setHovered(true)}
+      onMouseLeave={handlePointerLeave}
       style={{
         position: 'relative',
         background: 'rgba(250,248,240,0.03)',
-        border: '1px solid rgba(201,168,76,0.25)',
+        border: '1px solid rgba(204,158,36,0.25)',
         padding: 'clamp(2rem,5vw,3.5rem)',
         maxWidth: '480px',
         width: '100%',
@@ -87,7 +94,7 @@ function EventCard({ event, label, icon }) {
         willChange: 'transform',
         transition: 'box-shadow 0.4s ease',
         boxShadow: hovered
-          ? '0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(201,168,76,0.4)'
+          ? '0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(204,158,36,0.4)'
           : '0 8px 30px rgba(0,0,0,0.2)',
       }}
     >
@@ -99,7 +106,7 @@ function EventCard({ event, label, icon }) {
           width: '200px',
           height: '200px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(204,158,36,0.12) 0%, transparent 70%)',
           transform: 'translate(-50%,-50%)',
           pointerEvents: 'none',
           opacity: hovered ? 1 : 0,
@@ -117,7 +124,7 @@ function EventCard({ event, label, icon }) {
           left: 0,
           right: 0,
           height: '2px',
-          background: 'linear-gradient(90deg, transparent, #c9a84c, #f0d080, #c9a84c, transparent)',
+          background: 'linear-gradient(90deg, transparent, #cc9e24, #f9cc01, #cc9e24, transparent)',
           transform: hovered ? 'scaleX(1)' : 'scaleX(0)',
           transition: 'transform 0.5s ease',
           transformOrigin: 'center',
@@ -141,7 +148,7 @@ function EventCard({ event, label, icon }) {
           fontWeight: 200,
           fontSize: '0.62rem',
           letterSpacing: '0.5em',
-          color: '#c9a84c',
+          color: '#cc9e24',
           textTransform: 'uppercase',
           marginBottom: '0.75rem',
         }}
@@ -173,7 +180,7 @@ function EventCard({ event, label, icon }) {
           marginBottom: '1.5rem',
         }}
       >
-        Saturday, June 6, 2026 &nbsp;·&nbsp; {event.time}
+        {config.wedding.dateFormatted} &nbsp;·&nbsp; {event.time}
       </p>
 
       {/* Address */}
@@ -216,20 +223,20 @@ function EventCard({ event, label, icon }) {
           fontWeight: 300,
           fontSize: '0.7rem',
           letterSpacing: '0.35em',
-          color: '#c9a84c',
+          color: '#cc9e24',
           textDecoration: 'none',
           textTransform: 'uppercase',
-          borderBottom: '1px solid rgba(201,168,76,0.4)',
+          borderBottom: '1px solid rgba(204,158,36,0.4)',
           paddingBottom: '0.25rem',
           transition: 'color 0.3s, border-color 0.3s',
         }}
         onMouseEnter={e => {
-          e.currentTarget.style.color = '#f0d080';
-          e.currentTarget.style.borderColor = '#f0d080';
+          e.currentTarget.style.color = '#f9cc01';
+          e.currentTarget.style.borderColor = '#f9cc01';
         }}
         onMouseLeave={e => {
-          e.currentTarget.style.color = '#c9a84c';
-          e.currentTarget.style.borderColor = 'rgba(201,168,76,0.4)';
+          e.currentTarget.style.color = '#cc9e24';
+          e.currentTarget.style.borderColor = 'rgba(204,158,36,0.4)';
         }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -293,8 +300,8 @@ export default function EventsSection() {
       id="events"
       ref={sectionRef}
       style={{
-        background: '#143526',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -305,8 +312,8 @@ export default function EventsSection() {
           position: 'absolute',
           inset: 0,
           backgroundImage: `
-            linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px)
+            linear-gradient(rgba(204,158,36,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(204,158,36,0.04) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
           pointerEvents: 'none',
@@ -317,10 +324,10 @@ export default function EventsSection() {
         {/* Header */}
         <div
           className="events-header"
-          style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,5rem)' }}
+          style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem,6vw,5rem)' }}
         >
           <p className="section-tag" style={{ marginBottom: '0.75rem' }}>
-            Join Us
+            {config.ui.events.tag}
           </p>
           <h2
             style={{
@@ -330,7 +337,7 @@ export default function EventsSection() {
               color: '#faf8f0',
             }}
           >
-            The Celebration
+            {config.ui.events.title}
           </h2>
           <p
             style={{
@@ -342,7 +349,7 @@ export default function EventsSection() {
               marginTop: '0.75rem',
             }}
           >
-            Two moments. One magical day.
+            {config.ui.events.subtitle}
           </p>
         </div>
 
@@ -378,26 +385,26 @@ export default function EventsSection() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '1rem',
-            marginTop: 'clamp(3rem,8vw,5rem)',
+            marginTop: 'clamp(1.5rem,6vw,5rem)',
           }}
         >
-          <div style={{ height: '1px', flex: 1, maxWidth: '200px', background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.4))' }} />
+          <div style={{ height: '1px', flex: 1, maxWidth: '200px', background: 'linear-gradient(to right, transparent, rgba(204,158,36,0.4))' }} />
           <div
             style={{
               width: '36px',
               height: '36px',
-              border: '1px solid rgba(201,168,76,0.35)',
+              border: '1px solid rgba(204,158,36,0.35)',
               borderRadius: '50%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '0.9rem',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
             }}
           >
             ♡
           </div>
-          <div style={{ height: '1px', flex: 1, maxWidth: '200px', background: 'linear-gradient(to left, transparent, rgba(201,168,76,0.4))' }} />
+          <div style={{ height: '1px', flex: 1, maxWidth: '200px', background: 'linear-gradient(to left, transparent, rgba(204,158,36,0.4))' }} />
         </div>
       </div>
     </section>

@@ -7,7 +7,7 @@ import { useDriveImages, driveThumbUrl } from '../hooks/useDriveImages';
 gsap.registerPlugin(ScrollTrigger);
 
 /* ── Bio card with scroll reveal ── */
-function PersonCard({ person, role, side, photo }) {
+function PersonCard({ person, role, side, photo, objectPosition }) {
   const cardRef   = useRef(null);
   const imageRef  = useRef(null);
   const textRef   = useRef(null);
@@ -70,7 +70,7 @@ function PersonCard({ person, role, side, photo }) {
           style={{
             position: 'absolute',
             inset: 0,
-            border: '1px solid rgba(201,168,76,0.5)',
+            border: '1px solid rgba(204,158,36,0.5)',
             zIndex: 2,
             pointerEvents: 'none',
           }}
@@ -83,7 +83,7 @@ function PersonCard({ person, role, side, photo }) {
               position: 'absolute',
               width: '24px',
               height: '24px',
-              borderColor: '#c9a84c',
+              borderColor: '#cc9e24',
               borderStyle: 'solid',
               borderWidth: c.includes('t') ? '1px 0 0 0' : '0 0 1px 0',
               ...(c.includes('r') ? { borderRightWidth: '1px', right: -1 } : { borderLeftWidth: '1px', left: -1 }),
@@ -101,7 +101,7 @@ function PersonCard({ person, role, side, photo }) {
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: 'center top',
+              objectPosition: objectPosition || 'center top',
               display: 'block',
             }}
             onError={e => { e.currentTarget.style.display = 'none'; }}
@@ -112,15 +112,15 @@ function PersonCard({ person, role, side, photo }) {
               width: '100%',
               height: '100%',
               background: role === 'Bride'
-                ? 'linear-gradient(160deg, #144030 0%, #1e5c3a 40%, #2d6a4f 100%)'
-                : 'linear-gradient(160deg, #081a13 0%, #143526 40%, #1e5c3a 100%)',
+                ? 'linear-gradient(160deg, #243a1c 0%, #3a5a28 40%, #6b7a15 100%)'
+                : 'linear-gradient(160deg, #1a2e14 0%, #2a4a1e 40%, #3a5a28 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 'clamp(4rem,12vw,8rem)',
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 300,
-              color: 'rgba(201,168,76,0.3)',
+              color: 'rgba(204,158,36,0.3)',
               userSelect: 'none',
             }}
           >
@@ -134,7 +134,7 @@ function PersonCard({ person, role, side, photo }) {
             bottom: '1.5rem',
             ...(side === 'left' ? { right: '1.5rem' } : { left: '1.5rem' }),
             padding: '0.4rem 1.2rem',
-            background: 'rgba(201,168,76,0.9)',
+            background: 'rgba(204,158,36,0.9)',
             zIndex: 4,
           }}
         >
@@ -144,7 +144,7 @@ function PersonCard({ person, role, side, photo }) {
               fontWeight: 200,
               fontSize: '0.62rem',
               letterSpacing: '0.45em',
-              color: '#050d0a',
+              color: '#1a2e14',
               textTransform: 'uppercase',
             }}
           >
@@ -161,7 +161,7 @@ function PersonCard({ person, role, side, photo }) {
             fontWeight: 200,
             fontSize: '0.65rem',
             letterSpacing: '0.45em',
-            color: '#c9a84c',
+            color: '#cc9e24',
             textTransform: 'uppercase',
             marginBottom: '0.6rem',
           }}
@@ -213,14 +213,14 @@ function PersonCard({ person, role, side, photo }) {
             gap: '0.75rem',
           }}
         >
-          <div style={{ height: '1px', width: '40px', background: 'rgba(201,168,76,0.4)' }} />
+          <div style={{ height: '1px', width: '40px', background: 'rgba(204,158,36,0.4)' }} />
           <p
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,
               fontSize: '0.7rem',
               letterSpacing: '0.3em',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
             }}
           >
             {person.parents}
@@ -242,6 +242,7 @@ export default function CoupleSection() {
 
   const bridePhoto  = perlaImgs[0]   ? driveThumbUrl(perlaImgs[0].id,   'w1200') : null;
   const groomPhoto  = antonioImgs[0] ? driveThumbUrl(antonioImgs[0].id, 'w1200') : null;
+  const imgPos = config.imagePositions || {};
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -265,8 +266,8 @@ export default function CoupleSection() {
       id="couple"
       ref={sectionRef}
       style={{
-        background: '#102e20',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -282,7 +283,7 @@ export default function CoupleSection() {
           fontSize: 'clamp(12rem,30vw,22rem)',
           fontWeight: 300,
           fontStyle: 'italic',
-          color: 'rgba(201,168,76,0.04)',
+          color: 'rgba(204,158,36,0.04)',
           pointerEvents: 'none',
           userSelect: 'none',
           lineHeight: 1,
@@ -297,7 +298,7 @@ export default function CoupleSection() {
           ref={tagRef}
           style={{
             textAlign: 'center',
-            marginBottom: 'clamp(3rem,8vw,5rem)',
+            marginBottom: 'clamp(1.5rem,6vw,5rem)',
           }}
         >
           <p className="section-tag" style={{ marginBottom: '0.75rem' }}>The Couple</p>
@@ -323,7 +324,7 @@ export default function CoupleSection() {
             flexWrap: 'wrap',
             alignItems: 'flex-start',
             justifyContent: 'center',
-            gap: 'clamp(3rem,8vw,6rem)',
+            gap: 'clamp(1rem,8vw,6rem)',
           }}
         >
           <PersonCard
@@ -331,6 +332,7 @@ export default function CoupleSection() {
             role="Bride"
             side="left"
             photo={bridePhoto}
+            objectPosition={imgPos.couple_bride}
           />
 
           {/* Center heart divider (desktop only) */}
@@ -342,7 +344,7 @@ export default function CoupleSection() {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '1.5rem',
-              paddingTop: '12rem',
+              paddingTop: '0.5rem',
               minWidth: '60px',
             }}
             className="hidden lg:flex"
@@ -352,18 +354,18 @@ export default function CoupleSection() {
               style={{
                 width: '44px',
                 height: '44px',
-                border: '1px solid rgba(201,168,76,0.4)',
+                border: '1px solid rgba(204,158,36,0.4)',
                 borderRadius: '50%',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '1.1rem',
-                color: '#c9a84c',
+                color: '#cc9e24',
               }}
             >
               ♡
             </div>
-            <div style={{ width: '1px', height: '80px', background: 'linear-gradient(to top, transparent, rgba(201,168,76,0.4))' }} />
+            <div style={{ width: '1px', height: '80px', background: 'linear-gradient(to top, transparent, rgba(204,158,36,0.4))' }} />
           </div>
 
           <PersonCard
@@ -371,6 +373,7 @@ export default function CoupleSection() {
             role="Groom"
             side="right"
             photo={groomPhoto}
+            objectPosition={imgPos.couple_groom}
           />
         </div>
       </div>

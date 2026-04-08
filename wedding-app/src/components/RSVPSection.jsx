@@ -26,7 +26,7 @@ function FloatingInput({ label, value, onChange, type = 'text', name, required =
           width: '100%',
           background: 'transparent',
           border: 'none',
-          borderBottom: `1px solid ${focused ? '#c9a84c' : 'rgba(250,248,240,0.18)'}`,
+          borderBottom: `1px solid ${focused ? '#cc9e24' : 'rgba(250,248,240,0.18)'}`,
           padding: '1.25rem 0 0.5rem',
           fontFamily: 'Jost, sans-serif',
           fontWeight: 300,
@@ -44,7 +44,7 @@ function FloatingInput({ label, value, onChange, type = 'text', name, required =
           top: focused || hasValue ? '0' : '1.25rem',
           fontSize: focused || hasValue ? '0.62rem' : '0.9rem',
           letterSpacing: focused || hasValue ? '0.35em' : '0.05em',
-          color: focused ? '#c9a84c' : 'rgba(250,248,240,0.45)',
+          color: focused ? '#cc9e24' : 'rgba(250,248,240,0.45)',
           textTransform: focused || hasValue ? 'uppercase' : 'none',
           transition: 'all 0.3s ease',
           pointerEvents: 'none',
@@ -62,7 +62,7 @@ function FloatingInput({ label, value, onChange, type = 'text', name, required =
           left: 0,
           width: focused ? '100%' : '0%',
           height: '1px',
-          background: '#c9a84c',
+          background: '#cc9e24',
           transition: 'width 0.45s ease',
         }}
       />
@@ -73,7 +73,7 @@ function FloatingInput({ label, value, onChange, type = 'text', name, required =
 function FloatingTextarea() { return null; }
 
 function ConfettiEffect() {
-  const colors = ['#c9a84c','#f0d080','#40916c','#faf8f0','#e8d5a3'];
+  const colors = ['#cc9e24','#f9cc01','#9caf13','#faf8f0','#e0d377'];
   return (
     <div
       style={{
@@ -116,6 +116,7 @@ export default function RSVPSection() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
     name: '',
+    phone: '',
     email: '',
     attendance: '',
     guests: '1',
@@ -154,21 +155,37 @@ export default function RSVPSection() {
     setForm(f => ({ ...f, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const subject = `Wedding RSVP – ${form.name} (${form.attendance})`;
-    const body = [
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      `Attendance: ${form.attendance}`,
-      `Number of Guests: ${form.guests}`,
-    ].join('\n');
+  const [submitting, setSubmitting] = useState(false);
 
-    window.open(
-      `mailto:${config.events.rsvp.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-      '_blank'
-    );
-    setSubmitted(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setSubmitted(true);
+    } catch {
+      // Fallback to mailto if backend is unavailable
+      const subject = `Wedding RSVP – ${form.name} (${form.attendance})`;
+      const body = [
+        `Name: ${form.name}`,
+        `Phone: ${form.phone}`,
+        `Email: ${form.email || 'N/A'}`,
+        `Attendance: ${form.attendance}`,
+        `Number of Guests: ${form.guests}`,
+      ].join('\n');
+      window.open(
+        `mailto:${config.events.rsvp.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+        '_blank'
+      );
+      setSubmitted(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -176,8 +193,8 @@ export default function RSVPSection() {
       id="rsvp"
       ref={sectionRef}
       style={{
-      background: '#143526',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+      background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -190,7 +207,7 @@ export default function RSVPSection() {
           right: 0,
           width: '40%',
           height: '100%',
-          background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.05))',
+          background: 'linear-gradient(to right, transparent, rgba(204,158,36,0.05))',
           pointerEvents: 'none',
         }}
       />
@@ -199,39 +216,39 @@ export default function RSVPSection() {
         {/* Header */}
         <div
           className="rsvp-header"
-          style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,4.5rem)' }}
+          style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem,6vw,4.5rem)' }}
         >
-          <p className="section-tag" style={{ color: '#c9a84c', marginBottom: '0.75rem' }}>
-            Kindly Reply
+          <p className="section-tag" style={{ color: '#cc9e24', marginBottom: '0.75rem' }}>
+            {config.ui.rsvp.tag}
           </p>
           <h2
             style={{
               fontFamily: '"Cormorant Garamond", serif',
               fontWeight: 400,
               fontSize: 'clamp(2.2rem,6vw,4rem)',
-              color: '#050d0a',
+              color: '#faf8f0',
               marginBottom: '0.5rem',
             }}
           >
-            Will You Join Us?
+            {config.ui.rsvp.title}
           </h2>
           <p
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,
               fontSize: '0.82rem',
-              color: 'rgba(5,13,10,0.5)',
+              color: 'rgba(250,248,240,0.45)',
               letterSpacing: '0.15em',
               marginBottom: '0.5rem',
             }}
           >
-            Please respond by May 20, 2026
+            Please respond by {new Date(config.events.rsvp.deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </p>
           <div
             style={{
               width: '60px',
               height: '1px',
-              background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)',
+              background: 'linear-gradient(90deg, transparent, #cc9e24, transparent)',
               margin: '1.5rem auto 0',
             }}
           />
@@ -256,7 +273,15 @@ export default function RSVPSection() {
                   required
                 />
                 <FloatingInput
-                  label="Email Address"
+                  label="Phone Number"
+                  name="phone"
+                  type="tel"
+                  value={form.phone}
+                  onChange={handleChange}
+                  required
+                />
+                <FloatingInput
+                  label="Email Address (optional)"
                   name="email"
                   type="email"
                   value={form.email}
@@ -278,15 +303,16 @@ export default function RSVPSection() {
                   >
                     Attendance
                   </p>
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    {['Joyfully Accepts', 'Regretfully Declines'].map(opt => (
+                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    {config.ui.rsvp.attendanceOptions.map(opt => (
                       <button
                         key={opt}
                         type="button"
                         onClick={() => setForm(f => ({ ...f, attendance: opt }))}
                         style={{
-                          flex: 1,
-                          padding: '0.75rem',
+                          flex: '1 1 auto',
+                          minWidth: '100px',
+                          padding: '0.75rem 0.5rem',
                           fontFamily: 'Jost, sans-serif',
                           fontWeight: 300,
                           fontSize: '0.75rem',
@@ -294,13 +320,13 @@ export default function RSVPSection() {
                           cursor: 'pointer',
                           transition: 'all 0.3s ease',
                           border: form.attendance === opt
-                            ? '1px solid #c9a84c'
+                            ? '1px solid #cc9e24'
                             : '1px solid rgba(250,248,240,0.15)',
                           background: form.attendance === opt
-                            ? 'rgba(201,168,76,0.1)'
+                            ? 'rgba(204,158,36,0.1)'
                             : 'transparent',
                           color: form.attendance === opt
-                            ? '#c9a84c'
+                            ? '#cc9e24'
                             : 'rgba(250,248,240,0.5)',
                         }}
                       >
@@ -351,38 +377,54 @@ export default function RSVPSection() {
                   style={{
                     display: 'flex',
                     justifyContent: 'center',
-                    gap: '2rem',
+                    gap: 'clamp(0.75rem, 3vw, 2rem)',
                     flexWrap: 'wrap',
                   }}
                 >
-                  <a
+                  {/* <a
                     href={`mailto:${config.events.rsvp.email}`}
                     style={{
                       fontFamily: 'Jost, sans-serif',
                       fontWeight: 300,
-                      fontSize: '0.8rem',
-                      color: '#c9a84c',
+                      fontSize: 'clamp(0.7rem, 2vw, 0.8rem)',
+                      color: '#cc9e24',
                       textDecoration: 'none',
+                      wordBreak: 'break-all',
                     }}
                   >
                     {config.events.rsvp.email}
                   </a>
-                  <span style={{ color: 'rgba(250,248,240,0.3)' }}>·</span>
+                  <span style={{ color: 'rgba(250,248,240,0.3)' }}>·</span> */}
                   <a
-                    href="https://wa.me/96171054630"
+                    href={`https://wa.me/${config.events.rsvp.phone1.replace(/[\s+]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
                       fontFamily: 'Jost, sans-serif',
                       fontWeight: 300,
                       fontSize: '0.8rem',
-                      color: '#c9a84c',
+                      color: '#cc9e24',
                       textDecoration: 'none',
                     }}
                   >
                     {config.events.rsvp.phone1}
                   </a>
-                </div>
+                  <span style={{ color: 'rgba(250,248,240,0.3)' }}>·</span>
+                  <a
+                    href={`https://wa.me/${config.events.rsvp.phone2.replace(/[\s+]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      fontFamily: 'Jost, sans-serif',
+                      fontWeight: 300,
+                      fontSize: '0.8rem',
+                      color: '#cc9e24',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    {config.events.rsvp.phone2}
+                  </a>
+                  </div>
               </div>
             </motion.div>
           ) : (
@@ -402,7 +444,7 @@ export default function RSVPSection() {
                 style={{
                   width: '64px',
                   height: '64px',
-                  border: '1px solid #c9a84c',
+                  border: '1px solid #cc9e24',
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
@@ -435,7 +477,7 @@ export default function RSVPSection() {
                   margin: '0 auto',
                 }}
               >
-                Your RSVP has been sent. We can't wait to celebrate with you!
+                {config.ui.rsvp.successMessage}
               </p>
             </motion.div>
           )}

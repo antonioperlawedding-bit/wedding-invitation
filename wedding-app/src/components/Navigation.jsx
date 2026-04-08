@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import config from '@config';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NAV_ITEMS = [
-  { label: 'Our Story',  href: '#couple'   },
-  { label: 'Events',     href: '#events'   },
-  { label: 'Timeline',   href: '#timeline' },
-  { label: 'Gallery',    href: '#gallery'  },
-  { label: 'RSVP',       href: '#rsvp',    highlight: true },
-];
+const NAV_ITEMS = config.navigation;
 
 export default function Navigation() {
   const navRef     = useRef(null);
@@ -73,10 +68,10 @@ export default function Navigation() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        background: 'rgba(5,13,10,0.75)',
+        background: 'rgba(26,46,20,0.75)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(201,168,76,0.15)',
+        borderBottom: '1px solid rgba(204,158,36,0.15)',
       }}
     >
       {/* Logo / Monogram */}
@@ -86,14 +81,14 @@ export default function Navigation() {
           fontFamily: '"Cormorant Garamond", serif',
           fontSize: '1.4rem',
           fontWeight: 400,
-          color: '#c9a84c',
+          color: '#cc9e24',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
           letterSpacing: '0.1em',
         }}
       >
-        P&nbsp;&amp;&nbsp;A
+        {config.couple.groom.firstName.charAt(0)}&nbsp;&amp;&nbsp;{config.couple.bride.firstName.charAt(0)}
       </button>
 
       {/* Desktop links — display controlled by className only to avoid override */}
@@ -121,8 +116,8 @@ export default function Navigation() {
                   fontWeight: 300,
                   letterSpacing: '0.35em',
                   textTransform: 'uppercase',
-                  color: '#050d0a',
-                  background: 'linear-gradient(135deg,#f0d080,#c9a84c)',
+                  color: '#1a2e14',
+                  background: 'linear-gradient(135deg,#f9cc01,#cc9e24)',
                   border: 'none',
                   padding: '0.45rem 1.4rem',
                   cursor: 'pointer',
@@ -149,7 +144,7 @@ export default function Navigation() {
                   transition: 'color 0.3s',
                   position: 'relative',
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = '#c9a84c'}
+                onMouseEnter={e => e.currentTarget.style.color = '#cc9e24'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,248,240,0.7)'}
               >
                 {item.label}
@@ -181,7 +176,7 @@ export default function Navigation() {
               display: 'block',
               width: '24px',
               height: '1px',
-              background: '#c9a84c',
+              background: '#cc9e24',
               transition: 'all 0.3s ease',
               transform: menuOpen
                 ? i === 0 ? 'rotate(45deg) translate(4px,4px)'
@@ -204,9 +199,9 @@ export default function Navigation() {
             top: '64px',
             left: 0,
             right: 0,
-            background: 'rgba(5,13,10,0.97)',
+            background: 'rgba(26,46,20,0.97)',
             backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(201,168,76,0.15)',
+            borderBottom: '1px solid rgba(204,158,36,0.15)',
             padding: '1.5rem',
             display: 'flex',
             flexDirection: 'column',
@@ -223,7 +218,7 @@ export default function Navigation() {
                 fontWeight: 300,
                 letterSpacing: '0.3em',
                 textTransform: 'uppercase',
-                color: item.highlight ? '#c9a84c' : 'rgba(250,248,240,0.8)',
+                color: item.highlight ? '#cc9e24' : 'rgba(250,248,240,0.8)',
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Perla & Antonio Wedding Invitation — June 6, 2026" />
-    <meta name="theme-color" content="#050d0a" />
+    <meta name="theme-color" content="#1a2e14" />
     <title>Perla &amp; Antonio — June 6, 2026</title>
 
     <!-- Favicon -->
@@ -18,9 +18,45 @@
       rel="stylesheet"
     />
   </head>
-  <body style="margin:0;background:#081a13">
-    <!-- Dark overlay — prevents white flash while JS loads, removed by React -->
-    <div id="preloader" style="position:fixed;inset:0;z-index:9999;background:#081a13"></div>
+  <body style="margin:0;background:#1a2e14">
+    <!-- Instant loading screen — visible before JS loads, removed by React -->
+    <div id="preloader" style="position:fixed;inset:0;z-index:9999;background:#1a2e14;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem">
+      <!-- Rings -->
+      <div style="display:flex;align-items:center;justify-content:center;height:100px;position:relative">
+        <div style="position:relative;z-index:1;transform:translateX(-28px)">
+          <svg width="80" height="80" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(204,158,36,0.25)" stroke-width="3"/>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#cc9e24" stroke-width="3" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0" style="animation:ringDraw 1.2s ease-in-out forwards"/>
+          </svg>
+        </div>
+        <div style="position:absolute;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:#cc9e24;letter-spacing:0.1em;z-index:3">♡</div>
+        <div style="position:relative;z-index:0;transform:translateX(28px)">
+          <svg width="80" height="80" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(204,158,36,0.25)" stroke-width="3"/>
+            <circle cx="50" cy="50" r="45" fill="none" stroke="#f9cc01" stroke-width="3" stroke-linecap="round" stroke-dasharray="283" stroke-dashoffset="0" style="animation:ringDraw 1.2s ease-in-out forwards"/>
+          </svg>
+        </div>
+      </div>
+      <!-- Names -->
+      <div style="text-align:center">
+        <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,6vw,3rem);font-weight:300;color:#faf8f0;letter-spacing:0.08em;line-height:1.2;margin:0">
+          Antonio <span style="color:#cc9e24;font-style:italic">&amp;</span> Perla
+        </p>
+        <p style="font-family:'Jost',sans-serif;font-weight:200;font-size:0.7rem;letter-spacing:0.5em;color:rgba(204,158,36,0.7);text-transform:uppercase;margin-top:0.5rem">
+          Are Getting Married
+        </p>
+      </div>
+      <!-- Date -->
+      <p style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:400;color:#cc9e24;letter-spacing:0.3em;margin:0">June 6 · 2026</p>
+      <!-- Progress bar -->
+      <div style="width:160px;height:1px;background:rgba(204,158,36,0.2);border-radius:1px;overflow:hidden">
+        <div style="height:100%;background:linear-gradient(90deg,#cc9e24,#f9cc01);border-radius:1px;animation:progressFill 2.5s ease-in-out forwards"></div>
+      </div>
+    </div>
+    <style>
+      @keyframes ringDraw { from { stroke-dashoffset: 283; } to { stroke-dashoffset: 0; } }
+      @keyframes progressFill { from { transform: scaleX(0); transform-origin: left; } to { transform: scaleX(1); transform-origin: left; } }
+    </style>
 
     <div id="root"></div>
     <script>window.__loadStart=Date.now();</script>

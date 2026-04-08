@@ -63,7 +63,7 @@ export function driveThumbUrl(fileId, sz = 'w1600') {
  *
  * Requires VITE_GOOGLE_DRIVE_API_KEY to be set; silently returns empty array when not set.
  */
-export function useDriveImages(rootFolderId, subfolderName) {
+export function useDriveImages(rootFolderId, subfolderName, tick = 0) {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(!!(rootFolderId && subfolderName && API_KEY));
   const [error, setError] = useState(null);
@@ -72,6 +72,13 @@ export function useDriveImages(rootFolderId, subfolderName) {
     if (!rootFolderId || !subfolderName || !API_KEY) {
       setLoading(false);
       return;
+    }
+
+    // When tick changes, clear entire cache so both folder-lookup and
+    // file-listing entries are invalidated (listing URLs use folder IDs,
+    // not names, so name-based matching misses them).
+    if (tick > 0) {
+      _cache.clear();
     }
 
     let alive = true;
@@ -91,7 +98,7 @@ export function useDriveImages(rootFolderId, subfolderName) {
 
     load();
     return () => { alive = false; };
-  }, [rootFolderId, subfolderName]);
+  }, [rootFolderId, subfolderName, tick]);
 
   return { images, loading, error };
 }

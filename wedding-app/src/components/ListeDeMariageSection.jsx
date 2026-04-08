@@ -41,8 +41,8 @@ export default function ListeDeMariageSection() {
       id="liste-mariage"
       ref={sectionRef}
       style={{
-        background: '#1a3d2a',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,5rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -70,7 +70,7 @@ export default function ListeDeMariageSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(201,168,76,0.04) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 70% 50% at 50% 50%, rgba(204,158,36,0.04) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -79,10 +79,10 @@ export default function ListeDeMariageSection() {
         {/* Header */}
         <div
           className="mariage-header"
-          style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,4.5rem)' }}
+          style={{ textAlign: 'center', marginBottom: 'clamp(1.5rem,6vw,4.5rem)' }}
         >
           <p className="section-tag" style={{ marginBottom: '0.75rem' }}>
-            Liste de Mariage
+            {config.ui.listeDeMariage.tag}
           </p>
           <h2
             style={{
@@ -92,13 +92,13 @@ export default function ListeDeMariageSection() {
               color: '#faf8f0',
             }}
           >
-            Our Wish List
+            {config.ui.listeDeMariage.title}
           </h2>
           <div
             style={{
               width: '60px',
               height: '1px',
-              background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)',
+              background: 'linear-gradient(90deg, transparent, #cc9e24, transparent)',
               margin: '1.5rem auto 0',
             }}
           />
@@ -108,9 +108,9 @@ export default function ListeDeMariageSection() {
         <div
           className="mariage-card"
           style={{
-            border: '1px solid rgba(201,168,76,0.25)',
+            border: '1px solid rgba(204,158,36,0.25)',
             padding: 'clamp(2rem,5vw,3.5rem)',
-            background: 'rgba(201,168,76,0.03)',
+            background: 'rgba(204,158,36,0.03)',
             position: 'relative',
             overflow: 'hidden',
           }}
@@ -123,7 +123,7 @@ export default function ListeDeMariageSection() {
               left: 0,
               right: 0,
               height: '2px',
-              background: 'linear-gradient(90deg, transparent, #c9a84c, #f0d080, #c9a84c, transparent)',
+              background: 'linear-gradient(90deg, transparent, #cc9e24, #f9cc01, #cc9e24, transparent)',
             }}
           />
 
@@ -139,8 +139,7 @@ export default function ListeDeMariageSection() {
               textAlign: 'center',
             }}
           >
-            Your presence on our special day is the greatest gift of all.
-            If you would like to contribute to our journey and future together, a Wish Account is available below.
+            {config.ui.listeDeMariage.message}
           </p>
 
           {/* Divider */}
@@ -156,15 +155,15 @@ export default function ListeDeMariageSection() {
               style={{
                 flex: 1,
                 height: '1px',
-                background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.35))',
+                background: 'linear-gradient(to right, transparent, rgba(204,158,36,0.35))',
               }}
             />
-            <span style={{ color: '#c9a84c', fontSize: '0.7rem', opacity: 0.7 }}>✦</span>
+            <span style={{ color: '#cc9e24', fontSize: '0.7rem', opacity: 0.7 }}>✦</span>
             <div
               style={{
                 flex: 1,
                 height: '1px',
-                background: 'linear-gradient(to left, transparent, rgba(201,168,76,0.35))',
+                background: 'linear-gradient(to left, transparent, rgba(204,158,36,0.35))',
               }}
             />
           </div>
@@ -177,22 +176,23 @@ export default function ListeDeMariageSection() {
                 fontWeight: 200,
                 fontSize: '0.62rem',
                 letterSpacing: '0.45em',
-                color: '#c9a84c',
+                color: '#cc9e24',
                 textTransform: 'uppercase',
                 marginBottom: '1rem',
               }}
             >
-              Wish Account
+              {config.ui.listeDeMariage.accountLabel}
             </p>
 
             <p
               style={{
                 fontFamily: '"Cormorant Garamond", serif',
                 fontWeight: 400,
-                fontSize: 'clamp(1.8rem,5vw,2.8rem)',
+                fontSize: 'clamp(1.4rem,4vw,2.8rem)',
                 color: '#faf8f0',
-                letterSpacing: '0.1em',
+                letterSpacing: '0.05em',
                 marginBottom: '0.5rem',
+                wordBreak: 'break-all',
               }}
             >
               <a
@@ -213,19 +213,8 @@ export default function ListeDeMariageSection() {
                 letterSpacing: '0.2em',
               }}
             >
-              Antonio &amp; Perla Tannoury
+              {config.ui.listeDeMariage.accountName}
             </p>
-          </div>
-
-          {/* Bottom note */}
-          <div
-            style={{
-              marginTop: '2.5rem',
-              paddingTop: '2rem',
-              borderTop: '1px solid rgba(201,168,76,0.1)',
-              textAlign: 'center',
-            }}
-          >
           </div>
         </div>
       </div>

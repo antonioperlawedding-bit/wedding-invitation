@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 
-import LoadingScreen    from './components/LoadingScreen';
 import Navigation       from './components/Navigation';
 import HeroSection      from './components/HeroSection';
 import CountdownSection from './components/CountdownSection';
@@ -15,7 +14,7 @@ import RSVPSection      from './components/RSVPSection';
 import ListeDeMariageSection from './components/ListeDeMariageSection';
 import FooterSection    from './components/FooterSection';
 import ChatbotWidget    from './components/ChatbotWidget';
-import SectionReveal    from './components/SectionReveal';
+import SectionTransition from './components/SectionTransition';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +36,6 @@ export default function App() {
     lenisRef.current  = lenis;
     window.__lenis    = lenis;
 
-    // Drive Lenis via GSAP ticker for perfect sync with ScrollTrigger
     const ticker = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(ticker);
     gsap.ticker.lagSmoothing(0);
@@ -49,10 +47,43 @@ export default function App() {
     };
   }, []);
 
+  /* ── Animate the HTML preloader out, then mark loaded ── */
+  useEffect(() => {
+    const preloader = document.getElementById('preloader');
+    if (!preloader) { setIsLoaded(true); return; }
+
+    document.documentElement.style.overflow = 'hidden';
+
+    // Wait for the progress bar animation (2.5s) + small buffer
+    const MIN_DISPLAY_MS = 2800;
+    const pageStart = window.__loadStart || Date.now();
+    const elapsed = Date.now() - pageStart;
+    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
+
+    const tl = gsap.timeline({
+      delay: remaining / 1000,
+      onComplete: () => {
+        preloader.remove();
+        document.documentElement.style.overflow = '';
+        setIsLoaded(true);
+      },
+    });
+
+    tl.to(preloader, {
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.inOut',
+    });
+
+    return () => {
+      tl.kill();
+      document.documentElement.style.overflow = '';
+    };
+  }, []);
+
   /* ── After load completes: refresh ScrollTrigger ── */
   useEffect(() => {
     if (isLoaded) {
-      // Small delay to let DOM paint
       const id = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 100);
@@ -61,37 +92,42 @@ export default function App() {
   }, [isLoaded]);
 
   return (
-    <>
-      {/* Loading screen always mounts first, is removed after animation */}
-      {!isLoaded && (
-        <LoadingScreen onComplete={() => setIsLoaded(true)} />
-      )}
+    <div
+      style={{
+        pointerEvents: isLoaded ? 'auto' : 'none',
+      }}
+    >
+      <Navigation />
 
-      {/* Main site — fades in after load */}
-      <div
-        style={{
-          opacity:    isLoaded ? 1 : 0,
-          transition: 'opacity 0.6s ease',
-          // Prevent interaction before load is done
-          pointerEvents: isLoaded ? 'auto' : 'none',
-        }}
-      >
-        <Navigation />
-
-        <main>
-          <HeroSection />
-          <SectionReveal><CountdownSection /></SectionReveal>
-          <SectionReveal><CoupleSection /></SectionReveal>
-          <SectionReveal><EventsSection /></SectionReveal>
-          <SectionReveal><TimelineSection /></SectionReveal>
-          <SectionReveal><GallerySection /></SectionReveal>
-          <SectionReveal><ListeDeMariageSection /></SectionReveal>
-          <SectionReveal><RSVPSection /></SectionReveal>
+      <main style={{ perspective: '1400px', perspectiveOrigin: '50% 50%' }}>
+        <HeroSection />
+        <SectionTransition variant="rise">
+          <CountdownSection />
+        </SectionTransition>
+        <SectionTransition variant="tiltLeft">
+          <CoupleSection />
+        </SectionTransition>
+        <SectionTransition variant="curtain">
+          <EventsSection />
+        </SectionTransition>
+        <SectionTransition variant="portal">
+          <TimelineSection />
+        </SectionTransition>
+        <SectionTransition variant="flip">
+          <GallerySection />
+        </SectionTransition>
+        <SectionTransition variant="tiltRight">
+          <ListeDeMariageSection />
+        </SectionTransition>
+        <SectionTransition variant="scale">
+          <RSVPSection />
+        </SectionTransition>
+        <SectionTransition variant="rise">
           <FooterSection />
-        </main>
+        </SectionTransition>
+      </main>
 
-        <ChatbotWidget />
-      </div>
-    </>
+      <ChatbotWidget />
+    </div>
   );
 }

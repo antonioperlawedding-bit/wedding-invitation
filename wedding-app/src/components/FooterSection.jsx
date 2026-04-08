@@ -32,8 +32,8 @@ export default function FooterSection() {
     <footer
       ref={sectionRef}
       style={{
-        background: '#143526',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,4rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,4rem)',
         position: 'relative',
         overflow: 'hidden',
         textAlign: 'center',
@@ -44,7 +44,7 @@ export default function FooterSection() {
         style={{
           position: 'absolute',
           inset: 0,
-          background: 'radial-gradient(ellipse 60% 50% at 50% 60%, rgba(45,106,79,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse 60% 50% at 50% 60%, rgba(107,122,21,0.12) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}
       />
@@ -57,12 +57,12 @@ export default function FooterSection() {
             alignItems: 'center',
             gap: '1rem',
             justifyContent: 'center',
-            marginBottom: '3rem',
+            marginBottom: 'clamp(1.5rem,4vw,3rem)',
           }}
         >
-          <div style={{ height: '1px', width: '80px', background: 'linear-gradient(to right, transparent, rgba(201,168,76,0.4))' }} />
-          <div style={{ color: '#c9a84c', fontSize: '0.8rem', opacity: 0.7 }}>✦</div>
-          <div style={{ height: '1px', width: '80px', background: 'linear-gradient(to left, transparent, rgba(201,168,76,0.4))' }} />
+          <div style={{ height: '1px', width: '80px', background: 'linear-gradient(to right, transparent, rgba(204,158,36,0.4))' }} />
+          <div style={{ color: '#cc9e24', fontSize: '0.8rem', opacity: 0.7 }}>✦</div>
+          <div style={{ height: '1px', width: '80px', background: 'linear-gradient(to left, transparent, rgba(204,158,36,0.4))' }} />
         </div>
 
         {/* Poem / quote */}
@@ -75,12 +75,10 @@ export default function FooterSection() {
             fontSize: 'clamp(1.2rem,3.5vw,1.8rem)',
             color: 'rgba(250,248,240,0.6)',
             lineHeight: 1.8,
-            marginBottom: '3rem',
+            marginBottom: 'clamp(1.5rem,4vw,3rem)',
           }}
         >
-          "Two people, one shared heartbeat,
-          <br />
-          one beautiful forever beginning."
+          &ldquo;{config.ui.footer.quote}&rdquo;
         </blockquote>
 
         {/* Divider */}
@@ -88,8 +86,8 @@ export default function FooterSection() {
           style={{
             width: '1px',
             height: '60px',
-            background: 'linear-gradient(to bottom, #c9a84c, transparent)',
-            margin: '0 auto 3rem',
+            background: 'linear-gradient(to bottom, #cc9e24, transparent)',
+            margin: '0 auto clamp(1.5rem,4vw,3rem)',
           }}
         />
 
@@ -104,25 +102,25 @@ export default function FooterSection() {
               letterSpacing: '0.05em',
             }}
           >
-            Perla{' '}
-            <span style={{ color: '#c9a84c', fontStyle: 'italic' }}>&amp;</span>
-            {' '}Antonio
+            {config.couple.groom.firstName}{' '}
+            <span style={{ color: '#cc9e24', fontStyle: 'italic' }}>&amp;</span>
+            {' '}{config.couple.bride.firstName}
           </p>
         </div>
 
         {/* Date */}
-        <div ref={dateRef} style={{ marginBottom: '3.5rem' }}>
+        <div ref={dateRef} style={{ marginBottom: 'clamp(1.5rem,5vw,3.5rem)' }}>
           <p
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,
               fontSize: '0.7rem',
               letterSpacing: '0.5em',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
               textTransform: 'uppercase',
             }}
           >
-            June 6, 2026 &nbsp;·&nbsp; Lebanon
+            {config.wedding.dateFormatted}
           </p>
         </div>
 
@@ -131,30 +129,30 @@ export default function FooterSection() {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '2rem',
+            gap: 'clamp(0.75rem, 3vw, 2rem)',
             flexWrap: 'wrap',
-            marginBottom: '3rem',
+            marginBottom: 'clamp(1.5rem,4vw,3rem)',
           }}
         >
-          <a
+          {/* <a
             href={`mailto:${config.events.rsvp.email}`}
             style={{
               fontFamily: 'Jost, sans-serif',
               fontWeight: 200,
               fontSize: '0.72rem',
               letterSpacing: '0.15em',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
               textDecoration: 'none',
               transition: 'color 0.3s',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#c9a84c'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,168,76,0.6)'}
+            onMouseEnter={e => e.currentTarget.style.color = '#cc9e24'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(204,158,36,0.6)'}
           >
             {config.events.rsvp.email}
           </a>
-          <span style={{ color: 'rgba(201,168,76,0.3)', fontSize: '0.7rem' }}>·</span>
+          <span style={{ color: 'rgba(204,158,36,0.3)', fontSize: '0.7rem' }}>·</span> */}
           <a
-            href="https://wa.me/96171054630"
+            href={`https://wa.me/${config.events.rsvp.phone1.replace(/[\s+]/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -162,18 +160,18 @@ export default function FooterSection() {
               fontWeight: 200,
               fontSize: '0.72rem',
               letterSpacing: '0.15em',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
               textDecoration: 'none',
               transition: 'color 0.3s',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#c9a84c'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,168,76,0.6)'}
+            onMouseEnter={e => e.currentTarget.style.color = '#cc9e24'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(204,158,36,0.6)'}
           >
             {config.events.rsvp.phone1}
           </a>
-          <span style={{ color: 'rgba(201,168,76,0.3)', fontSize: '0.7rem' }}>·</span>
+          <span style={{ color: 'rgba(204,158,36,0.3)', fontSize: '0.7rem' }}>·</span>
           <a
-            href="https://wa.me/96171981734"
+            href={`https://wa.me/${config.events.rsvp.phone2.replace(/[\s+]/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -181,12 +179,12 @@ export default function FooterSection() {
               fontWeight: 200,
               fontSize: '0.72rem',
               letterSpacing: '0.15em',
-              color: 'rgba(201,168,76,0.6)',
+              color: 'rgba(204,158,36,0.6)',
               textDecoration: 'none',
               transition: 'color 0.3s',
             }}
-            onMouseEnter={e => e.currentTarget.style.color = '#c9a84c'}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(201,168,76,0.6)'}
+            onMouseEnter={e => e.currentTarget.style.color = '#cc9e24'}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(204,158,36,0.6)'}
           >
             {config.events.rsvp.phone2}
           </a>
@@ -195,7 +193,7 @@ export default function FooterSection() {
         {/* Bottom ornament */}
         <div
           style={{
-            borderTop: '1px solid rgba(201,168,76,0.1)',
+            borderTop: '1px solid rgba(204,158,36,0.1)',
             paddingTop: '2rem',
           }}
         >
@@ -205,11 +203,11 @@ export default function FooterSection() {
               fontWeight: 100,
               fontSize: '0.65rem',
               letterSpacing: '0.3em',
-              color: 'rgba(250,248,240,0.2)',
+              color: 'rgba(250, 248, 240, 0.76)',
               textTransform: 'uppercase',
             }}
           >
-            Made with ♡ for Perla &amp; Antonio
+            Made with ♡ for {config.couple.bride.firstName} &amp; {config.couple.groom.firstName}
           </p>
         </div>
       </div>

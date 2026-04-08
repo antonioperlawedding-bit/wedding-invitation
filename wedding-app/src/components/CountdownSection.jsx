@@ -2,10 +2,11 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getTimeRemaining } from '../utils/animations';
+import config from '@config';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WEDDING_DATE = '2026-06-06T17:00:00';
+const WEDDING_DATE = config.wedding.dateTime;
 
 function FlipNumber({ value, label }) {
   const prevRef  = useRef(value);
@@ -46,14 +47,14 @@ function FlipNumber({ value, label }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'rgba(5,13,10,0.85)',
-          border: '1px solid rgba(201,168,76,0.3)',
+          background: 'rgba(26,46,20,0.85)',
+          border: '1px solid rgba(204,158,36,0.3)',
           borderRadius: '6px',
           position: 'relative',
           overflow: 'hidden',
           transformStyle: 'preserve-3d',
           willChange: 'transform',
-          boxShadow: '0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,168,76,0.1)',
+          boxShadow: '0 8px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(204,158,36,0.1)',
         }}
       >
         {/* Shimmer line across middle */}
@@ -87,7 +88,7 @@ function FlipNumber({ value, label }) {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.06) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at center, rgba(204,158,36,0.06) 0%, transparent 70%)',
             pointerEvents: 'none',
           }}
         />
@@ -99,7 +100,7 @@ function FlipNumber({ value, label }) {
           fontWeight: 200,
           fontSize: '0.6rem',
           letterSpacing: '0.45em',
-          color: 'rgba(201,168,76,0.7)',
+          color: 'rgba(204,158,36,0.7)',
           textTransform: 'uppercase',
           marginTop: '0.75rem',
         }}
@@ -128,7 +129,7 @@ function Separator() {
             width: '5px',
             height: '5px',
             borderRadius: '50%',
-            background: '#c9a84c',
+            background: '#cc9e24',
             opacity: 0.6,
           }}
         />
@@ -179,8 +180,8 @@ export default function CountdownSection() {
     <section
       ref={sectionRef}
       style={{
-        background: '#143526',
-        padding: 'clamp(5rem,12vw,9rem) clamp(1.5rem,5vw,4rem)',
+        background: '#1e3518',
+        padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,4rem)',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -202,14 +203,14 @@ export default function CountdownSection() {
             fontFamily: '"Cormorant Garamond", serif',
             fontSize: 'clamp(6rem,25vw,18rem)',
             fontWeight: 300,
-            color: 'rgba(201,168,76,0.06)',
+            color: 'rgba(204,158,36,0.06)',
             letterSpacing: '-0.02em',
             whiteSpace: 'nowrap',
             userSelect: 'none',
             lineHeight: 1,
           }}
         >
-          06.06.26
+          {config.wedding.dateShort}
         </p>
       </div>
 
@@ -217,9 +218,9 @@ export default function CountdownSection() {
         {/* Section tag */}
         <p
           className="countdown-item section-tag"
-          style={{ marginBottom: '0.75rem', color: '#c9a84c' }}
+          style={{ marginBottom: '0.75rem', color: '#cc9e24' }}
         >
-          Counting Down To
+          {config.ui.countdown.tag}
         </p>
 
         {/* Title */}
@@ -233,7 +234,7 @@ export default function CountdownSection() {
             marginBottom: '0.5rem',
           }}
         >
-          Our Special Day
+          {config.ui.countdown.title}
         </h2>
 
         <p
@@ -244,10 +245,10 @@ export default function CountdownSection() {
             fontSize: '0.85rem',
             color: 'rgba(250,248,240,0.45)',
             letterSpacing: '0.15em',
-            marginBottom: '3.5rem',
+            marginBottom: 'clamp(1.5rem,5vw,3.5rem)',
           }}
         >
-          Saturday, June 6, 2026 &nbsp;·&nbsp; Lebanon
+          {config.wedding.dateFormatted} &nbsp;·&nbsp; {config.wedding.location}
         </p>
 
         {/* Timer */}
@@ -277,7 +278,7 @@ export default function CountdownSection() {
             width: '1px',
             height: '60px',
             background: 'linear-gradient(to bottom, #c9a84c, transparent)',
-            margin: '3.5rem auto 0',
+            margin: 'clamp(1.5rem,5vw,3.5rem) auto 0',
           }}
         />
       </div>

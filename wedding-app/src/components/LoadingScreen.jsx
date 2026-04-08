@@ -1,49 +1,64 @@
-import { useEffect, useRef, useState, Suspense } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import GoldenRings from './three/GoldenRings';
+import config from '@config';
 
 export default function LoadingScreen({ onComplete }) {
-  const rootRef     = useRef(null);
-  const progressRef = useRef(null);
-  const [canvasReady, setCanvasReady] = useState(false);
+  const rootRef      = useRef(null);
+  const curtainTopRef= useRef(null);
+  const curtainBotRef= useRef(null);
+  const doneRef      = useRef(false);
 
-  // On mount: remove HTML preloader, lock scroll, start progress animation
   useEffect(() => {
+    if (doneRef.current) return;
+    const root = rootRef.current;
+    const curtainTop = curtainTopRef.current;
+    const curtainBot = curtainBotRef.current;
+
+    // Remove the static HTML preloader now that React has mounted
     const preloader = document.getElementById('preloader');
     if (preloader) preloader.remove();
+
+    // Prevent scroll during loading
     document.documentElement.style.overflow = 'hidden';
 
-    if (progressRef.current) {
-      gsap.fromTo(progressRef.current, { scaleX: 0 }, {
-        scaleX: 1,
-        duration: 3.2,
-        ease: 'power2.inOut',
-        transformOrigin: 'left',
-      });
-    }
+    // Minimum time the loading screen should stay visible (from first paint, not React mount)
+    const MIN_DISPLAY_MS = 2800;
+    const pageStart = window.__loadStart || Date.now();
+    const elapsed = Date.now() - pageStart;
+    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
 
-    return () => { document.documentElement.style.overflow = ''; };
-  }, []);
+    gsap.set(curtainTop, { yPercent: 0 });
+    gsap.set(curtainBot, { yPercent: 0 });
 
-  // Once 3D rings are visible, show them for a minimum time then fade out
-  useEffect(() => {
-    if (!canvasReady) return;
+    const tl = gsap.timeline({
+      delay: remaining / 1000,
+      onComplete: () => {
+        doneRef.current = true;
+        document.documentElement.style.overflow = '';
+        // Hide the entire loading screen after curtains are off-screen
+        if (root) root.style.display = 'none';
+        onComplete();
+      },
+    });
 
-    const MIN_DISPLAY_MS = 3400;
-    const timeout = setTimeout(() => {
-      gsap.to(rootRef.current, {
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          document.documentElement.style.overflow = '';
-          onComplete();
-        },
-      });
-    }, MIN_DISPLAY_MS);
+    tl
+      // Curtain exit — top half flies up, bottom flies down
+      .to(curtainTop, {
+        yPercent: -102,
+        duration: 1.0,
+        ease: 'expo.inOut',
+      })
+      .to(curtainBot, {
+        yPercent: 102,
+        duration: 1.0,
+        ease: 'expo.inOut',
+      }, '<');
 
-    return () => clearTimeout(timeout);
-  }, [canvasReady, onComplete]);
+    return () => {
+      tl.kill();
+      document.documentElement.style.overflow = '';
+    };
+  }, [onComplete]);
 
   return (
     <div
@@ -54,101 +69,127 @@ export default function LoadingScreen({ onComplete }) {
         zIndex: 9999,
         overflow: 'hidden',
         pointerEvents: 'all',
-        background: 'radial-gradient(ellipse 70% 60% at 50% 45%, #0c2418 0%, #06120e 70%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.8rem',
       }}
     >
-      {/* 3D Golden Rings — the main visual, visible the entire loading time */}
+      {/* ── Curtain top half ── */}
+      <div
+        ref={curtainTopRef}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: '#1a2e14',
+          zIndex: 2,
+        }}
+      />
+      {/* ── Curtain bottom half ── */}
+      <div
+        ref={curtainBotRef}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '50%',
+          background: '#1a2e14',
+          zIndex: 2,
+        }}
+      />
+
+      {/* ── Content layer (behind curtains — same as preloader) ── */}
       <div
         style={{
-          width: 'min(340px, 85vw)',
-          height: '240px',
-          opacity: canvasReady ? 1 : 0,
-          transition: 'opacity 0.6s ease',
-        }}
-      >
-        <Suspense fallback={null}>
-          <GoldenRings onReady={() => setCanvasReady(true)} />
-        </Suspense>
-      </div>
-
-      {/* Simple SVG fallback while Three.js canvas initializes */}
-      {!canvasReady && (
-        <div style={{
           position: 'absolute',
+          inset: 0,
+          zIndex: 1,
+          background: '#1a2e14',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-        }}>
-          <svg width="60" height="60" viewBox="0 0 100 100" style={{ animation: 'spin 1.2s linear infinite' }}>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(201,168,76,0.15)" strokeWidth="3"/>
-            <circle cx="50" cy="50" r="42" fill="none" stroke="#c9a84c" strokeWidth="3" strokeLinecap="round" strokeDasharray="80 200"/>
-          </svg>
+          gap: '2rem',
+        }}
+      >
+        {/* Interlocking rings */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 100, position: 'relative' }}>
+          <div style={{ position: 'relative', zIndex: 1, transform: 'translateX(-28px)' }}>
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(204,158,36,0.25)" strokeWidth="3"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="#cc9e24" strokeWidth="3" strokeLinecap="round" strokeDasharray="283" strokeDashoffset="0"/>
+            </svg>
+          </div>
+          <div style={{
+            position: 'absolute',
+            fontFamily: '"Cormorant Garamond", serif',
+            fontSize: '1.5rem',
+            fontWeight: 300,
+            color: '#cc9e24',
+            letterSpacing: '0.1em',
+            zIndex: 3,
+          }}>♡</div>
+          <div style={{ position: 'relative', zIndex: 0, transform: 'translateX(28px)' }}>
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(204,158,36,0.25)" strokeWidth="3"/>
+              <circle cx="50" cy="50" r="45" fill="none" stroke="#f9cc01" strokeWidth="3" strokeLinecap="round" strokeDasharray="283" strokeDashoffset="0"/>
+            </svg>
+          </div>
         </div>
-      )}
 
-      {/* Names */}
-      <div style={{ textAlign: 'center' }}>
+        {/* Names */}
+        <div style={{ textAlign: 'center' }}>
+          <p style={{
+            fontFamily: '"Cormorant Garamond", serif',
+            fontSize: 'clamp(1.8rem, 6vw, 3rem)',
+            fontWeight: 300,
+            color: '#faf8f0',
+            letterSpacing: '0.08em',
+            lineHeight: 1.2,
+          }}>
+            {config.couple.groom.firstName}{' '}
+            <span style={{ color: '#cc9e24', fontStyle: 'italic' }}>&amp;</span>
+            {' '}{config.couple.bride.firstName}
+          </p>
+          <p style={{
+            fontFamily: 'Jost, sans-serif',
+            fontWeight: 200,
+            fontSize: '0.7rem',
+            letterSpacing: '0.5em',
+            color: 'rgba(204,158,36,0.7)',
+            textTransform: 'uppercase',
+            marginTop: '0.5rem',
+          }}>
+            {config.ui.loading.subtitle}
+          </p>
+        </div>
+
+        {/* Date */}
         <p style={{
           fontFamily: '"Cormorant Garamond", serif',
-          fontSize: 'clamp(1.8rem, 6vw, 3rem)',
-          fontWeight: 300,
-          color: '#faf8f0',
-          letterSpacing: '0.08em',
-          lineHeight: 1.2,
+          fontSize: '1.1rem',
+          fontWeight: 400,
+          color: '#c9a84c',
+          letterSpacing: '0.3em',
         }}>
-          Perla{' '}
-          <span style={{ color: '#c9a84c', fontStyle: 'italic' }}>&amp;</span>
-          {' '}Antonio
+          {config.wedding.dateFormatted}
         </p>
-        <p style={{
-          fontFamily: 'Jost, sans-serif',
-          fontWeight: 200,
-          fontSize: '0.7rem',
-          letterSpacing: '0.5em',
-          color: 'rgba(201,168,76,0.7)',
-          textTransform: 'uppercase',
-          marginTop: '0.5rem',
+
+        {/* Progress bar (already filled by now) */}
+        <div style={{
+          width: '160px',
+          height: '1px',
+          background: 'rgba(201,168,76,0.2)',
+          borderRadius: 1,
+          overflow: 'hidden',
         }}>
-          Are Getting Married
-        </p>
-      </div>
-
-      {/* Date */}
-      <p style={{
-        fontFamily: '"Cormorant Garamond", serif',
-        fontSize: '1.1rem',
-        fontWeight: 400,
-        color: '#c9a84c',
-        letterSpacing: '0.3em',
-      }}>
-        June 6 · 2026
-      </p>
-
-      {/* Progress bar */}
-      <div style={{
-        width: '160px',
-        height: '1px',
-        background: 'rgba(201,168,76,0.2)',
-        borderRadius: 1,
-        overflow: 'hidden',
-        marginTop: '0.5rem',
-      }}>
-        <div
-          ref={progressRef}
-          style={{
+          <div style={{
             height: '100%',
             width: '100%',
             background: 'linear-gradient(90deg, #c9a84c, #f0d080)',
             borderRadius: 1,
-            transform: 'scaleX(0)',
-            transformOrigin: 'left',
-          }}
-        />
+          }} />
+        </div>
       </div>
     </div>
   );
