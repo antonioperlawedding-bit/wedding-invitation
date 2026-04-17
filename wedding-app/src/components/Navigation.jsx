@@ -2,25 +2,34 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import config from '@config';
+import { useLang } from '../i18n/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const NAV_ITEMS = config.navigation;
+const NAV_HREFS = config.navigation.map(n => ({ href: n.href, highlight: n.highlight }));
+const NAV_KEYS = ['ourStory', 'ceremony', 'schedule', 'gallery', 'rsvp'];
 
 export default function Navigation() {
-  const navRef     = useRef(null);
+  const navRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { lang, setLang, t, isAr } = useLang();
+
+  const navItems = NAV_HREFS.map((item, i) => ({
+    ...item,
+    label: t(`nav.${NAV_KEYS[i]}`),
+  }));
+
+  const fontFamily = isAr ? '"Tajawal", sans-serif' : 'Jost, sans-serif';
 
   useEffect(() => {
     const nav = navRef.current;
-    // Hide initially — reveal after hero
     gsap.set(nav, { y: -80, opacity: 0 });
 
     ScrollTrigger.create({
       start: 'top -80px',
-      onEnter:      () => gsap.to(nav, { y: 0, opacity: 1, duration: 0.6, ease: 'expo.out' }),
-      onLeaveBack:  () => gsap.to(nav, { y: -80, opacity: 0, duration: 0.4, ease: 'power2.in' }),
+      onEnter: () => gsap.to(nav, { y: 0, opacity: 1, duration: 0.6, ease: 'expo.out' }),
+      onLeaveBack: () => gsap.to(nav, { y: -80, opacity: 0, duration: 0.4, ease: 'power2.in' }),
     });
 
     return () => ScrollTrigger.getAll().forEach(t => {
@@ -28,7 +37,6 @@ export default function Navigation() {
     });
   }, []);
 
-  // Smooth scroll using Lenis if available, fallback to native
   const scrollTo = (href) => {
     setMenuOpen(false);
     const target = document.querySelector(href);
@@ -40,15 +48,11 @@ export default function Navigation() {
     }
   };
 
-  // Mobile menu animation
   useEffect(() => {
     const menu = mobileMenuRef.current;
     if (!menu) return;
     if (menuOpen) {
-      gsap.fromTo(menu,
-        { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' }
-      );
+      gsap.fromTo(menu, { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: 'expo.out' });
     } else {
       gsap.to(menu, { opacity: 0, y: -10, duration: 0.25, ease: 'power2.in' });
     }
@@ -64,24 +68,25 @@ export default function Navigation() {
         right: 0,
         zIndex: 1000,
         padding: '0 clamp(1.5rem,5vw,4rem)',
-        height: '64px',
+        height: '60px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        background: 'rgba(26,46,20,0.75)',
+        background: 'rgba(250,248,240,0.82)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(204,158,36,0.15)',
+        borderBottom: '1px solid rgba(135,169,107,0.15)',
       }}
     >
-      {/* Logo / Monogram */}
+      {/* Monogram */}
       <button
         onClick={() => scrollTo('#hero')}
         style={{
-          fontFamily: '"Cormorant Garamond", serif',
-          fontSize: '1.4rem',
+          fontFamily: '"Playfair Display", "Cormorant Garamond", serif',
+          fontSize: '1.2rem',
           fontWeight: 400,
-          color: '#cc9e24',
+          fontStyle: 'italic',
+          color: '#87A96B',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -91,35 +96,31 @@ export default function Navigation() {
         {config.couple.groom.firstName.charAt(0)}&nbsp;&amp;&nbsp;{config.couple.bride.firstName.charAt(0)}
       </button>
 
-      {/* Desktop links — display controlled by className only to avoid override */}
+      {/* Desktop links */}
       <style>{`
         @media (max-width: 767px) { .nav-links { display: none !important; } }
         @media (min-width: 768px) { .nav-hamburger { display: none !important; } }
       `}</style>
       <ul
         className="nav-links"
-        style={{
-          gap: '2.5rem',
-          listStyle: 'none',
-          display: 'flex',
-          alignItems: 'center',
-        }}
+        style={{ gap: '2.5rem', listStyle: 'none', display: 'flex', alignItems: 'center' }}
       >
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <li key={item.href}>
             {item.highlight ? (
               <button
                 onClick={() => scrollTo(item.href)}
                 style={{
-                  fontFamily: 'Jost, sans-serif',
-                  fontSize: '0.72rem',
-                  fontWeight: 300,
-                  letterSpacing: '0.35em',
-                  textTransform: 'uppercase',
-                  color: '#1a2e14',
-                  background: 'linear-gradient(135deg,#f9cc01,#cc9e24)',
+                  fontFamily,
+                  fontSize: isAr ? '0.78rem' : '0.7rem',
+                  fontWeight: 400,
+                  letterSpacing: isAr ? '0' : '0.3em',
+                  textTransform: isAr ? 'none' : 'uppercase',
+                  color: '#fff',
+                  background: '#87A96B',
                   border: 'none',
                   padding: '0.45rem 1.4rem',
+                  borderRadius: '0.35rem',
                   cursor: 'pointer',
                   transition: 'opacity 0.3s',
                 }}
@@ -132,20 +133,19 @@ export default function Navigation() {
               <button
                 onClick={() => scrollTo(item.href)}
                 style={{
-                  fontFamily: 'Jost, sans-serif',
-                  fontSize: '0.72rem',
+                  fontFamily,
+                  fontSize: isAr ? '0.78rem' : '0.7rem',
                   fontWeight: 300,
-                  letterSpacing: '0.3em',
-                  textTransform: 'uppercase',
-                  color: 'rgba(250,248,240,0.7)',
+                  letterSpacing: isAr ? '0' : '0.25em',
+                  textTransform: isAr ? 'none' : 'uppercase',
+                  color: 'rgba(58,46,32,0.6)',
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   transition: 'color 0.3s',
-                  position: 'relative',
                 }}
-                onMouseEnter={e => e.currentTarget.style.color = '#cc9e24'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(250,248,240,0.7)'}
+                onMouseEnter={e => e.currentTarget.style.color = '#87A96B'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(58,46,32,0.6)'}
               >
                 {item.label}
               </button>
@@ -154,29 +154,55 @@ export default function Navigation() {
         ))}
       </ul>
 
-      {/* Mobile hamburger */}
-      <button
-        className="nav-hamburger"
-        onClick={() => setMenuOpen(o => !o)}
-        style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '5px',
-          padding: '4px',
-        }}
-        aria-label="Menu"
-      >
+      {/* Right side: always-visible language toggle + mobile hamburger */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <button
+          onClick={() => { setLang(isAr ? 'en' : 'ar'); setMenuOpen(false); }}
+          style={{
+            fontFamily: isAr ? 'Jost, sans-serif' : '"Tajawal", sans-serif',
+            fontSize: '0.72rem',
+            fontWeight: 400,
+            color: 'rgba(58,46,32,0.55)',
+            background: 'none',
+            border: '1px solid rgba(135,169,107,0.3)',
+            borderRadius: '0.3rem',
+            padding: '0.3rem 0.7rem',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            letterSpacing: '0.05em',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#87A96B'; e.currentTarget.style.color = '#87A96B'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(135,169,107,0.3)'; e.currentTarget.style.color = 'rgba(58,46,32,0.55)'; }}
+        >
+          {isAr ? 'EN' : 'عربي'}
+        </button>
+
+        {/* Hamburger */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '5px',
+            padding: '4px',
+            height: '100%',
+          }}
+          aria-label="Menu"
+        >
         {[0, 1, 2].map(i => (
           <span
             key={i}
             style={{
               display: 'block',
-              width: '24px',
-              height: '1px',
-              background: '#cc9e24',
+              width: '22px',
+              height: '1.5px',
+              background: '#87A96B',
               transition: 'all 0.3s ease',
               transform: menuOpen
                 ? i === 0 ? 'rotate(45deg) translate(4px,4px)'
@@ -186,8 +212,9 @@ export default function Navigation() {
               opacity: menuOpen && i === 1 ? 0 : 1,
             }}
           />
-        ))}
-      </button>
+          ))}
+        </button>
+      </div>
 
       {/* Mobile dropdown */}
       {menuOpen && (
@@ -196,35 +223,35 @@ export default function Navigation() {
           className="nav-hamburger"
           style={{
             position: 'absolute',
-            top: '64px',
+            top: '60px',
             left: 0,
             right: 0,
-            background: 'rgba(26,46,20,0.97)',
+            background: 'rgba(250,248,240,0.97)',
             backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(204,158,36,0.15)',
-            padding: '1.5rem',
+            borderBottom: '1px solid rgba(135,169,107,0.15)',
+            padding: '1.25rem 1.5rem',
             display: 'flex',
             flexDirection: 'column',
-            gap: '1.2rem',
+            gap: '0.2rem',
           }}
         >
-          {NAV_ITEMS.map((item) => (
+          {navItems.map((item) => (
             <button
               key={item.href}
               onClick={() => scrollTo(item.href)}
               style={{
-                fontFamily: 'Jost, sans-serif',
-                fontSize: '0.85rem',
+                fontFamily,
+                fontSize: isAr ? '0.9rem' : '0.82rem',
                 fontWeight: 300,
-                letterSpacing: '0.3em',
-                textTransform: 'uppercase',
-                color: item.highlight ? '#cc9e24' : 'rgba(250,248,240,0.8)',
+                letterSpacing: isAr ? '0' : '0.2em',
+                textTransform: isAr ? 'none' : 'uppercase',
+                color: item.highlight ? '#87A96B' : 'rgba(58,46,32,0.7)',
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                textAlign: 'left',
-                padding: '0.5rem 0',
-                borderBottom: '1px solid rgba(201,168,76,0.1)',
+                textAlign: isAr ? 'right' : 'left',
+                padding: '0.6rem 0',
+                borderBottom: '1px solid rgba(135,169,107,0.08)',
               }}
             >
               {item.label}

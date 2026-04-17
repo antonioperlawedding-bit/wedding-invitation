@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import config from '@config';
+import { useLang } from '../i18n/LanguageContext';
+import { useConfig } from '../i18n/useConfig';
 
 /* ── Build the system prompt from wedding config ── */
 const SYSTEM_PROMPT = `You are the unofficial "best friend who roasts EVERYONE" at ${config.couple.bride.firstName} and ${config.couple.groom.firstName}'s wedding.
@@ -84,7 +86,7 @@ function renderContent(text) {
   // 1. Convert markdown-style links [text](url) → <a> tags
   rendered = rendered.replace(
     /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#f9cc01;text-decoration:underline;text-underline-offset:2px">$1</a>'
+    '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#87A96B;text-decoration:underline;text-underline-offset:2px">$1</a>'
   );
 
   // 2. Auto-link plain venue name mentions that weren't already linked
@@ -97,7 +99,7 @@ function renderContent(text) {
     if (rendered.includes(name)) {
       rendered = rendered.replace(
         name,
-        `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#f9cc01;text-decoration:underline;text-underline-offset:2px">${name}</a>`
+        `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#87A96B;text-decoration:underline;text-underline-offset:2px">${name}</a>`
       );
     }
   });
@@ -152,17 +154,16 @@ function ChatMessage({ msg }) {
           padding: '0.7rem 1rem',
           ...(isUser
             ? {
-                background: 'linear-gradient(135deg,#cc9e24,#f9cc01)',
-                color: '#1a2e14',
+                background: 'linear-gradient(135deg,#87A96B,#6B8F55)',
+                color: '#fff',
                 borderRadius: '20px 20px 4px 20px',
-                boxShadow: '0 2px 12px rgba(204,158,36,0.25)',
+                boxShadow: '0 2px 12px rgba(135,169,107,0.25)',
               }
             : {
-                background: 'rgba(30,50,22,0.9)',
-                color: '#faf8f0',
-                border: '1px solid rgba(204,158,36,0.18)',
-                borderRadius: '20px 20px 20px 4px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.15)',
+                background: 'rgba(250,248,240,0.95)',
+                color: '#3a2e20',
+                border: '1px solid rgba(135,169,107,0.15)',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.06)',
               }),
         }}
       >
@@ -184,7 +185,7 @@ function ChatMessage({ msg }) {
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                background: '#cc9e24',
+                background: '#87A96B',
                 marginLeft: '4px',
                 verticalAlign: 'middle',
                 animation: 'blink 1s step-end infinite',
@@ -198,9 +199,11 @@ function ChatMessage({ msg }) {
 }
 
 export default function ChatbotWidget() {
+  const { t, isAr } = useLang();
+  const cfg = useConfig();
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: config.events.chatbot.welcomeMessage },
+    { role: 'assistant', content: cfg.events.chatbot.welcomeMessage },
   ]);
   const [input, setInput]     = useState('');
   const [loading, setLoading] = useState(false);
@@ -262,12 +265,12 @@ export default function ChatbotWidget() {
       if (!apiKey) {
         // Fallback: simple FAQ matching without API
         const q = userText.toLowerCase();
-        const faq = config.events.chatbot_faqs.find(f =>
+        const faq = cfg.events.chatbot_faqs.find(f =>
           f.question.toLowerCase().split(' ').some(w => w.length > 3 && q.includes(w))
         );
         const reply = faq
           ? faq.answer
-          : `Thank you for your question! Please contact us at ${config.events.rsvp.email} or call ${config.events.rsvp.phone1} for more details. We can't wait to celebrate with you! 💐`;
+          : t('chatbot.fallbackReply').replace('{phone}', cfg.events.rsvp.phone1);
 
         // Simulate typing
         let displayed = '';
@@ -344,7 +347,7 @@ export default function ChatbotWidget() {
           m.id === streamingId
             ? {
                 ...m,
-                content: `I'm sorry, I had trouble answering that. Please reach out at ${config.events.rsvp.email} 💌`,
+                content: t('chatbot.errorReply').replace('{email}', cfg.events.rsvp.email),
                 streaming: false,
                 id: undefined,
               }
@@ -354,7 +357,7 @@ export default function ChatbotWidget() {
     } finally {
       setLoading(false);
     }
-  }, [input, messages, loading, apiKey, model]);
+  }, [input, messages, loading, apiKey, model, cfg, t]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -408,9 +411,9 @@ export default function ChatbotWidget() {
               overflow: 'hidden',
               display: 'flex',
               flexDirection: 'column',
-              background: 'linear-gradient(180deg, #1e3216 0%, #1a2e14 100%)',
+              background: 'linear-gradient(180deg, #faf8f0 0%, #f5f0e8 100%)',
               border: 'none',
-              boxShadow: '0 25px 80px rgba(0,0,0,0.5), 0 0 40px rgba(204,158,36,0.08)',
+              boxShadow: '0 25px 80px rgba(0,0,0,0.15), 0 0 40px rgba(139,115,85,0.05)',
               /* Desktop overrides via media query handled by className */
             }}
             className="chatbot-panel"
@@ -419,8 +422,8 @@ export default function ChatbotWidget() {
             <div
               style={{
                 padding: '1rem 1.2rem',
-                background: 'linear-gradient(135deg, rgba(107,122,21,0.3), rgba(26,46,20,0.9))',
-                borderBottom: '1px solid rgba(204,158,36,0.12)',
+                background: 'linear-gradient(135deg, rgba(139,115,85,0.08), rgba(250,248,240,0.95))',
+                borderBottom: '1px solid rgba(139,115,85,0.1)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.8rem',
@@ -434,20 +437,14 @@ export default function ChatbotWidget() {
                 left: 0,
                 right: 0,
                 height: '2px',
-                background: 'linear-gradient(90deg, #cc9e24, #f9cc01, #e0d377, #f9cc01, #cc9e24)',
+                background: 'linear-gradient(90deg, #87A96B, #A8D8A0, #6BBF59, #A8D8A0, #87A96B)',
               }} />
               <div
                 style={{
                   width: '38px',
                   height: '38px',
                   borderRadius: '12px',
-                  background: 'linear-gradient(135deg,#cc9e24,#f9cc01)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1rem',
-                  flexShrink: 0,
-                  boxShadow: '0 2px 10px rgba(204,158,36,0.3)',
+                  background: 'linear-gradient(135deg,#87A96B,#6B8F55)',
                 }}
               >
                 💍
@@ -458,34 +455,34 @@ export default function ChatbotWidget() {
                     fontFamily: '"Cormorant Garamond", serif',
                     fontSize: '1.05rem',
                     fontWeight: 500,
-                    color: '#faf8f0',
+                    color: '#3a2e20',
                     lineHeight: 1.2,
                     margin: 0,
                   }}
                 >
-                  Wedding Concierge
+                  {t('chatbot.title')}
                 </p>
                 <p
                   style={{
-                    fontFamily: 'Jost, sans-serif',
+                    fontFamily: isAr ? '"Tajawal", sans-serif' : 'Jost, sans-serif',
                     fontWeight: 200,
                     fontSize: '0.62rem',
-                    color: 'rgba(204,158,36,0.7)',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
+                    color: 'rgba(139,115,85,0.7)',
+                    letterSpacing: isAr ? '0' : '0.15em',
+                    textTransform: isAr ? 'none' : 'uppercase',
                     margin: 0,
                     marginTop: '2px',
                   }}
                 >
-                  {config.couple.bride.firstName} &amp; {config.couple.groom.firstName} · {config.wedding.dateFormatted}
+                  {cfg.couple.bride.firstName} &amp; {cfg.couple.groom.firstName} · {cfg.wedding.dateFormatted}
                 </p>
               </div>
               <button
                 onClick={() => setOpen(false)}
                 style={{
-                  background: 'rgba(250,248,240,0.06)',
-                  border: '1px solid rgba(250,248,240,0.1)',
-                  color: 'rgba(250,248,240,0.5)',
+                  background: 'rgba(139,115,85,0.06)',
+                  border: '1px solid rgba(139,115,85,0.15)',
+                  color: 'rgba(58,46,32,0.5)',
                   cursor: 'pointer',
                   fontSize: '0.85rem',
                   width: '30px',
@@ -497,12 +494,12 @@ export default function ChatbotWidget() {
                   transition: 'all 0.2s',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.color = '#faf8f0';
-                  e.currentTarget.style.background = 'rgba(250,248,240,0.12)';
+                  e.currentTarget.style.color = '#3a2e20';
+                  e.currentTarget.style.background = 'rgba(139,115,85,0.12)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.color = 'rgba(250,248,240,0.5)';
-                  e.currentTarget.style.background = 'rgba(250,248,240,0.06)';
+                  e.currentTarget.style.color = 'rgba(58,46,32,0.5)';
+                  e.currentTarget.style.background = 'rgba(139,115,85,0.06)';
                 }}
                 aria-label="Close chat"
               >
@@ -519,7 +516,7 @@ export default function ChatbotWidget() {
                 display: 'flex',
                 flexDirection: 'column',
                 scrollbarWidth: 'thin',
-                scrollbarColor: 'rgba(204,158,36,0.25) transparent',
+                scrollbarColor: 'rgba(139,115,85,0.2) transparent',
               }}
             >
               {messages.map((msg, i) => (
@@ -545,19 +542,19 @@ export default function ChatbotWidget() {
                   fontWeight: 300,
                   letterSpacing: '0.15em',
                   textTransform: 'uppercase',
-                  color: 'rgba(204,158,36,0.5)',
+                  color: 'rgba(139,115,85,0.5)',
                   margin: '0 0 0.3rem 0.2rem',
                 }}>
-                  Quick questions
+                  {t('chatbot.quickQuestions')}
                 </p>
-                {QUICK_QUESTIONS.map(q => (
+                {[t('chatbot.q1'), t('chatbot.q2'), t('chatbot.q3'), t('chatbot.q4'), t('chatbot.q5')].map(q => (
                   <button
                     key={q}
                     onClick={() => sendMessage(q)}
                     style={{
-                      background: 'rgba(204,158,36,0.06)',
-                      border: '1px solid rgba(204,158,36,0.2)',
-                      color: 'rgba(224,211,119,0.85)',
+                      background: 'rgba(139,115,85,0.06)',
+                      border: '1px solid rgba(139,115,85,0.18)',
+                      color: 'rgba(139,115,85,0.8)',
                       padding: '0.35rem 0.75rem',
                       borderRadius: '20px',
                       fontFamily: 'Jost, sans-serif',
@@ -568,14 +565,14 @@ export default function ChatbotWidget() {
                       letterSpacing: '0.03em',
                     }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.background = 'rgba(204,158,36,0.15)';
-                      e.currentTarget.style.borderColor = 'rgba(204,158,36,0.4)';
-                      e.currentTarget.style.color = '#f9cc01';
+                      e.currentTarget.style.background = 'rgba(135,169,107,0.12)';
+                      e.currentTarget.style.borderColor = 'rgba(135,169,107,0.35)';
+                      e.currentTarget.style.color = '#87A96B';
                     }}
                     onMouseLeave={e => {
-                      e.currentTarget.style.background = 'rgba(204,158,36,0.06)';
-                      e.currentTarget.style.borderColor = 'rgba(204,158,36,0.2)';
-                      e.currentTarget.style.color = 'rgba(224,211,119,0.85)';
+                      e.currentTarget.style.background = 'rgba(135,169,107,0.06)';
+                      e.currentTarget.style.borderColor = 'rgba(135,169,107,0.18)';
+                      e.currentTarget.style.color = 'rgba(135,169,107,0.8)';
                     }}
                   >
                     {q}
@@ -587,13 +584,13 @@ export default function ChatbotWidget() {
             {/* Input — redesigned with better focus states */}
             <div
               style={{
-                borderTop: '1px solid rgba(204,158,36,0.1)',
+                borderTop: '1px solid rgba(135,169,107,0.1)',
                 padding: '0.8rem 0.9rem',
                 paddingBottom: 'max(0.8rem, env(safe-area-inset-bottom, 0.8rem))',
                 display: 'flex',
                 gap: '0.5rem',
                 alignItems: 'center',
-                background: 'rgba(26,46,20,0.95)',
+                background: 'rgba(250,248,240,0.97)',
                 flexShrink: 0,
               }}
             >
@@ -603,27 +600,27 @@ export default function ChatbotWidget() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder={config.events.chatbot.placeholderText}
+                placeholder={cfg.events.chatbot.placeholderText}
                 disabled={loading}
                 style={{
                   flex: 1,
-                  background: 'rgba(250,248,240,0.06)',
-                  border: '1px solid rgba(204,158,36,0.15)',
+                  background: 'rgba(135,169,107,0.04)',
+                  border: '1px solid rgba(135,169,107,0.15)',
                   borderRadius: '22px',
                   padding: '0.6rem 1rem',
                   fontFamily: 'Jost, sans-serif',
                   fontWeight: 300,
                   fontSize: '0.84rem',
-                  color: '#faf8f0',
+                  color: '#3a2e20',
                   outline: 'none',
                   transition: 'border-color 0.3s, box-shadow 0.3s',
                 }}
                 onFocus={e => {
-                  e.target.style.borderColor = 'rgba(204,158,36,0.45)';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(204,158,36,0.08)';
+                  e.target.style.borderColor = 'rgba(135,169,107,0.4)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(135,169,107,0.08)';
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = 'rgba(204,158,36,0.15)';
+                  e.target.style.borderColor = 'rgba(135,169,107,0.15)';
                   e.target.style.boxShadow = 'none';
                 }}
               />
@@ -637,8 +634,8 @@ export default function ChatbotWidget() {
                   minHeight: '40px',
                   borderRadius: '50%',
                   background: loading || !input.trim()
-                    ? 'rgba(204,158,36,0.15)'
-                    : 'linear-gradient(135deg,#cc9e24,#f9cc01)',
+                    ? 'rgba(135,169,107,0.15)'
+                    : 'linear-gradient(135deg,#87A96B,#6B8F55)',
                   border: 'none',
                   padding: 0,
                   cursor: loading || !input.trim() ? 'default' : 'pointer',
@@ -649,12 +646,12 @@ export default function ChatbotWidget() {
                   transition: 'all 0.3s ease',
                   boxShadow: loading || !input.trim()
                     ? 'none'
-                    : '0 2px 10px rgba(204,158,36,0.3)',
+                    : '0 2px 10px rgba(135,169,107,0.3)',
                   aspectRatio: '1',
                 }}
                 aria-label="Send"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={loading || !input.trim() ? 'rgba(204,158,36,0.4)' : '#1a2e14'} strokeWidth="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={loading || !input.trim() ? 'rgba(135,169,107,0.4)' : '#fff'} strokeWidth="2">
                   <line x1="22" y1="2" x2="11" y2="13"/>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                 </svg>
@@ -691,14 +688,8 @@ export default function ChatbotWidget() {
               width: '58px',
               height: '58px',
               borderRadius: '16px',
-              background: 'linear-gradient(135deg,#cc9e24,#f9cc01)',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '1.4rem',
-              boxShadow: '0 4px 25px rgba(204,158,36,0.35), 0 0 40px rgba(204,158,36,0.1)',
+              background: 'linear-gradient(135deg,#87A96B,#6B8F55)',
+              boxShadow: '0 4px 25px rgba(139,115,85,0.35), 0 0 40px rgba(139,115,85,0.1)',
             }}
             aria-label="Open wedding assistant"
           >
@@ -720,12 +711,12 @@ export default function ChatbotWidget() {
           >
             <div style={{
               position: 'absolute', inset: 0, borderRadius: '16px',
-              border: '2px solid rgba(204,158,36,0.4)',
+              border: '2px solid rgba(139,115,85,0.35)',
               animation: 'chatRadiate1 2.5s ease-out infinite',
             }} />
             <div style={{
               position: 'absolute', inset: 0, borderRadius: '16px',
-              border: '2px solid rgba(204,158,36,0.3)',
+              border: '2px solid rgba(139,115,85,0.25)',
               animation: 'chatRadiate2 2.5s ease-out 0.8s infinite',
             }} />
           </div>

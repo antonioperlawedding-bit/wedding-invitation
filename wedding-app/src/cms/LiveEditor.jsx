@@ -163,38 +163,245 @@ function SectionLabel({ label }) {
   );
 }
 
-/* ── Hero ── */
+/* ── Hero ── matches actual HeroSection: full-screen image + arch border + details ── */
 function HeroPreview({ config, onChange }) {
+  const heroImage = deepGet(config, 'ui.hero.heroImage');
+  const SAGE = '#87A96B';
+  const BROWN = '#3a2e22';
+  const DETAIL_BG = '#faf8f0';
+
   return (
-    <section className="le-section" style={{ background: '#1a2e14', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', position: 'relative' }}>
+    <section className="le-section" style={{ position: 'relative' }}>
       <SectionLabel label="Hero Section" />
-      <div style={{ padding: '4rem 2rem', width: '100%', maxWidth: 700 }}>
-        <ET config={config} path="ui.hero.tag" tag="p" style={TAG_STYLE} onChange={onChange} />
-        <div style={{ margin: '2rem 0' }}>
-          <ET config={config} path="couple.groom.firstName" tag="span"
-            style={{ fontFamily: SERIF, fontWeight: 300, fontSize: 'clamp(3rem,10vw,6rem)', color: CREAM, display: 'block', lineHeight: 1 }}
+
+      {/* ─── Image block ─── */}
+      <div style={{
+        position: 'relative', minHeight: '55vh',
+        background: heroImage ? `url(${heroImage}) center 30% / cover` : DETAIL_BG,
+        display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        overflow: 'hidden',
+      }}>
+        {/* Gradient overlay */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: heroImage
+            ? 'linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.08) 40%, rgba(0,0,0,0.5) 100%)'
+            : 'linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(27,67,50,0.06) 100%)',
+        }} />
+        {/* Placeholder display when no image */}
+        {!heroImage && (
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ fontFamily: '"Playfair Display",serif', fontSize: '5rem', fontWeight: 400, fontStyle: 'italic', color: 'rgba(135,169,107,0.12)', letterSpacing: '0.15em', lineHeight: 1 }}>
+              {(deepGet(config, 'couple.groom.firstName') || 'A').charAt(0)}
+              <span style={{ fontSize: '0.6em', margin: '0 0.1em' }}>&amp;</span>
+              {(deepGet(config, 'couple.bride.firstName') || 'P').charAt(0)}
+            </div>
+          </div>
+        )}
+        {/* Names on image */}
+        <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 2rem 3rem', width: '100%' }}>
+          <ET config={config} path="ui.hero.tag" tag="p"
+            style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.62rem', letterSpacing: '0.5em', textTransform: 'uppercase', color: heroImage ? 'rgba(255,255,255,0.75)' : 'rgba(135,169,107,0.6)', marginBottom: '0.5rem' }}
             onChange={onChange} />
-          <span style={{ fontFamily: SERIF, fontStyle: 'italic', fontSize: 'clamp(1.5rem,5vw,3rem)', color: GOLD, display: 'block', margin: '0.2em 0' }}>&amp;</span>
-          <ET config={config} path="couple.bride.firstName" tag="span"
-            style={{ fontFamily: SERIF, fontWeight: 300, fontSize: 'clamp(3rem,10vw,6rem)', color: CREAM, display: 'block', lineHeight: 1 }}
+          <div style={{ fontFamily: '"Playfair Display",serif', fontWeight: 400, fontStyle: 'italic', fontSize: 'clamp(2rem,8vw,3.5rem)', color: heroImage ? '#fff' : BROWN, lineHeight: 1.1, textShadow: heroImage ? '0 2px 30px rgba(0,0,0,0.25)' : 'none' }}>
+            {deepGet(config, 'couple.groom.firstName')}
+            <span style={{ color: heroImage ? '#A8D8A0' : SAGE, fontSize: '0.7em', fontStyle: 'italic', margin: '0 0.15em' }}>&amp;</span>
+            {deepGet(config, 'couple.bride.firstName')}
+          </div>
+          <p style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.65rem', letterSpacing: '0.4em', textTransform: 'uppercase', color: heroImage ? 'rgba(255,255,255,0.65)' : 'rgba(135,169,107,0.7)', marginTop: '0.5rem' }}>
+            {deepGet(config, 'wedding.dateFormatted')}
+          </p>
+        </div>
+      </div>
+
+      {/* Hero image URL editor */}
+      <div style={{ background: 'rgba(30,50,22,0.95)', padding: '0.75rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', borderTop: '1px solid rgba(204,158,36,0.15)', borderBottom: '1px solid rgba(204,158,36,0.15)' }}>
+        <label style={{ fontFamily: SANS, fontWeight: 300, fontSize: '0.68rem', letterSpacing: '0.1em', color: GOLD, whiteSpace: 'nowrap' }}>Hero Image URL</label>
+        <input
+          type="text"
+          value={deepGet(config, 'ui.hero.heroImage') || ''}
+          onChange={(e) => onChange('ui.hero.heroImage', e.target.value)}
+          placeholder="https://… (paste direct image URL)"
+          style={{ flex: 1, background: 'rgba(250,248,240,0.08)', border: '1px solid rgba(204,158,36,0.2)', borderRadius: 4, padding: '0.4rem 0.6rem', color: CREAM, fontFamily: SANS, fontSize: '0.72rem' }}
+        />
+      </div>
+
+      {/* ─── Arch border ─── */}
+      <div style={{ position: 'relative', lineHeight: 0, background: DETAIL_BG, marginTop: '-1px' }}>
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: '50px' }}>
+          <path d="M0,80 L0,30 Q360,0 720,0 Q1080,0 1440,30 L1440,80 Z" fill={DETAIL_BG} />
+          <path d="M0,30 Q360,0 720,0 Q1080,0 1440,30" fill="none" stroke="rgba(135,169,107,0.3)" strokeWidth="1.5" />
+        </svg>
+      </div>
+
+      {/* ─── Details section ─── */}
+      <div style={{ background: DETAIL_BG, padding: '2rem 2rem 3rem', textAlign: 'center', maxWidth: 600, margin: '0 auto', width: '100%' }}>
+        {/* Monogram */}
+        <div style={{ fontFamily: '"Playfair Display",serif', fontSize: '3rem', fontWeight: 400, color: '#8B7355', lineHeight: 1, marginBottom: '1rem' }}>
+          {(deepGet(config, 'couple.groom.firstName') || 'A').charAt(0)}
+          <span style={{ fontStyle: 'italic', color: SAGE, fontSize: '0.6em', margin: '0 0.05em' }}>&amp;</span>
+          {(deepGet(config, 'couple.bride.firstName') || 'P').charAt(0)}
+        </div>
+
+        {/* Bible verse */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ fontSize: '1.2rem', color: SAGE, marginBottom: '0.75rem', opacity: 0.7 }}>✝</div>
+          <ET config={config} path="wedding.bibleVerse" tag="p"
+            style={{ fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400, fontSize: '0.95rem', color: '#5a4a3a', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}
+            onChange={onChange} />
+          <ET config={config} path="wedding.bibleReference" tag="p"
+            style={{ fontFamily: SANS, fontWeight: 300, fontSize: '0.72rem', letterSpacing: '0.15em', color: SAGE, marginTop: '0.5rem' }}
             onChange={onChange} />
         </div>
-        <div style={{ width: 120, height: 1, background: 'linear-gradient(90deg,transparent,#cc9e24,#f9cc01,#cc9e24,transparent)', margin: '1.5rem auto' }} />
-        <ET config={config} path="couple.groom.parentsDisplay" tag="p"
-          style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.72rem', letterSpacing: '0.3em', color: 'rgba(250,248,240,0.4)', marginBottom: '0.25rem' }}
-          onChange={onChange} />
-        <span style={{ color: GOLD, fontSize: '0.6rem', opacity: 0.4 }}>✦</span>
-        <ET config={config} path="couple.bride.parentsDisplay" tag="p"
-          style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.72rem', letterSpacing: '0.3em', color: 'rgba(250,248,240,0.4)', marginTop: '0.25rem' }}
-          onChange={onChange} />
-        <div style={{ marginTop: '2rem' }}>
+
+        {/* Divider */}
+        <div style={{ width: 60, height: 1, margin: '0 auto 1.5rem', background: `linear-gradient(90deg, transparent, ${SAGE}, transparent)` }} />
+
+        {/* Parents */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <ET config={config} path="couple.groom.parentsDisplay" tag="p"
+            style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '0.95rem', color: '#5a4a3a', lineHeight: 1.8 }}
+            onChange={onChange} />
+          <p style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.65rem', letterSpacing: '0.4em', color: SAGE, textTransform: 'uppercase', margin: '0.25rem 0' }}>&amp;</p>
+          <ET config={config} path="couple.bride.parentsDisplay" tag="p"
+            style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '0.95rem', color: '#5a4a3a', lineHeight: 1.8 }}
+            onChange={onChange} />
+        </div>
+
+        {/* Invite text */}
+        <p style={{ fontFamily: SANS, fontWeight: 300, fontSize: '0.72rem', letterSpacing: '0.4em', color: SAGE, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          Invite you to the wedding of
+        </p>
+
+        {/* Couple names */}
+        <div style={{ fontFamily: '"Playfair Display",serif', fontWeight: 400, fontStyle: 'italic', fontSize: 'clamp(2rem,8vw,3.5rem)', color: BROWN, lineHeight: 1.1, marginBottom: '0.5rem' }}>
+          <ET config={config} path="couple.groom.firstName" tag="span" style={{ font: 'inherit', color: 'inherit' }} onChange={onChange} />
+          <span style={{ color: SAGE, fontSize: '0.7em', fontStyle: 'italic', margin: '0 0.15em' }}>&amp;</span>
+          <ET config={config} path="couple.bride.firstName" tag="span" style={{ font: 'inherit', color: 'inherit' }} onChange={onChange} />
+        </div>
+
+        {/* Date & Location */}
+        <div style={{ marginTop: '1rem' }}>
           <ET config={config} path="wedding.dateFormatted" tag="p"
-            style={{ fontFamily: SERIF, fontSize: '1rem', color: GOLD, letterSpacing: '0.2em' }}
+            style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '1.1rem', color: SAGE, letterSpacing: '0.15em' }}
             onChange={onChange} />
           <ET config={config} path="wedding.locationFull" tag="p"
-            style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.7rem', letterSpacing: '0.25em', color: 'rgba(250,248,240,0.35)', marginTop: '0.5rem' }}
+            style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.75rem', letterSpacing: '0.3em', color: SAGE, textTransform: 'uppercase', marginTop: '0.5rem', opacity: 0.7 }}
             onChange={onChange} />
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ── Countdown ── */
+function CountdownPreview({ config, onChange }) {
+  const SAGE = '#87A96B';
+  const BROWN = '#3a2e22';
+  const DETAIL_BG = '#faf8f0';
+
+  // Compute live countdown
+  const dateTime = deepGet(config, 'wedding.dateTime');
+  const diff = dateTime ? Math.max(0, new Date(dateTime) - new Date()) : 0;
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
+
+  const flipCard = (value, label) => (
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        width: 68, height: 78,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(135,169,107,0.25)',
+        borderRadius: 8, position: 'relative', overflow: 'hidden',
+        boxShadow: '0 4px 24px rgba(135,169,107,0.08)',
+      }}>
+        <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'rgba(135,169,107,0.12)', transform: 'translateY(-50%)' }} />
+        <span style={{ fontFamily: SERIF, fontWeight: 300, fontSize: '2.2rem', lineHeight: 1, color: BROWN }}>{String(value).padStart(2, '0')}</span>
+      </div>
+      <p style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.55rem', letterSpacing: '0.4em', textTransform: 'uppercase', color: SAGE, marginTop: '0.5rem' }}>{label}</p>
+    </div>
+  );
+
+  return (
+    <section className="le-section" style={{ background: DETAIL_BG, position: 'relative', overflow: 'hidden' }}>
+      <SectionLabel label="Countdown Section" />
+      <div style={{ padding: '4rem 2rem', maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
+        <ET config={config} path="ui.countdown.tag" tag="p"
+          style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.62rem', letterSpacing: '0.45em', textTransform: 'uppercase', color: SAGE, marginBottom: '0.75rem' }}
+          onChange={onChange} />
+        <ET config={config} path="ui.countdown.title" tag="h2"
+          style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)', color: BROWN, lineHeight: 1.2, marginBottom: '2.5rem' }}
+          onChange={onChange} />
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 'clamp(0.75rem, 3vw, 1.5rem)', flexWrap: 'wrap' }}>
+          {flipCard(days, 'Days')}
+          {flipCard(hours, 'Hours')}
+          {flipCard(minutes, 'Minutes')}
+          {flipCard(seconds, 'Seconds')}
+        </div>
+        <p style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '0.9rem', color: SAGE, letterSpacing: '0.15em', marginTop: '2rem' }}>
+          {deepGet(config, 'wedding.dateFormatted')}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+/* ── Gathering ── */
+function GatheringPreview({ config, onChange }) {
+  const SAGE = '#87A96B';
+  const BROWN = '#3a2e22';
+  const DETAIL_BG = '#faf8f0';
+
+  const locationCard = (key, labelPath) => {
+    const prefix = `events.gathering.${key}`;
+    return (
+      <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <ET config={config} path={labelPath} tag="h3"
+          style={{ fontFamily: '"Playfair Display",serif', fontWeight: 600, fontSize: '1.4rem', color: BROWN, marginBottom: '0.5rem' }}
+          onChange={onChange} />
+        <ET config={config} path={`${prefix}.venue`} tag="p"
+          style={{ fontFamily: SANS, fontWeight: 300, fontSize: '0.82rem', color: 'rgba(58,46,34,0.5)', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '0.3rem' }}
+          onChange={onChange} />
+        <ET config={config} path={`${prefix}.address`} tag="p"
+          style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '1rem', color: 'rgba(58,46,34,0.65)', marginBottom: '0.5rem' }}
+          onChange={onChange} />
+        <ET config={config} path={`${prefix}.time`} tag="p"
+          style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '1rem', color: SAGE, letterSpacing: '0.05em', marginBottom: '0.5rem' }}
+          onChange={onChange} />
+        <ET config={config} path={`${prefix}.description`} tag="p"
+          style={{ fontFamily: SERIF, fontStyle: 'italic', fontWeight: 400, fontSize: '0.85rem', color: 'rgba(58,46,34,0.5)', maxWidth: 400, margin: '0 auto' }}
+          onChange={onChange} />
+      </div>
+    );
+  };
+
+  return (
+    <section className="le-section" style={{ background: DETAIL_BG, position: 'relative', overflow: 'hidden' }}>
+      <SectionLabel label="Gathering Section" />
+      <div style={{ padding: '4rem 2rem', maxWidth: 600, margin: '0 auto', textAlign: 'center' }}>
+        <ET config={config} path="ui.gathering.tag" tag="p"
+          style={{ fontFamily: SANS, fontWeight: 200, fontSize: '0.62rem', letterSpacing: '0.45em', textTransform: 'uppercase', color: SAGE, marginBottom: '0.75rem' }}
+          onChange={onChange} />
+        <ET config={config} path="ui.gathering.title" tag="h2"
+          style={{ fontFamily: SERIF, fontWeight: 400, fontSize: 'clamp(2rem,5vw,3.2rem)', color: BROWN, lineHeight: 1.2, marginBottom: '0.5rem' }}
+          onChange={onChange} />
+        <p style={{ fontFamily: SANS, fontWeight: 300, fontSize: '0.82rem', color: 'rgba(58,46,34,0.45)', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+          {deepGet(config, 'wedding.dateFormatted')}
+        </p>
+        <div style={{ width: 60, height: 1, margin: '0 auto 2rem', background: `linear-gradient(90deg, transparent, ${SAGE}, transparent)` }} />
+
+        {locationCard('groom', 'ui.gathering.groomLabel')}
+
+        {/* Divider */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', margin: '1rem 0' }}>
+          <div style={{ width: 40, height: 1, background: `linear-gradient(to right, transparent, rgba(135,169,107,0.4))` }} />
+          <span style={{ color: SAGE, fontSize: '0.7rem', opacity: 0.6 }}>✦</span>
+          <div style={{ width: 40, height: 1, background: `linear-gradient(to left, transparent, rgba(135,169,107,0.4))` }} />
+        </div>
+
+        {locationCard('bride', 'ui.gathering.brideLabel')}
       </div>
     </section>
   );
@@ -317,6 +524,15 @@ function EventsPreview({ config, onChange }) {
   );
 }
 
+/* ── Timeline icon labels ── */
+const ICON_OPTIONS = [
+  { value: 'guests', label: '👥 Guests' },
+  { value: 'church', label: '⛪ Church' },
+  { value: 'drinks', label: '🥂 Drinks' },
+  { value: 'dinner', label: '🍽️ Dinner' },
+  { value: 'dance',  label: '💃 Dance' },
+];
+
 /* ── Timeline ── */
 function TimelinePreview({ config, onChange }) {
   const items = deepGet(config, 'events.timeline') || [];
@@ -339,6 +555,12 @@ function TimelinePreview({ config, onChange }) {
     onChange('events.timeline', updated);
   };
 
+  const setItemIcon = (index, icon) => {
+    const updated = structuredClone(items);
+    updated[index].icon = icon;
+    onChange('events.timeline', updated);
+  };
+
   return (
     <section className="le-section" style={{ background: '#1a2e14' }}>
       <SectionLabel label="Timeline Section" />
@@ -348,7 +570,7 @@ function TimelinePreview({ config, onChange }) {
         <div style={{ position: 'relative', paddingLeft: '2rem' }}>
           {/* Vertical line */}
           <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 1, background: 'rgba(204,158,36,0.2)' }} />
-          {items.map((_, i) => (
+          {items.map((item, i) => (
             <div key={i} style={{ position: 'relative', marginBottom: '2.5rem', paddingLeft: '1.5rem', textAlign: 'left' }}>
               {/* Dot */}
               <div style={{ position: 'absolute', left: '-2.35rem', top: '0.25rem', width: 10, height: 10, borderRadius: '50%', border: '1px solid #cc9e24', background: '#1a2e14' }} />
@@ -358,8 +580,15 @@ function TimelinePreview({ config, onChange }) {
                 style={{ fontFamily: SERIF, fontWeight: 400, fontSize: '1.2rem', color: CREAM, marginBottom: '0.3rem' }} onChange={onChange} />
               <ET config={config} path={`events.timeline.${i}.description`} tag="p"
                 style={BODY_STYLE} onChange={onChange} />
-              {/* Item controls */}
-              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.5rem' }}>
+              {/* Icon selector + item controls */}
+              <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <select
+                  value={item.icon || 'guests'}
+                  onChange={(e) => setItemIcon(i, e.target.value)}
+                  style={{ background: 'rgba(204,158,36,0.12)', border: '1px solid rgba(204,158,36,0.3)', color: '#cc9e24', borderRadius: 4, padding: '0.15rem 0.4rem', fontSize: '0.6rem', cursor: 'pointer', fontFamily: SANS }}
+                >
+                  {ICON_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                </select>
                 {i > 0 && (
                   <button onClick={() => moveItem(i, -1)} style={{ background: 'rgba(204,158,36,0.15)', border: '1px solid rgba(204,158,36,0.3)', color: '#cc9e24', borderRadius: '4px', padding: '0.15rem 0.4rem', fontSize: '0.6rem', cursor: 'pointer' }}>▲ Up</button>
                 )}
@@ -769,6 +998,8 @@ export default function LiveEditor() {
       {/* Preview container */}
       <div className="le-preview">
         <HeroPreview config={config} onChange={handleChange} />
+        <CountdownPreview config={config} onChange={handleChange} />
+        <GatheringPreview config={config} onChange={handleChange} />
         <CouplePreview config={config} photos={photos} onChange={handleChange} onPhotosRefresh={refreshPhotos} imagePositions={imagePositions} onPositionChange={handlePositionChange} />
         <EventsPreview config={config} onChange={handleChange} />
         <TimelinePreview config={config} onChange={handleChange} />

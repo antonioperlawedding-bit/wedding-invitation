@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import config from '@config';
+import { useConfig } from '../i18n/useConfig';
+import { useLang } from '../i18n/LanguageContext';
 import { useDriveImages, driveThumbUrl } from '../hooks/useDriveImages';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -11,20 +12,16 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
 
   useEffect(() => {
     if (!itemRef.current) return;
-
     gsap.fromTo(
       itemRef.current,
-      { scale: 0.92, opacity: 0 },
+      { scale: 0.95, opacity: 0 },
       {
         scale: 1,
         opacity: 1,
-        duration: 0.9,
+        duration: 0.8,
         delay: (index % 3) * 0.1,
         ease: 'expo.out',
-        scrollTrigger: {
-          trigger: itemRef.current,
-          start: 'top 92%',
-        },
+        scrollTrigger: { trigger: itemRef.current, start: 'top 92%' },
       }
     );
   }, [index]);
@@ -37,8 +34,9 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
         gridColumn: `span ${colSpan}`,
         aspectRatio: aspect,
         position: 'relative',
-        background: 'linear-gradient(135deg, #2a4a1e 0%, #3a5a28 60%, #1e3216 100%)',
+        background: 'linear-gradient(135deg, #f5f0e8 0%, #ebe5d8 100%)',
         overflow: 'hidden',
+        borderRadius: '0.75rem',
       }}
     >
       <img
@@ -50,13 +48,24 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
           objectFit: 'cover',
           objectPosition: item.objectPosition || 'center center',
           display: 'block',
+          borderRadius: '0.75rem',
         }}
         loading="lazy"
         onError={e => { e.currentTarget.style.display = 'none'; }}
       />
 
-      {/* Overlay */}
-      <div className="gallery-overlay" />
+      {/* Hover overlay */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to top, rgba(135,169,107,0.45) 0%, transparent 60%)',
+          opacity: 0,
+          transition: 'opacity 0.4s ease',
+          borderRadius: '0.75rem',
+        }}
+        className="gallery-overlay"
+      />
 
       {/* Caption */}
       <div
@@ -68,9 +77,6 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
           padding: '1.25rem',
           opacity: 0,
           transition: 'opacity 0.4s ease',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '0.25rem',
           zIndex: 2,
         }}
         className="gallery-caption"
@@ -79,20 +85,21 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
           style={{
             fontFamily: '"Cormorant Garamond", serif',
             fontStyle: 'italic',
-            fontSize: '1rem',
-            color: '#faf8f0',
+            fontSize: '0.95rem',
+            color: '#fff',
           }}
         >
           {item.caption}
         </p>
       </div>
 
-      {/* Gold border reveal on hover */}
+      {/* Border reveal on hover */}
       <div
         style={{
           position: 'absolute',
-          inset: 0,
-          border: '1px solid rgba(204,158,36,0.5)',
+          inset: '4px',
+          border: '1px solid rgba(135,169,107,0.4)',
+          borderRadius: '0.6rem',
           opacity: 0,
           transition: 'opacity 0.4s ease',
           pointerEvents: 'none',
@@ -102,6 +109,7 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
       />
 
       <style>{`
+        .gallery-item:hover .gallery-overlay { opacity: 1 !important; }
         .gallery-item:hover .gallery-caption { opacity: 1 !important; }
         .gallery-item:hover .gallery-border  { opacity: 1 !important; }
       `}</style>
@@ -110,20 +118,19 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
 }
 
 export default function GallerySection() {
-  const sectionRef    = useRef(null);
-
+  const sectionRef = useRef(null);
+  const config = useConfig();
+  const { t } = useLang();
   const driveRoot = config.google_drive?.root_folder_id;
   const { images: driveFiles, loading: driveLoading } = useDriveImages(driveRoot, 'memories');
-
   const imgPos = config.imagePositions || {};
 
-  // Map Drive files to gallery shape; fall back to static config when Drive is not ready
   const gallery = driveFiles.length > 0
     ? driveFiles.map((f, i) => ({
         id: f.id,
         src: driveThumbUrl(f.id, 'w1600'),
-        alt: f.name?.replace(/\.[^/.]+$/, '') || `Memory ${i + 1}`,
-        caption: (f.name?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || 'A beautiful moment'),
+        alt: f.name?.replace(/\.[^/.]+$/, '') || `${t('gallery.memory')} ${i + 1}`,
+        caption: (f.name?.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ') || t('gallery.fallbackCaption')),
         objectPosition: imgPos[`gallery_${f.id}`],
       }))
     : (config.events.gallery || []);
@@ -142,15 +149,12 @@ export default function GallerySection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('.gallery-header > *', {
-        y: 40,
+        y: 30,
         opacity: 0,
-        duration: 1,
+        duration: 0.9,
         stagger: 0.12,
         ease: 'expo.out',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 75%',
-        },
+        scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
       });
     }, sectionRef);
     return () => ctx.revert();
@@ -158,97 +162,106 @@ export default function GallerySection() {
 
   return (
     <section
-        id="gallery"
-        ref={sectionRef}
-        style={{
-          background: '#1e3518',
-          padding: 'clamp(2rem,8vw,9rem) clamp(1rem,4vw,5rem)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          {/* Header */}
-          <div
-            className="gallery-header"
-            style={{ textAlign: 'center', marginBottom: 'clamp(3rem,8vw,4.5rem)' }}
-          >
-            <p className="section-tag" style={{ marginBottom: '0.75rem' }}>
-              {config.ui.gallery.tag}
-            </p>
-            <h2
-              style={{
-                fontFamily: '"Cormorant Garamond", serif',
-                fontWeight: 400,
-                fontSize: 'clamp(2.2rem,6vw,4rem)',
-                color: '#faf8f0',
-              }}
-            >
-              {config.ui.gallery.title}
-            </h2>
-            <p
-              style={{
-                fontFamily: 'Jost, sans-serif',
-                fontWeight: 200,
-                fontSize: '0.82rem',
-                color: 'rgba(250,248,240,0.4)',
-                marginTop: '0.75rem',
-                letterSpacing: '0.15em',
-              }}
-            >
-              {config.ui.gallery.subtitle}
-            </p>
-          </div>
-
-          {/* Grid — responsive photo wall driven by config.galleryLayout */}
-          <div
-            className="gallery-grid"
+      id="gallery"
+      ref={sectionRef}
+      className="watermark-sunflower"
+      style={{
+        background: '#f5f0e8',
+        padding: 'clamp(3rem,8vw,7rem) clamp(1rem,4vw,3rem) clamp(1.5rem,4vw,3.5rem)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        {/* Header */}
+        <div
+          className="gallery-header"
+          style={{ textAlign: 'center', marginBottom: 'clamp(2rem,6vw,4rem)' }}
+        >
+          <p className="section-tag" style={{ marginBottom: '0.75rem' }}>
+            {config.ui.gallery.tag}
+          </p>
+          <h2
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(6, 1fr)',
-              gap: '0.75rem',
+              fontFamily: '"Cormorant Garamond", serif',
+              fontWeight: 400,
+              fontSize: 'clamp(2rem,5vw,3.5rem)',
+              color: '#3a2e20',
             }}
           >
-            {driveLoading && driveFiles.length === 0 ? (
-              // Loading skeleton
-              Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    gridColumn: 'span 3',
-                    aspectRatio: '1/1',
-                    background: 'linear-gradient(90deg, rgba(204,158,36,0.04) 25%, rgba(204,158,36,0.08) 50%, rgba(204,158,36,0.04) 75%)',
-                    backgroundSize: '200% 100%',
-                    animation: 'shimmer 1.8s infinite',
-                    borderRadius: '2px',
-                  }}
-                />
-              ))
-            ) : (
-              sortedGallery.map((item, i) => {
-                const lay = galleryLayout[item.id] || { cols: 3, aspect: '1/1' };
-                return (
-                  <GalleryItem
-                    key={item.id}
-                    item={item}
-                    index={i}
-                    colSpan={lay.cols}
-                    aspect={lay.aspect}
-                  />
-                );
-              })
-            )}
-          </div>
-          <style>{`
-            @keyframes shimmer {
-              0%   { background-position: 200% 0; }
-              100% { background-position: -200% 0; }
-            }
-            @media (max-width: 640px) {
-              .gallery-grid { gap: 0.35rem !important; }
-            }
-          `}</style>
+            {config.ui.gallery.title}
+          </h2>
+          <p
+            style={{
+              fontFamily: 'Jost, sans-serif',
+              fontWeight: 300,
+              fontSize: '0.82rem',
+              color: 'rgba(58,46,32,0.5)',
+              marginTop: '0.75rem',
+              letterSpacing: '0.1em',
+            }}
+          >
+            {config.ui.gallery.subtitle}
+          </p>
+          <div
+            style={{
+              width: '60px',
+              height: '1px',
+              background: 'linear-gradient(90deg, transparent, #87A96B, transparent)',
+              margin: '1.25rem auto 0',
+            }}
+          />
         </div>
-      </section>
+
+        {/* Photo grid */}
+        <div
+          className="gallery-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gap: '0.75rem',
+          }}
+        >
+          {driveLoading && driveFiles.length === 0 ? (
+            Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                style={{
+                  gridColumn: 'span 3',
+                  aspectRatio: '1/1',
+                  background: 'linear-gradient(90deg, rgba(135,169,107,0.06) 25%, rgba(135,169,107,0.12) 50%, rgba(135,169,107,0.06) 75%)',
+                  backgroundSize: '200% 100%',
+                  animation: 'shimmer 1.8s infinite',
+                  borderRadius: '0.75rem',
+                }}
+              />
+            ))
+          ) : (
+            sortedGallery.map((item, i) => {
+              const lay = galleryLayout[item.id] || { cols: 3, aspect: '1/1' };
+              return (
+                <GalleryItem
+                  key={item.id}
+                  item={item}
+                  index={i}
+                  colSpan={lay.cols}
+                  aspect={lay.aspect}
+                />
+              );
+            })
+          )}
+        </div>
+
+        <style>{`
+          @keyframes shimmer {
+            0%   { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
+          @media (max-width: 640px) {
+            .gallery-grid { gap: 0.35rem !important; }
+          }
+        `}</style>
+      </div>
+    </section>
   );
 }

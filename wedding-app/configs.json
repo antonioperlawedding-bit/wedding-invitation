@@ -9,22 +9,24 @@
     "dateTime": "2026-06-06T17:00:00",
     "year": "2026",
     "location": "Lebanon",
-    "locationFull": "Lebanon · Qaa El Rim · Chtaura"
+    "locationFull": "Lebanon · Qaa El Rim · Chtaura",
+    "bibleVerse": "So they are no longer two, but one flesh. Therefore, what God has joined together, no person is to separate",
+    "bibleReference": "Matthew 19:6"
   },
   "couple": {
     "bride": {
       "firstName": "Perla",
       "lastName": "HAYEK",
       "fullName": "Perla Antoine Hayek",
-      "parents": "  ",
-      "parentsDisplay": "Antoine & Nour Hayek ",
+      "parents": "  ",
+      "parentsDisplay": "Antoine & Nour Hayek",
       "bio": "Perla is a warm and vibrant colorful soul who lights up every room she enters. She like the yellow color, choco prince chocolate, and cooks delicious food. She is known for her infectious laughter, creative spirit, and kind heart. She is an agricultural engineer and an organic farmer, her sole enemies are worms and insects. She has also a great analytical mind and a great problem solver. She loves excel sheets and pie charts"
     },
     "groom": {
       "firstName": "Antonio",
       "lastName": "Tannoury",
       "fullName": "Antonio Edward Tannoury",
-      "parents": "  ",
+      "parents": "  ",
       "parentsDisplay": "Edward & Sanaa Tannoury",
       "bio": "Antonio is a dedicated professional with a passion for AI and Data. He likes cycling, hiking, nature. He is known for his analytical mind, loyalty to those he loves, and his ability to make people smile. He enjoys problem-solving, outdoor adventures, and quality time with loved ones. He loves excel sheets and pie charts."
     }
@@ -40,6 +42,22 @@
     }
   },
   "events": {
+    "gathering": {
+      "groom": {
+        "venue": "Tannoury Family Residence",
+        "address": "Qaa El Rim, Lebanon",
+        "time": "2:00 PM",
+        "mapUrl": "https://maps.app.goo.gl/h9ZVSJfF226Wpps98",
+        "description": "The celebration begins with a gathering at the groom's home"
+      },
+      "bride": {
+        "venue": "Massabki Hotel",
+        "address": "Chtaura, Lebanon",
+        "time": "2:30 PM",
+        "mapUrl": "https://maps.app.goo.gl/piEYFXfHJwND3ZYt7",
+        "description": "Join the bride's family for a beautiful send-off"
+      }
+    },
     "ceremony": {
       "date": "2026-06-06",
       "time": "5:00 PM",
@@ -60,7 +78,7 @@
       {
         "time": "4:30 PM",
         "title": "Guest Arrival",
-        "description": "Please arrive early to find your seats",
+        "description": "Please arrive early to find your seats and take some pictures before the ceremony starts",
         "icon": "guests"
       },
       {
@@ -80,12 +98,6 @@
         "title": "Dinner",
         "description": "Dinner will be served at Massabki Hotel",
         "icon": "dinner"
-      },
-      {
-        "time": "9:00 PM",
-        "title": "Groom and Bride Entrance",
-        "description": "The groom and bride will enter the party at Massabki Hotel",
-        "icon": "dance"
       }
     ],
     "gallery": [
@@ -111,7 +123,7 @@
         "id": "4",
         "src": "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?w=800",
         "alt": "Sunflower bouquet",
-        "caption": "Emma's favorite flowers"
+        "caption": "Perla's favorite flowers"
       },
       {
         "id": "5",
@@ -174,22 +186,34 @@
       "enabled": true,
       "welcomeMessage": "Hi! 👋 I'm here to help answer any questions about Perla & Antonio's wedding. Feel free to ask me anything!",
       "placeholderText": "Ask me about the wedding...",
-      "customInstructions": "Additional Guidelines:\n- Theme: Our wedding has a beautiful sunflower theme 🌻\n- Dress Code: Semi-formal/Garden party attire (mention comfortable footwear for outdoor grass)\n- Photography: Professional photographer will capture the ceremony, guests can take photos during reception\n- Adults-only celebration\n- Parking and valet service available on-site\n- Shuttle service from recommended hotels\n- Full dinner and drinks will be served\n\nBe extra warm and enthusiastic! This is a celebration of love! 💐✨"
+      "customInstructions": "Additional Guidelines:\n- Theme: Our wedding has a beautiful sunflower and red roses theme 🌻🌹\n- Dress Code: Semi-formal/Garden party attire (mention comfortable footwear for outdoor grass)\n- Photography: Professional photographer will capture the ceremony, guests can take photos during reception\n- Adults-only celebration\n- Parking and valet service available on-site\n- Shuttle service from recommended hotels\n- Full dinner and drinks will be served\n\nBe extra warm and enthusiastic! This is a celebration of love! 💐✨"
     }
   },
   "ui": {
     "hero": {
       "tag": "TOGETHER WE BEGIN",
-      "sideTextLeft": "Made for Each Other"
+      "sideTextLeft": "Made for Each Other",
+      "heroImage": "https://lh3.googleusercontent.com/d/1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf=s1600"
     },
     "countdown": {
       "tag": "Counting Down To",
       "title": "Our Special Day"
     },
+    "gathering": {
+      "tag": "The Celebration Begins",
+      "title": "The Gathering",
+      "groomLabel": "Groom's Residence",
+      "brideLabel": "Bride's Location"
+    },
     "events": {
       "tag": "Join Us",
       "title": "The Celebration",
-      "subtitle": "Two moments. One magical day."
+      "subtitle": "Two moments. One magical day.",
+      "ceremonyLabel": "The Ceremony",
+      "receptionLabel": "Welcom Drink & Dinner Reception"
+    },
+    "interlude": {
+      "image": "https://lh3.googleusercontent.com/d/1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf=s1600"
     },
     "timeline": {
       "tag": "The Day Of",
@@ -202,7 +226,7 @@
     },
     "rsvp": {
       "tag": "Kindly Reply",
-      "title": "Will You Join Us?",
+      "title": "We Would Be Honored",
       "attendanceOptions": [
         "Joyfully Accepts",
         "Regretfully Declines"
@@ -210,11 +234,12 @@
       "successMessage": "Your RSVP has been sent. We can't wait to celebrate with you!"
     },
     "listeDeMariage": {
-      "tag": "Liste de Mariage",
-      "title": "Our Wish List",
-      "message": "Your presence on our special day is the greatest gift of all. Our Whish Account is available below.",
-      "accountName": "  ",
-      "accountLabel": "Whish Account"
+      "tag": "Gifts",
+      "title": "Your Presence Is Our Gift",
+      "message": "Your presence on our special day is the greatest gift of all. For those who wish, our gift registry is available below.",
+      "accountName": "  ",
+      "accountNumber": "20896961-03",
+      "accountLabel": "Our Whish Account"
     },
     "footer": {
       "quote": "Two people, one shared heartbeat, one beautiful forever beginning."
@@ -229,11 +254,11 @@
       "href": "#couple"
     },
     {
-      "label": "Events",
+      "label": "Ceremony",
       "href": "#events"
     },
     {
-      "label": "Timeline",
+      "label": "Schedule",
       "href": "#timeline"
     },
     {

@@ -6,17 +6,42 @@ import Lenis from 'lenis';
 import Navigation       from './components/Navigation';
 import HeroSection      from './components/HeroSection';
 import CountdownSection from './components/CountdownSection';
-import CoupleSection    from './components/CoupleSection';
+import GatheringSection from './components/GatheringSection';
 import EventsSection    from './components/EventsSection';
+import InterludeSection from './components/InterludeSection';
 import TimelineSection  from './components/TimelineSection';
 import GallerySection   from './components/GallerySection';
 import RSVPSection      from './components/RSVPSection';
 import ListeDeMariageSection from './components/ListeDeMariageSection';
 import FooterSection    from './components/FooterSection';
 import ChatbotWidget    from './components/ChatbotWidget';
-import SectionTransition from './components/SectionTransition';
 
 gsap.registerPlugin(ScrollTrigger);
+
+/* Simple fade-up reveal for each section */
+function FadeInSection({ children }) {
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    gsap.set(el, { y: 40, opacity: 0 });
+    const tween = gsap.to(el, {
+      y: 0,
+      opacity: 1,
+      duration: 0.9,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        toggleActions: 'play none none none',
+      },
+    });
+    return () => { tween.scrollTrigger?.kill(); tween.kill(); };
+  }, []);
+
+  return <div ref={ref} style={{ willChange: 'transform' }}>{children}</div>;
+}
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,8 +79,7 @@ export default function App() {
 
     document.documentElement.style.overflow = 'hidden';
 
-    // Wait for the progress bar animation (2.5s) + small buffer
-    const MIN_DISPLAY_MS = 2800;
+    const MIN_DISPLAY_MS = 1200;
     const pageStart = window.__loadStart || Date.now();
     const elapsed = Date.now() - pageStart;
     const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
@@ -81,50 +105,29 @@ export default function App() {
     };
   }, []);
 
-  /* ── After load completes: refresh ScrollTrigger ── */
+  /* ── After load: refresh ScrollTrigger ── */
   useEffect(() => {
     if (isLoaded) {
-      const id = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
+      const id = setTimeout(() => ScrollTrigger.refresh(), 100);
       return () => clearTimeout(id);
     }
   }, [isLoaded]);
 
   return (
-    <div
-      style={{
-        pointerEvents: isLoaded ? 'auto' : 'none',
-      }}
-    >
+    <div style={{ pointerEvents: isLoaded ? 'auto' : 'none' }}>
       <Navigation />
 
-      <main style={{ perspective: '1400px', perspectiveOrigin: '50% 50%' }}>
+      <main style={{ position: 'relative', zIndex: 1 }}>
         <HeroSection />
-        <SectionTransition variant="rise">
-          <CountdownSection />
-        </SectionTransition>
-        <SectionTransition variant="tiltLeft">
-          <CoupleSection />
-        </SectionTransition>
-        <SectionTransition variant="curtain">
-          <EventsSection />
-        </SectionTransition>
-        <SectionTransition variant="portal">
-          <TimelineSection />
-        </SectionTransition>
-        <SectionTransition variant="flip">
-          <GallerySection />
-        </SectionTransition>
-        <SectionTransition variant="tiltRight">
-          <ListeDeMariageSection />
-        </SectionTransition>
-        <SectionTransition variant="scale">
-          <RSVPSection />
-        </SectionTransition>
-        <SectionTransition variant="rise">
-          <FooterSection />
-        </SectionTransition>
+        <FadeInSection><CountdownSection /></FadeInSection>
+        <FadeInSection><GatheringSection /></FadeInSection>
+        <FadeInSection><EventsSection /></FadeInSection>
+        <InterludeSection />
+        <FadeInSection><TimelineSection /></FadeInSection>
+        <FadeInSection><GallerySection /></FadeInSection>
+        <FadeInSection><ListeDeMariageSection /></FadeInSection>
+        <FadeInSection><RSVPSection /></FadeInSection>
+        <FadeInSection><FooterSection /></FadeInSection>
       </main>
 
       <ChatbotWidget />
