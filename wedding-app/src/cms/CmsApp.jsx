@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import './cms.css';
 import LoginPage from './LoginPage';
-import CmsLayout from './CmsLayout';
+import RsvpManager from './RsvpManager';
 
 export default function CmsApp() {
   const [token, setToken] = useState(() => localStorage.getItem('cms_token'));
@@ -22,9 +21,14 @@ export default function CmsApp() {
   }
 
   return (
-    <Routes>
-      <Route path="/*" element={<CmsLayout onLogout={logout} />} />
-      <Route path="*" element={<Navigate to="/cms" replace />} />
-    </Routes>
+    <div className="cms-root">
+      <header className="cms-header">
+        <h2 className="cms-header-title">Wedding RSVP Monitor</h2>
+        <button className="cms-btn cms-btn-sm" onClick={logout}>Logout</button>
+      </header>
+      <main className="cms-main">
+        <RsvpManager />
+      </main>
+    </div>
   );
 }

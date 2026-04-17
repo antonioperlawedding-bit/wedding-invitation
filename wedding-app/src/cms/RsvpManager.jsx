@@ -64,7 +64,7 @@ export default function RsvpManager() {
       </div>
 
       {loading ? (
-        <p style={{ color: 'rgba(250,248,240,0.4)' }}>Loading…</p>
+        <p style={{ color: 'rgba(58,46,34,0.4)' }}>Loading…</p>
       ) : rsvps.length === 0 ? (
         <div className="cms-empty">No RSVPs yet.</div>
       ) : (

@@ -47,7 +47,7 @@ export default function LoginPage({ onAuth }) {
 
           {step === 'email' ? (
             <>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(250,248,240,0.6)', marginBottom: '2rem', lineHeight: 1.6 }}>
+              <p style={{ fontSize: '0.88rem', color: 'rgba(58,46,34,0.5)', marginBottom: '2rem', lineHeight: 1.6 }}>
                 A one-time access code will be sent to the admin email address.
               </p>
               <button
@@ -62,7 +62,7 @@ export default function LoginPage({ onAuth }) {
           ) : (
             <form onSubmit={handleVerify}>
               {info && (
-                <p style={{ fontSize: '0.82rem', color: '#9caf13', marginBottom: '1.5rem', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '0.82rem', color: '#87A96B', marginBottom: '1.5rem', lineHeight: 1.5 }}>
                   {info}
                 </p>
               )}
@@ -80,8 +80,9 @@ export default function LoginPage({ onAuth }) {
                     textAlign: 'center',
                     fontSize: '2rem',
                     letterSpacing: '0.5em',
-                    fontFamily: '"Cormorant Garamond", serif',
+                    fontFamily: '"Cormorant Garamond", Georgia, serif',
                     padding: '1rem',
+                    color: '#3a2e22',
                   }}
                   autoFocus
                 />
@@ -100,7 +101,7 @@ export default function LoginPage({ onAuth }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: 'rgba(250,248,240,0.35)',
+                  color: 'rgba(58,46,34,0.35)',
                   fontSize: '0.75rem',
                   cursor: 'pointer',
                   marginTop: '1.25rem',
@@ -113,7 +114,7 @@ export default function LoginPage({ onAuth }) {
           )}
 
           {error && (
-            <p style={{ color: '#dc6060', fontSize: '0.82rem', marginTop: '1.25rem' }}>{error}</p>
+            <p style={{ color: '#C41E3A', fontSize: '0.82rem', marginTop: '1.25rem' }}>{error}</p>
           )}
         </div>
       </div>

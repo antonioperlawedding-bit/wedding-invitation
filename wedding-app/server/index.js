@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 import authRoutes from './routes/auth.js';
 import configRoutes from './routes/config.js';
 import rsvpRoutes from './routes/rsvp.js';
-import syncRoutes from './routes/sync.js';
-import photoRoutes from './routes/photos.js';
 import { ensureDataDir } from './utils.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,8 +23,6 @@ if (!IS_PROD) {
 app.use('/api/auth', authRoutes);
 app.use('/api/config', configRoutes);
 app.use('/api/rsvp', rsvpRoutes);
-app.use('/api/sync', syncRoutes);
-app.use('/api/photos', photoRoutes);
 
 /* ── Serve built frontend in production ── */
 if (IS_PROD) {
