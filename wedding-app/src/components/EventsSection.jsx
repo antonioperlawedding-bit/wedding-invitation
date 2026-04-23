@@ -3,52 +3,26 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useConfig } from '../i18n/useConfig';
 import { useLang } from '../i18n/LanguageContext';
+import churchImg from '../assets/st-charbel-church.png';
+import hotelImg from '../assets/massabki-hotel.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ── Elegant SVG icons ── */
+/* ── Venue illustration icons ── */
 const CeremonyIcon = () => (
-  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-    <circle cx="24" cy="24" r="23" stroke="#87A96B" strokeWidth="0.8" fill="none" />
-    {/* Church silhouette */}
-    <path d="M17 36 L17 22 L24 15 L31 22 L31 36" stroke="#87A96B" strokeWidth="1.1" strokeLinejoin="round" fill="rgba(135,169,107,0.05)" />
-    {/* Cross */}
-    <line x1="24" y1="9" x2="24" y2="15" stroke="#87A96B" strokeWidth="1.2" strokeLinecap="round" />
-    <line x1="21.5" y1="11.5" x2="26.5" y2="11.5" stroke="#87A96B" strokeWidth="1.2" strokeLinecap="round" />
-    {/* Arched door */}
-    <path d="M21.5 36 L21.5 30 C21.5 28 22.8 27 24 27 C25.2 27 26.5 28 26.5 30 L26.5 36" stroke="#87A96B" strokeWidth="1" fill="rgba(135,169,107,0.1)" />
-    {/* Rose window */}
-    <circle cx="24" cy="23" r="2" stroke="#87A96B" strokeWidth="0.7" fill="rgba(135,169,107,0.1)" />
-    <circle cx="24" cy="23" r="0.7" fill="#87A96B" opacity="0.15" />
-    {/* Small side windows */}
-    <rect x="19" y="25" width="1.5" height="2.5" rx="0.75" stroke="#87A96B" strokeWidth="0.5" fill="rgba(135,169,107,0.08)" opacity="0.6" />
-    <rect x="27.5" y="25" width="1.5" height="2.5" rx="0.75" stroke="#87A96B" strokeWidth="0.5" fill="rgba(135,169,107,0.08)" opacity="0.6" />
-  </svg>
+  <img
+    src={churchImg}
+    alt="Mar Charbel Church"
+    style={{ width: '90px', height: '90px', objectFit: 'contain', display: 'block' }}
+  />
 );
 
 const ReceptionIcon = () => (
-  <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-    <circle cx="24" cy="24" r="23" stroke="#87A96B" strokeWidth="0.8" fill="none" />
-    {/* Left champagne flute */}
-    <path d="M16 11 L15.3 20 C15.1 22 16.5 23 18 23" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" fill="none" />
-    <path d="M20 11 L20.7 20 C20.9 22 19.5 23 18 23" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" fill="none" />
-    <path d="M16 16 C16 16 15.5 20 15.5 21 C15.5 22.2 16.8 22.8 18 22.8 C19.2 22.8 20.5 22.2 20.5 21 C20.5 20 20 16 20 16Z" fill="rgba(135,169,107,0.1)" />
-    <line x1="18" y1="23" x2="18" y2="32" stroke="#87A96B" strokeWidth="0.9" strokeLinecap="round" />
-    <path d="M15.5 32.5 L20.5 32.5" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" />
-    {/* Right champagne flute */}
-    <path d="M28 11 L27.3 20 C27.1 22 28.5 23 30 23" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" fill="none" />
-    <path d="M32 11 L32.7 20 C32.9 22 31.5 23 30 23" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" fill="none" />
-    <path d="M28 16 C28 16 27.5 20 27.5 21 C27.5 22.2 28.8 22.8 30 22.8 C31.2 22.8 32.5 22.2 32.5 21 C32.5 20 32 16 32 16Z" fill="rgba(135,169,107,0.1)" />
-    <line x1="30" y1="23" x2="30" y2="32" stroke="#87A96B" strokeWidth="0.9" strokeLinecap="round" />
-    <path d="M27.5 32.5 L32.5 32.5" stroke="#87A96B" strokeWidth="1" strokeLinecap="round" />
-    {/* Clink sparkle */}
-    <path d="M22 12 L26 12" stroke="#87A96B" strokeWidth="0.6" strokeLinecap="round" opacity="0.45" />
-    <path d="M24 10 L24 14" stroke="#87A96B" strokeWidth="0.6" strokeLinecap="round" opacity="0.45" />
-    <path d="M22.5 10.5 L25.5 13.5" stroke="#87A96B" strokeWidth="0.4" strokeLinecap="round" opacity="0.25" />
-    <path d="M25.5 10.5 L22.5 13.5" stroke="#87A96B" strokeWidth="0.4" strokeLinecap="round" opacity="0.25" />
-    {/* Small heart */}
-    <path d="M22.5 36 C22.5 35 23.5 34.5 24 35.3 C24.5 34.5 25.5 35 25.5 36 C25.5 37 24 38 24 38 C24 38 22.5 37 22.5 36Z" fill="#87A96B" opacity="0.2" />
-  </svg>
+  <img
+    src={hotelImg}
+    alt="Massabki Hotel"
+    style={{ width: '90px', height: '90px', objectFit: 'contain', display: 'block' }}
+  />
 );
 
 function EventCard({ event, label, icon, dateStr, viewMapText }) {
@@ -88,7 +62,7 @@ function EventCard({ event, label, icon, dateStr, viewMapText }) {
       }} />
 
       {/* Icon */}
-      <div className="ev-anim" style={{ marginBottom: '1.25rem' }}>
+      <div className="ev-anim" style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'center' }}>
         {icon}
       </div>
 
@@ -111,13 +85,13 @@ function EventCard({ event, label, icon, dateStr, viewMapText }) {
       </h3>
 
       {/* Address */}
-      <p className="ev-anim" style={{
+      {/* <p className="ev-anim" style={{
         fontFamily: '"Cormorant Garamond", serif', fontWeight: 400,
         fontSize: '1rem', color: 'rgba(58,46,34,0.55)',
         marginBottom: '1rem',
       }}>
         {event.address}
-      </p>
+      </p> */}
 
       {/* Time */}
       <p className="ev-anim" style={{
@@ -183,7 +157,7 @@ export default function EventsSection() {
       ref={sectionRef}
       className="watermark-sunflower"
       style={{
-        background: '#f5f0e8',
+        background: '#eaf3e2',
         padding: 'clamp(3rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem)',
         position: 'relative',
         overflow: 'hidden',

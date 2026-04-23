@@ -15,6 +15,7 @@ import RSVPSection      from './components/RSVPSection';
 import ListeDeMariageSection from './components/ListeDeMariageSection';
 import FooterSection    from './components/FooterSection';
 import ChatbotWidget    from './components/ChatbotWidget';
+import MusicPlayer     from './components/MusicPlayer';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -131,6 +132,7 @@ export default function App() {
       </main>
 
       <ChatbotWidget />
+      <MusicPlayer />
     </div>
   );
 }

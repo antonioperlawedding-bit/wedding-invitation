@@ -34,7 +34,7 @@ function GalleryItem({ item, index, colSpan = 3, aspect = '1/1' }) {
         gridColumn: `span ${colSpan}`,
         aspectRatio: aspect,
         position: 'relative',
-        background: 'linear-gradient(135deg, #f5f0e8 0%, #ebe5d8 100%)',
+        background: 'linear-gradient(135deg, #eaf3e2 0%, #ebe5d8 100%)',
         overflow: 'hidden',
         borderRadius: '0.75rem',
       }}
@@ -166,7 +166,7 @@ export default function GallerySection() {
       ref={sectionRef}
       className="watermark-sunflower"
       style={{
-        background: '#f5f0e8',
+        background: '#eaf3e2',
         padding: 'clamp(3rem,8vw,7rem) clamp(1rem,4vw,3rem) clamp(1.5rem,4vw,3.5rem)',
         position: 'relative',
         overflow: 'hidden',

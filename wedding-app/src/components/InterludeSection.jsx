@@ -38,17 +38,15 @@ export default function InterludeSection() {
           height: '60vh',
           minHeight: '350px',
           maxHeight: '600px',
-          clipPath: 'inset(0)',
           overflow: 'hidden',
         }}
       >
         <div style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '100vh',
-          overflow: 'hidden',
+          bottom: 0,
           zIndex: 0,
         }}>
           <div
@@ -96,7 +94,7 @@ export default function InterludeSection() {
         >
           <path
             d="M0,0 L0,30 Q360,80 720,80 Q1080,80 1440,30 L1440,0 Z"
-            fill="#f5f0e8"
+            fill="#eaf3e2"
           />
           <path
             d="M0,30 Q360,80 720,80 Q1080,80 1440,30"
@@ -124,7 +122,7 @@ export default function InterludeSection() {
         >
           <path
             d="M0,80 L0,50 Q360,0 720,0 Q1080,0 1440,50 L1440,80 Z"
-            fill="#f5f0e8"
+            fill="#eaf3e2"
           />
           <path
             d="M0,50 Q360,0 720,0 Q1080,0 1440,50"

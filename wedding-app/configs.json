@@ -46,14 +46,14 @@
       "groom": {
         "venue": "Tannoury Family Residence",
         "address": "Qaa El Rim, Lebanon",
-        "time": "2:00 PM",
+        "time": "1:30 PM",
         "mapUrl": "https://maps.app.goo.gl/h9ZVSJfF226Wpps98",
         "description": "The celebration begins with a gathering at the groom's home"
       },
       "bride": {
         "venue": "Massabki Hotel",
         "address": "Chtaura, Lebanon",
-        "time": "2:30 PM",
+        "time": "1:30 PM",
         "mapUrl": "https://maps.app.goo.gl/piEYFXfHJwND3ZYt7",
         "description": "Join the bride's family for a beautiful send-off"
       }
@@ -88,7 +88,7 @@
         "icon": "church"
       },
       {
-        "time": "7:15 PM",
+        "time": "7:00 PM",
         "title": "Reception & Welcome Drink",
         "description": "Enjoy drinks and appetizers at Massabki Hotel",
         "icon": "drinks"
@@ -186,14 +186,14 @@
       "enabled": true,
       "welcomeMessage": "Hi! 👋 I'm here to help answer any questions about Perla & Antonio's wedding. Feel free to ask me anything!",
       "placeholderText": "Ask me about the wedding...",
-      "customInstructions": "Additional Guidelines:\n- Theme: Our wedding has a beautiful sunflower and red roses theme 🌻🌹\n- Dress Code: Semi-formal/Garden party attire (mention comfortable footwear for outdoor grass)\n- Photography: Professional photographer will capture the ceremony, guests can take photos during reception\n- Adults-only celebration\n- Parking and valet service available on-site\n- Shuttle service from recommended hotels\n- Full dinner and drinks will be served\n\nBe extra warm and enthusiastic! This is a celebration of love! 💐✨"
+      "customInstructions": "Additional notes:\n- The wedding has a sunflower and red roses theme 🌻🌹\n- Dress code is semi-formal / garden party attire. Guests should wear comfortable footwear as parts of the venue are on grass.\n- A professional photographer will be present. Please keep phones away during the ceremony; photos are welcome during the reception.\n- This is an adults-only celebration.\n- Free parking and valet service are available on-site.\n- A full dinner and drinks will be served.\n\nAlways stay upbeat and celebratory. Only share information that is confirmed above — do not speculate or invent details about the couple, their families, or the event."
     }
   },
   "ui": {
     "hero": {
       "tag": "TOGETHER WE BEGIN",
       "sideTextLeft": "Made for Each Other",
-      "heroImage": "https://lh3.googleusercontent.com/d/1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf=s1600"
+      "heroImage": "https://lh3.googleusercontent.com/d/1uvWrYf8Bkg0FBPqwwnkIEnsCZltoUiuu=s1600"
     },
     "countdown": {
       "tag": "Counting Down To",
@@ -213,7 +213,7 @@
       "receptionLabel": "Welcom Drink & Dinner Reception"
     },
     "interlude": {
-      "image": "https://lh3.googleusercontent.com/d/1NQ54S8IjltwCm68UIGzyXTN6cQgFftzf=s1600"
+      "image": "https://lh3.googleusercontent.com/d/1wtyo_IOZdLXnuajO870vzUg8n6uRej_0=s1600"
     },
     "timeline": {
       "tag": "The Day Of",

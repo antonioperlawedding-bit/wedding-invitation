@@ -215,7 +215,7 @@ export default function TimelineSection() {
       ref={sectionRef}
       className="watermark-rose"
       style={{
-        background: '#faf8f0',
+        background: '#f2f8ec',
         padding: 'clamp(3rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem)',
         position: 'relative',
         overflow: 'hidden',

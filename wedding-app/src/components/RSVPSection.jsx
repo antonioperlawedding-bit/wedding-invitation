@@ -169,7 +169,7 @@ export default function RSVPSection() {
       ref={sectionRef}
       className="watermark-sunflower"
       style={{
-        background: '#f5f0e8',
+        background: '#eaf3e2',
         padding: 'clamp(3rem,8vw,7rem) clamp(1rem,4vw,3rem) clamp(1.5rem,4vw,3.5rem)',
         position: 'relative',
         overflow: 'hidden',

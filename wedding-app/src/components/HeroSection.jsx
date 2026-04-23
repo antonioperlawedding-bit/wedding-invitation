@@ -3,6 +3,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useConfig } from '../i18n/useConfig';
 import { useLang } from '../i18n/LanguageContext';
+import cornerRoses from '../assets/flowers/tow_roses_one_sunflower_leaves.png';
+import cornerSunflower from '../assets/flowers/sunflower_rose_leaves.png';
+import leavesImg from '../assets/flowers/leaves.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +39,7 @@ function Monogram() {
   );
 }
 
-/* ── Background floral decorations (rose + sunflower) ── */
+/* ── Background floral decorations — real watercolor images ── */
 function FloralBackground() {
   return (
     <div style={{
@@ -46,96 +49,42 @@ function FloralBackground() {
       overflow: 'hidden',
       zIndex: 0,
     }}>
-      {/* Rose — top-right */}
-      <svg
-        width="120" height="150" viewBox="0 0 120 150" fill="none"
+      {/* Corner bouquet — top-right */}
+      <img
+        src={cornerRoses}
+        alt=""
+        aria-hidden="true"
         style={{
           position: 'absolute',
-          top: 'clamp(1rem, 4vw, 3rem)',
-          right: 'clamp(0.5rem, 3vw, 2rem)',
-          opacity: 0.10,
+          top: '60px',
+          right: '-20px',
+          width: 'clamp(160px, 28vw, 320px)',
+          opacity: 0.18,
+          transform: 'scaleX(-1)',
+          pointerEvents: 'none',
+          objectFit: 'contain',
         }}
-      >
-        <g transform="translate(60,50)">
-          <ellipse cx="0" cy="-5" rx="22" ry="28" fill="#C41E3A" />
-          <ellipse cx="-14" cy="2" rx="18" ry="24" fill="#C41E3A" transform="rotate(-25)" />
-          <ellipse cx="14" cy="2" rx="18" ry="24" fill="#C41E3A" transform="rotate(25)" />
-          <ellipse cx="-8" cy="12" rx="16" ry="20" fill="#C41E3A" transform="rotate(-12)" />
-          <ellipse cx="8" cy="12" rx="16" ry="20" fill="#C41E3A" transform="rotate(12)" />
-          <circle cx="0" cy="4" r="10" fill="#8B1A2B" />
-        </g>
-        {/* Stem + leaves */}
-        <path d="M60,78 Q60,110 60,145" stroke="#87A96B" strokeWidth="2" fill="none" />
-        <ellipse cx="45" cy="105" rx="14" ry="7" fill="#87A96B" transform="rotate(-25 45 105)" />
-        <ellipse cx="75" cy="118" rx="14" ry="7" fill="#87A96B" transform="rotate(25 75 118)" />
-      </svg>
-
-      {/* Sunflower — bottom-left */}
-      <svg
-        width="130" height="160" viewBox="0 0 130 160" fill="none"
+      />
+      {/* Corner bouquet — bottom-left */}
+      <img
+        src={cornerSunflower}
+        alt=""
+        aria-hidden="true"
         style={{
           position: 'absolute',
-          bottom: 'clamp(1rem, 4vw, 3rem)',
-          left: 'clamp(0.5rem, 3vw, 2rem)',
-          opacity: 0.10,
+          bottom: '-20px',
+          left: '-10px',
+          width: 'clamp(130px, 22vw, 260px)',
+          opacity: 0.16,
+          transform: 'scaleY(-1)',
+          pointerEvents: 'none',
+          objectFit: 'contain',
         }}
-      >
-        <g transform="translate(65,60)">
-          {Array.from({ length: 10 }, (_, i) => (
-            <ellipse key={i} rx="12" ry="28" fill="#FFE135" transform={`rotate(${i * 18})`} />
-          ))}
-          <circle r="16" fill="#8B7355" />
-          <circle r="10" fill="#6b5740" />
-        </g>
-        {/* Stem + leaf */}
-        <path d="M65,88 Q65,120 65,155" stroke="#87A96B" strokeWidth="2.5" fill="none" />
-        <ellipse cx="48" cy="120" rx="16" ry="8" fill="#87A96B" transform="rotate(-25 48 120)" />
-      </svg>
+      />
     </div>
   );
 }
 
-/* ── Decorative arch border SVG between image and details ── */
-function ArchBorder() {
-  return (
-    <div style={{
-      position: 'relative',
-      marginTop: '-1px',
-      lineHeight: 0,
-      zIndex: 4,
-    }}>
-      <svg
-        viewBox="0 0 1440 80"
-        preserveAspectRatio="none"
-        style={{ display: 'block', width: '100%', height: 'clamp(40px, 6vw, 80px)' }}
-      >
-        <path
-          d="M0,80 L0,30 Q360,0 720,0 Q1080,0 1440,30 L1440,80 Z"
-          fill="#faf8f0"
-        />
-        <path
-          d="M0,30 Q360,0 720,0 Q1080,0 1440,30"
-          fill="none"
-          stroke="rgba(135,169,107,0.3)"
-          strokeWidth="1.5"
-        />
-      </svg>
-      {/* Center ornament */}
-      <div style={{
-        position: 'absolute',
-        top: '-6px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 5,
-      }}>
-        <svg width="24" height="12" viewBox="0 0 24 12" fill="none">
-          <path d="M0,10 Q6,0 12,0 Q18,0 24,10" stroke="rgba(135,169,107,0.5)" strokeWidth="1" fill="none" />
-          <circle cx="12" cy="2" r="2.5" fill="#87A96B" opacity="0.5" />
-        </svg>
-      </div>
-    </div>
-  );
-}
 
 export default function HeroSection() {
   const config = useConfig();
@@ -198,51 +147,22 @@ export default function HeroSection() {
       ref={sectionRef}
       style={{ position: 'relative' }}
     >
-      {/* ─── Top curved overlay ─── */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        lineHeight: 0,
-        zIndex: 3,
-        pointerEvents: 'none',
-      }}>
-        <svg
-          viewBox="0 0 1440 80"
-          preserveAspectRatio="none"
-          style={{ display: 'block', width: '100%', height: 'clamp(35px, 5vw, 70px)' }}
-        >
-          <path
-            d="M0,0 L0,30 Q360,80 720,80 Q1080,80 1440,30 L1440,0 Z"
-            fill="#faf8f0"
-          />
-          <path
-            d="M0,30 Q360,80 720,80 Q1080,80 1440,30"
-            fill="none"
-            stroke="rgba(135,169,107,0.25)"
-            strokeWidth="1.5"
-          />
-        </svg>
-      </div>
-
       {/* ─── Full-screen couple image — fixed so it slides under the next section ─── */}
       <div
         ref={imageBlockRef}
         style={{
           position: 'relative',
           height: '100svh',
-          clipPath: 'inset(0)',
+          overflow: 'hidden',
         }}
       >
-        {/* Sticky inner so the image stays in place while content scrolls over it */}
+        {/* Image fills the section container */}
         <div style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '100svh',
-          overflow: 'hidden',
+          bottom: 0,
           zIndex: 0,
         }}>
           {heroImage ? (
@@ -264,7 +184,7 @@ export default function HeroSection() {
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: '#faf8f0',
+                background: '#f2f8ec',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -332,7 +252,7 @@ export default function HeroSection() {
             position: 'absolute',
             inset: 0,
             background: heroImage
-              ? 'linear-gradient(to bottom, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.1) 38%, rgba(0,0,0,0.45) 100%)'
+              ? 'linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.68) 100%)'
               : 'linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(27,67,50,0.06) 100%)',
             pointerEvents: 'none',
           }} />
@@ -391,7 +311,7 @@ export default function HeroSection() {
               fontWeight: 200,
               fontSize: '0.68rem',
               letterSpacing: '0.5em',
-              color: heroImage ? 'rgba(255,255,255,0.75)' : 'rgba(135,169,107,0.6)',
+              color: heroImage ? 'rgba(255,255,255,0.95)' : 'rgba(135,169,107,0.6)',
               textTransform: 'uppercase',
               marginBottom: '0.6rem',
             }}>
@@ -405,7 +325,7 @@ export default function HeroSection() {
               color: heroImage ? '#fff' : '#3a2e20',
               lineHeight: 1.15,
               letterSpacing: '0.04em',
-              textShadow: heroImage ? '0 2px 30px rgba(0,0,0,0.25)' : 'none',
+              textShadow: heroImage ? '0 2px 8px rgba(0,0,0,0.55), 0 4px 32px rgba(0,0,0,0.35)' : 'none',
             }}>
               {config.couple.groom.firstName}
               <span style={{
@@ -421,7 +341,7 @@ export default function HeroSection() {
               fontWeight: 200,
               fontSize: '0.7rem',
               letterSpacing: '0.4em',
-              color: heroImage ? 'rgba(255,255,255,0.65)' : 'rgba(135,169,107,0.7)',
+              color: heroImage ? 'rgba(255,255,255,0.92)' : 'rgba(135,169,107,0.7)',
               textTransform: 'uppercase',
               marginTop: '0.75rem',
             }}>
@@ -449,13 +369,10 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ─── Arch border transition ─── */}
-      <ArchBorder />
-
       {/* ─── Wedding details section (slides over the image) ─── */}
       <div
         style={{
-          background: '#faf8f0',
+          background: '#f2f8ec',
           padding: 'clamp(2rem,6vw,5rem) clamp(1.5rem,5vw,3rem) clamp(1rem,3vw,2rem)',
           position: 'relative',
           zIndex: 2,
@@ -517,11 +434,15 @@ export default function HeroSection() {
             </p>
           </div>
 
-          {/* Divider */}
-          <div className="hero-anim" style={{
-            width: '60px', height: '1px', margin: '0 auto 1.5rem',
-            background: 'linear-gradient(90deg, transparent, #87A96B, transparent)',
-          }} />
+          {/* Floral divider */}
+          <div className="hero-anim" style={{ margin: '0 auto 1.5rem', textAlign: 'center' }}>
+            <img
+              src={leavesImg}
+              alt=""
+              aria-hidden="true"
+              style={{ width: 'clamp(180px, 40vw, 280px)', opacity: 0.75, display: 'inline-block' }}
+            />
+          </div>
 
           {/* Parents' names */}
           <div className="hero-anim" style={{ marginBottom: '1.5rem' }}>
@@ -629,7 +550,7 @@ export default function HeroSection() {
         >
           <path
             d="M0,0 L0,0 Q360,60 720,60 Q1080,60 1440,0 L1440,0 Z"
-            fill="#faf8f0"
+            fill="#f2f8ec"
           />
         </svg>
       </div>

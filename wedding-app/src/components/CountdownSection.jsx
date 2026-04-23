@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import leavesImg from '../assets/flowers/leaves.png';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { getTimeRemaining } from '../utils/animations';
@@ -108,7 +109,7 @@ export default function CountdownSection() {
       ref={sectionRef}
       className="watermark-sunflower"
       style={{
-        background: '#f5f0e8',
+        background: '#eaf3e2',
         padding: 'clamp(3rem, 8vw, 7rem) clamp(1rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3.5rem)',
         position: 'relative',
         overflow: 'hidden',
@@ -128,10 +129,9 @@ export default function CountdownSection() {
           }}>
             {cfg.ui.countdown.title}
           </h2>
-          <div style={{
-            width: '60px', height: '1px', margin: '1.25rem auto 0',
-            background: 'linear-gradient(90deg, transparent, #87A96B, transparent)',
-          }} />
+          <div style={{ margin: '1.25rem auto 0', textAlign: 'center' }}>
+            <img src={leavesImg} alt="" aria-hidden="true" style={{ width: 'clamp(160px,35vw,240px)', opacity: 0.7, display: 'inline-block' }} />
+          </div>
         </div>
 
         {/* Cards */}

@@ -42,8 +42,15 @@ function LocationCard({ data, label, viewMapText }) {
       }}>
         {data.address}
       </p>
-
-      {data.mapUrl && (
+      {data.time && (
+        <p className="loc-anim" style={{
+          fontFamily: '"Cormorant Garamond", serif', fontWeight: 500,
+          fontSize: 'clamp(1rem, 4vw, 2.35rem)', color: '#87A96B',
+          letterSpacing: '0.1em', marginTop: '0.5rem', marginBottom: '0rem',
+        }}>
+          {data.time}
+        </p>
+      )}
         <a
           href={data.mapUrl}
           target="_blank"
@@ -71,7 +78,6 @@ function LocationCard({ data, label, viewMapText }) {
         >
           {viewMapText}
         </a>
-      )}
     </div>
   );
 }
@@ -90,7 +96,7 @@ export default function GatheringSection() {
       ref={sectionRef}
       className="watermark-rose"
       style={{
-        background: '#faf8f0',
+        background: '#f2f8ec',
         padding: 'clamp(3rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3.5rem)',
         position: 'relative',
         overflow: 'hidden',

@@ -43,7 +43,7 @@ function PersonCard({ person, role, roleKey, photo, objectPosition, t }) {
         ) : (
           <div style={{
             width: '100%', height: '100%',
-            background: 'linear-gradient(160deg, #f5f0e8 0%, #ede6d6 40%, #e0d4be 100%)',
+            background: 'linear-gradient(160deg, #eaf3e2 0%, #d8ecca 40%, #e0d4be 100%)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 'clamp(5rem, 15vw, 10rem)',
             fontFamily: '"Playfair Display", serif', fontWeight: 300,
@@ -132,7 +132,7 @@ export default function CoupleSection() {
       id="couple"
       ref={sectionRef}
       style={{
-        background: '#faf8f0',
+        background: '#f2f8ec',
         padding: 'clamp(2rem, 6vw, 5rem) 0 clamp(1rem, 3vw, 2.5rem)',
         position: 'relative',
         overflow: 'hidden',

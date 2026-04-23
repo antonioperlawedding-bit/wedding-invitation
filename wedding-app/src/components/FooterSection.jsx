@@ -99,7 +99,7 @@ export default function FooterSection() {
               fontWeight: 400,
               fontStyle: 'italic',
               fontSize: 'clamp(1.8rem,5vw,3rem)',
-              color: '#faf8f0',
+              color: '#f2f8ec',
               letterSpacing: '0.04em',
             }}
           >

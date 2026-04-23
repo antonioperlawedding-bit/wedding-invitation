@@ -7,15 +7,18 @@
 ============================================= */
 :root {
   --color-white: #ffffff;
-  --color-ivory: #faf8f0;
-  --color-ivory-warm: #f5f0e8;
-  --color-cream: #ede6d6;
+  --color-ivory: #f2f8ec;
+  --color-ivory-warm: #eaf3e2;
+  --color-cream: #d8ecca;
   --color-straw: #8B7355;
   --color-straw-light: #a89279;
   --color-straw-dark: #6b5740;
   --color-straw-muted: rgba(139, 115, 85, 0.5);
-  --color-canary: #FFE135;
-  --color-canary-light: #FFF176;
+  --color-gold: #C9A020;
+  --color-gold-light: #E8C84A;
+  --color-canary: #F5C518;
+  --color-canary-light: #FDE372;
+  --color-sunflower: #F5C518;
   --color-tender-green: #A8D8A0;
   --color-parrot-green: #6BBF59;
   --color-avocado: #87A96B;
@@ -179,15 +182,17 @@ body { font-family: var(--font-jost); background: var(--color-ivory); color: var
 ============================================= */
 .watermark-rose { position: relative; }
 .watermark-rose::before {
-  content:''; position:absolute; top:10%; right:-5%; width:300px; height:300px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg opacity='0.12' fill='%23C41E3A'%3E%3Cellipse cx='100' cy='85' rx='35' ry='40'/%3E%3Cellipse cx='75' cy='95' rx='30' ry='35' transform='rotate(-30 75 95)'/%3E%3Cellipse cx='125' cy='95' rx='30' ry='35' transform='rotate(30 125 95)'/%3E%3Cellipse cx='85' cy='110' rx='28' ry='32' transform='rotate(-15 85 110)'/%3E%3Cellipse cx='115' cy='110' rx='28' ry='32' transform='rotate(15 115 110)'/%3E%3Ccircle cx='100' cy='95' r='12' fill='%238B1A2B'/%3E%3Cpath d='M98,130 Q100,175 100,190 M92,145 Q80,155 70,150 M108,145 Q120,155 130,150' stroke='%2387A96B' stroke-width='2' fill='none'/%3E%3Cellipse cx='70' cy='152' rx='18' ry='10' fill='%2387A96B' transform='rotate(-20 70 152)'/%3E%3Cellipse cx='130' cy='152' rx='18' ry='10' fill='%2387A96B' transform='rotate(20 130 152)'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-size:contain; pointer-events:none; z-index:0;
+  content:''; position:absolute; top:5%; right:0; width:clamp(200px,28vw,320px); height:clamp(200px,28vw,320px);
+  background-image: url('../assets/flowers/two_roses_leaves.png');
+  background-repeat:no-repeat; background-size:contain; background-position: top right;
+  pointer-events:none; z-index:0; opacity:0.13;
 }
 .watermark-sunflower { position: relative; }
 .watermark-sunflower::before {
-  content:''; position:absolute; bottom:5%; left:-5%; width:280px; height:280px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cg opacity='0.1'%3E%3Cg transform='translate(100,90)'%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(0)'/%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(30)'/%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(60)'/%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(90)'/%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(120)'/%3E%3Cellipse rx='18' ry='35' fill='%23FFE135' transform='rotate(150)'/%3E%3Ccircle r='20' fill='%238B7355'/%3E%3Ccircle r='14' fill='%236b5740'/%3E%3C/g%3E%3Cpath d='M98,125 Q100,170 100,195' stroke='%2387A96B' stroke-width='2.5' fill='none'/%3E%3Cellipse cx='80' cy='158' rx='20' ry='10' fill='%2387A96B' opacity='0.8' transform='rotate(-25 80 158)'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-size:contain; pointer-events:none; z-index:0;
+  content:''; position:absolute; bottom:5%; left:0; width:clamp(180px,24vw,280px); height:clamp(180px,24vw,280px);
+  background-image: url('../assets/flowers/sunflower_foulard.png');
+  background-repeat:no-repeat; background-size:contain; background-position: bottom left;
+  pointer-events:none; z-index:0; opacity:0.13;
 }
 
 /* =============================================
