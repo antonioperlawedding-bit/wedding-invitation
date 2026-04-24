@@ -114,12 +114,12 @@ export const translations = {
 
     // Gathering
     gathering: {
-      viewMap: 'عرض الخريطة',
+      viewMap: 'الخريطة',
     },
 
     // Events
     events: {
-      viewMap: 'عرض الخريطة',
+      viewMap: 'الخريطة',
     },
 
     // Gallery
@@ -186,7 +186,7 @@ export const translations = {
 export const configAr = {
   wedding: {
     dateFormatted: 'السبت، ٦ حزيران ٢٠٢٦',
-    locationFull: 'لبنان · قاع الريم · شتورا',
+    locationFull: 'قاع الريم · شتورا',
     location: 'لبنان',
     bibleVerse: 'إذًا ليسا بعدُ اثنَين بل جسدٌ واحد. فالذي جمعَهُ الله لا يُفرِّقهُ إنسان.',
     bibleReference: 'متّى ١٩:٦',
@@ -289,7 +289,7 @@ export const configAr = {
         icon: 'church',
       },
       {
-        time: '٧:١٥ مساءً',
+        time: '٧:٠٠ مساءً',
         title: 'الاستقبال ومشروب الترحيب',
         description: 'استمتعوا بالمشروبات والمقبّلات في فندق مسابكي',
         icon: 'drinks',

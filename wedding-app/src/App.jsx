@@ -15,7 +15,8 @@ import RSVPSection      from './components/RSVPSection';
 import ListeDeMariageSection from './components/ListeDeMariageSection';
 import FooterSection    from './components/FooterSection';
 import ChatbotWidget    from './components/ChatbotWidget';
-import MusicPlayer     from './components/MusicPlayer';
+import MusicPlayer, { triggerPlay } from './components/MusicPlayer';
+import LoadingScreen    from './components/LoadingScreen';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,38 +74,23 @@ export default function App() {
     };
   }, []);
 
-  /* ── Animate the HTML preloader out, then mark loaded ── */
+  /* ── Handle bfcache restore: re-show loading screen so music triggers ── */
   useEffect(() => {
-    const preloader = document.getElementById('preloader');
-    if (!preloader) { setIsLoaded(true); return; }
-
-    document.documentElement.style.overflow = 'hidden';
-
-    const MIN_DISPLAY_MS = 1200;
-    const pageStart = window.__loadStart || Date.now();
-    const elapsed = Date.now() - pageStart;
-    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
-
-    const tl = gsap.timeline({
-      delay: remaining / 1000,
-      onComplete: () => {
-        preloader.remove();
-        document.documentElement.style.overflow = '';
-        setIsLoaded(true);
-      },
-    });
-
-    tl.to(preloader, {
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.inOut',
-    });
-
-    return () => {
-      tl.kill();
-      document.documentElement.style.overflow = '';
+    const onPageShow = (e) => {
+      if (e.persisted) {
+        // Reset timestamp so LoadingScreen shows for its full duration
+        window.__loadStart = Date.now();
+        setIsLoaded(false);
+      }
     };
+    window.addEventListener('pageshow', onPageShow);
+    return () => window.removeEventListener('pageshow', onPageShow);
   }, []);
+
+  const handleLoadComplete = () => {
+    setIsLoaded(true);
+    triggerPlay();
+  };
 
   /* ── After load: refresh ScrollTrigger ── */
   useEffect(() => {
@@ -115,6 +101,8 @@ export default function App() {
   }, [isLoaded]);
 
   return (
+    <>
+    {!isLoaded && <LoadingScreen onComplete={handleLoadComplete} />}
     <div style={{ pointerEvents: isLoaded ? 'auto' : 'none' }}>
       <Navigation />
 
@@ -134,5 +122,6 @@ export default function App() {
       <ChatbotWidget />
       <MusicPlayer />
     </div>
+    </>
   );
 }

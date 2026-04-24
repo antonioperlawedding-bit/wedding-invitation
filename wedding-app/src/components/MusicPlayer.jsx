@@ -1,75 +1,84 @@
 import { useState, useEffect } from 'react';
-import musicFile from '../assets/music/Air Supply - Making Love Out Of Nothing At All (Piano Cover by Riyandi Kusuma).mp3';
 
-/* ── Module-level singleton so audio starts as early as possible ── */
-let _audio = null;
-let _playing = false;
-let _started = false; // synchronous flag — set BEFORE the async play() Promise resolves
-const _listeners = new Set();
-
+/**
+ * Returns the single Audio element created in index.html.
+ * Falls back to creating one if not yet available (e.g. during dev HMR).
+ * We do NOT call play() here — index.html already did.
+ */
 function getAudio() {
-  if (!_audio) {
-    _audio = new Audio(musicFile);
-    _audio.loop = true;
-    _audio.volume = 0.35;
-    _audio.preload = 'auto';
+  if (!window.__audio) {
+    const a = new Audio('/music.mp3');
+    a.loop    = true;
+    a.volume  = 0.35;
+    a.preload = 'auto';
+    window.__audio = a;
   }
-  return _audio;
+  return window.__audio;
 }
 
-function notifyListeners() {
-  _listeners.forEach(fn => fn(_playing));
-}
-
-const EVENTS = ['click', 'touchstart', 'touchend', 'pointerdown', 'scroll', 'keydown', 'mousemove'];
-
-function removeListeners() {
-  EVENTS.forEach(ev => document.removeEventListener(ev, onAnyInteraction));
-}
-
-function tryPlay() {
-  if (_started) return; // prevent duplicate concurrent play() calls
-  _started = true;
+/**
+ * Called by App.jsx every time the loading screen finishes.
+ * Ensures audio is playing and unmuted. No-ops if already audibly playing.
+ */
+export function triggerPlay() {
   const audio = getAudio();
-  audio.play().then(() => {
-    _playing = true;
-    notifyListeners();
-    removeListeners();
-  }).catch(() => {
-    _started = false; // allow retry on next gesture if play() was rejected
+
+  // Already playing audibly — nothing to do
+  if (!audio.paused && !audio.muted) return;
+
+  // Playing muted (normal muted-autoplay path) — just unmute
+  if (!audio.paused && audio.muted) {
+    audio.muted  = false;
+    audio.volume = 0.35;
+    return;
+  }
+
+  // Paused — attempt play (needs gesture on iOS <16.4)
+  audio.muted  = false;
+  audio.volume = 0.35;
+  audio.play().catch(() => {
+    // Gesture still required on this browser — the _unlock listener in
+    // index.html will handle it on first tap/scroll
   });
 }
 
-function onAnyInteraction() {
-  tryPlay();
-}
-
-EVENTS.forEach(ev => document.addEventListener(ev, onAnyInteraction, { passive: true }));
-
-/* Try immediately — works on desktop Chrome when user has prior engagement with the site */
-tryPlay();
-
 export default function MusicPlayer() {
-  const [playing, setPlaying] = useState(_playing);
+  const [playing, setPlaying] = useState(() => {
+    const a = getAudio();
+    return !a.paused && !a.muted;
+  });
+  const [chatOpen, setChatOpen] = useState(false);
 
+  // Sync React state directly to native audio element events
   useEffect(() => {
-    _listeners.add(setPlaying);
-    setPlaying(_playing);
-    return () => { _listeners.delete(setPlaying); };
+    const a = getAudio();
+    const sync = () => setPlaying(!a.paused && !a.muted);
+    a.addEventListener('play',         sync);
+    a.addEventListener('pause',        sync);
+    a.addEventListener('volumechange', sync);
+    return () => {
+      a.removeEventListener('play',         sync);
+      a.removeEventListener('pause',        sync);
+      a.removeEventListener('volumechange', sync);
+    };
+  }, []);
+
+  // Hide button when chatbot is open on mobile
+  useEffect(() => {
+    const onChat = (e) => setChatOpen(e.detail?.open ?? false);
+    window.addEventListener('chatbot:toggle', onChat);
+    return () => window.removeEventListener('chatbot:toggle', onChat);
   }, []);
 
   const toggle = (e) => {
     e.stopPropagation();
-    const audio = getAudio();
-    if (_playing) {
-      audio.pause();
-      _playing = false;
-      notifyListeners();
+    const a = getAudio();
+    if (a.paused) {
+      a.muted  = false;
+      a.volume = 0.35;
+      a.play().catch(() => {});
     } else {
-      audio.play().then(() => {
-        _playing = true;
-        notifyListeners();
-      }).catch(() => {});
+      a.pause();
     }
   };
 
@@ -91,8 +100,8 @@ export default function MusicPlayer() {
         background: 'rgba(242,248,236,0.88)',
         backdropFilter: 'blur(10px)',
         WebkitBackdropFilter: 'blur(10px)',
+        display: chatOpen ? 'none' : 'flex',
         cursor: 'pointer',
-        display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         boxShadow: '0 2px 12px rgba(135,169,107,0.15)',
@@ -104,11 +113,16 @@ export default function MusicPlayer() {
         WebkitAppearance: 'none',
         flexShrink: 0,
       }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.1)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(135,169,107,0.25)'; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(135,169,107,0.15)'; }}
+      onMouseEnter={e => {
+        e.currentTarget.style.transform = 'scale(1.1)';
+        e.currentTarget.style.boxShadow = '0 4px 16px rgba(135,169,107,0.25)';
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.transform = 'scale(1)';
+        e.currentTarget.style.boxShadow = '0 2px 12px rgba(135,169,107,0.15)';
+      }}
     >
       {playing ? (
-        /* Animated bars when playing */
         <span style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '14px' }}>
           {[0, 0.15, 0.3].map((delay, i) => (
             <span
@@ -124,7 +138,6 @@ export default function MusicPlayer() {
           ))}
         </span>
       ) : (
-        /* Music note icon when paused */
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M9 18V5l12-2v13"

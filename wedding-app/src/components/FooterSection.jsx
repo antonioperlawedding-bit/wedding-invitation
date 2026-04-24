@@ -32,7 +32,7 @@ export default function FooterSection() {
     <footer
       ref={sectionRef}
       style={{
-        background: '#162F24',
+        background: '#195325',
         padding: 'clamp(3rem,8vw,7rem) clamp(1rem,4vw,3rem) clamp(1.5rem,4vw,3.5rem)',
         position: 'relative',
         overflow: 'hidden',

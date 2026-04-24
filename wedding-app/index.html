@@ -54,7 +54,41 @@
     </style>
 
     <div id="root"></div>
-    <script>window.__loadStart=Date.now();</script>
+    <script>
+      window.__loadStart = Date.now();
+      // Create the audio element before React loads — only once per tab.
+      // Strategy: start MUTED (universally allowed by all browsers without gesture),
+      // then immediately unmute. This gives us gesture-free autoplay everywhere.
+      if (!window.__audio) {
+        var _a = new Audio('/music.mp3');
+        _a.loop    = true;
+        _a.volume  = 0.35;
+        _a.muted   = true;   // muted = browsers always allow autoplay
+        _a.preload = 'auto';
+        window.__audio = _a;
+
+        var _p = _a.play();
+        if (_p) {
+          _p.then(function () {
+            // Playing (muted) — unmute immediately for audible playback
+            _a.muted = false;
+          }).catch(function () {
+            // Even muted failed (iOS <16.4, very strict settings)
+            // First interaction will unlock it
+            _a.muted = false; // clear muted flag so next play() is audible
+          });
+        }
+
+        // Fallback: on first ANY interaction, ensure audio is playing + unmuted
+        function _unlock() {
+          _a.muted = false;
+          if (_a.paused) _a.play().catch(function () {});
+        }
+        ['click','touchstart','pointerdown','scroll','keydown'].forEach(function (ev) {
+          document.addEventListener(ev, _unlock, { passive: true, once: true });
+        });
+      }
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
