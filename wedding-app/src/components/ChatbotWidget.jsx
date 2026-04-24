@@ -546,8 +546,7 @@ export default function ChatbotWidget() {
               }}
             >
               {/* Quick questions — horizontal scroll row, above input */}
-              {messages.filter(m => m.role === 'user').length === 0 && (
-                <div
+              <div
                   style={{
                     overflowX: 'auto',
                     overflowY: 'hidden',
@@ -592,7 +591,6 @@ export default function ChatbotWidget() {
                     </button>
                   ))}
                 </div>
-              )}
 
               {/* Text input row */}
               <div

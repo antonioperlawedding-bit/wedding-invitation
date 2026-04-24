@@ -35,7 +35,7 @@ function FadeInSection({ children }) {
       ease: 'power2.out',
       scrollTrigger: {
         trigger: el,
-        start: 'top 88%',
+        start: 'top 100%',
         toggleActions: 'play none none none',
       },
     });
@@ -66,6 +66,12 @@ export default function App() {
     const ticker = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(ticker);
     gsap.ticker.lagSmoothing(0);
+
+    // Required for Lenis v1 + GSAP ScrollTrigger: keeps ScrollTrigger in sync
+    // with Lenis's scroll position synchronously (not waiting for native scroll events).
+    // Without this, ScrollTrigger is one frame behind on fast scroll, causing
+    // triggers to miss or fire late — making sections appear frozen/blank.
+    lenis.on('scroll', ScrollTrigger.update);
 
     return () => {
       gsap.ticker.remove(ticker);

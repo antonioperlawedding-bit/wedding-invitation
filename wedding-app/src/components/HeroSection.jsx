@@ -247,12 +247,13 @@ export default function HeroSection() {
             </div>
           )}
 
-          {/* Gradient overlay — lighter for placeholder, cinematic for photo */}
+          {/* Gradient overlay */}
           <div style={{
             position: 'absolute',
             inset: 0,
             background: heroImage
-              ? 'linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.22) 40%, rgba(0,0,0,0.68) 100%)'
+              /* Only a dark fade at the very bottom to make text legible — top stays fully bright */
+              ? 'linear-gradient(to bottom, transparent 0%, transparent 50%, rgba(0,0,0,0.9) 100%)'
               : 'linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(27,67,50,0.06) 100%)',
             pointerEvents: 'none',
           }} />
