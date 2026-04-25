@@ -25,7 +25,7 @@ const ReceptionIcon = () => (
   />
 );
 
-function EventCard({ event, label, icon, dateStr, viewMapText }) {
+function EventCard({ event, label, subLabel, icon, dateStr, viewMapText }) {
   const cardRef = useRef(null);
 
   useEffect(() => {
@@ -70,7 +70,7 @@ function EventCard({ event, label, icon, dateStr, viewMapText }) {
       <p className="ev-anim" style={{
         fontFamily: 'Jost, sans-serif', fontWeight: 200,
         fontSize: '0.62rem', letterSpacing: '0.45em',
-        color: '#87A96B', textTransform: 'uppercase', marginBottom: '0.75rem',
+        color: '#87A96B', textTransform: 'uppercase', marginBottom: subLabel ? '0.35rem' : '0.75rem',
       }}>
         {label}
       </p>
@@ -98,7 +98,7 @@ function EventCard({ event, label, icon, dateStr, viewMapText }) {
         fontFamily: '"Cormorant Garamond", serif', fontWeight: 400,
         fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', color: '#87A96B',
         letterSpacing: '0.1em', marginBottom: '0.75rem',
-      }}>
+      }} dir="ltr">
         {event.time}
       </p>
 
@@ -193,6 +193,7 @@ export default function EventsSection() {
           <EventCard
             event={config.events.ceremony}
             label={config.ui.events.ceremonyLabel}
+            subLabel={t('events.churchLabel')}
             icon={<CeremonyIcon />}
             dateStr={config.wedding.dateFormatted}
             viewMapText={t('events.viewMap')}

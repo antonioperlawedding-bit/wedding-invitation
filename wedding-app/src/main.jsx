@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import App from './App.jsx';
@@ -13,14 +12,12 @@ if (window.location.pathname.startsWith('/cms')) {
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/cms/*" element={<CmsApp />} />
-          <Route path="*" element={<App />} />
-        </Routes>
-      </BrowserRouter>
-    </LanguageProvider>
-  </React.StrictMode>
+  <LanguageProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/cms/*" element={<CmsApp />} />
+        <Route path="*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
+  </LanguageProvider>
 );

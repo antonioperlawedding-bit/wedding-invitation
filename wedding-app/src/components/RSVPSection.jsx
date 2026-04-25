@@ -69,36 +69,13 @@ function FloatingInput({ label, value, onChange, type = 'text', name, required =
   );
 }
 
-function ConfettiEffect() {
-  const colors = ['#8B7355','#FFE135','#A8D8A0','#C41E3A','#87A96B'];
-  return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-      {Array.from({ length: 24 }, (_, i) => (
-        <motion.div
-          key={i}
-          initial={{ y: 0, x: `${Math.random() * 100}%`, opacity: 1, rotate: 0 }}
-          animate={{ y: '110vh', rotate: Math.random() * 720, opacity: [1,1,0] }}
-          transition={{ duration: 2 + Math.random() * 2, delay: Math.random(), ease: 'easeIn' }}
-          style={{
-            position: 'absolute',
-            top: '-20px',
-            width: i % 3 === 0 ? '8px' : '5px',
-            height: i % 3 === 0 ? '8px' : '14px',
-            borderRadius: i % 2 === 0 ? '50%' : '2px',
-            background: colors[i % colors.length],
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function RSVPSection() {
   const sectionRef = useRef(null);
   const config = useConfig();
   const { t, isAr } = useLang();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submittedAttendance, setSubmittedAttendance] = useState('');
   const [form, setForm] = useState({
     name: '',
     phone: '',
@@ -133,9 +110,12 @@ export default function RSVPSection() {
     setForm(f => ({ ...f, [name]: value }));
   };
 
+  const [error, setError] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
+    setError('');
     try {
       const res = await fetch('/api/rsvp', {
         method: 'POST',
@@ -143,21 +123,10 @@ export default function RSVPSection() {
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error('Failed');
+      setSubmittedAttendance(form.attendance);
       setSubmitted(true);
     } catch {
-      const subject = `${t('rsvp.emailSubject')} – ${form.name} (${form.attendance})`;
-      const body = [
-        `${t('rsvp.nameLabel')}: ${form.name}`,
-        `${t('rsvp.phoneLabel')}: ${form.phone}`,
-        `${t('rsvp.emailLabel')}: ${form.email || t('rsvp.na')}`,
-        `${t('rsvp.attendanceLabel')}: ${form.attendance}`,
-        `${t('rsvp.guestsLabel')}: ${form.guests}`,
-      ].join('\n');
-      window.open(
-        `mailto:${config.events.rsvp.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-        '_blank'
-      );
-      setSubmitted(true);
+      setError(t('rsvp.errorMessage') || 'Something went wrong. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -306,6 +275,11 @@ export default function RSVPSection() {
                     >
                       {submitting ? t('rsvp.sending') : t('rsvp.sendRsvp')}
                     </button>
+                    {error && (
+                      <p style={{ marginTop: '0.75rem', color: '#c0392b', fontSize: '0.82rem', fontFamily: 'Jost, sans-serif', fontWeight: 300 }}>
+                        {error}
+                      </p>
+                    )}
                   </div>
                 </form>
               </div>
@@ -343,6 +317,7 @@ export default function RSVPSection() {
                       color: '#87A96B',
                       textDecoration: 'none',
                     }}
+                    dir="ltr"
                   >
                     {config.events.rsvp.phone1}
                   </a>
@@ -358,6 +333,7 @@ export default function RSVPSection() {
                       color: '#87A96B',
                       textDecoration: 'none',
                     }}
+                    dir="ltr"
                   >
                     {config.events.rsvp.phone2}
                   </a>
@@ -372,7 +348,6 @@ export default function RSVPSection() {
               transition={{ duration: 0.6, ease: [0.25,0.46,0.45,0.94] }}
               style={{ position: 'relative', textAlign: 'center', padding: 'clamp(3rem,8vw,5rem) 2rem' }}
             >
-              <ConfettiEffect />
               <div
                 style={{
                   width: '64px',
@@ -387,7 +362,7 @@ export default function RSVPSection() {
                   margin: '0 auto 2rem',
                 }}
               >
-                ♡
+                {submittedAttendance === config.ui.rsvp.attendanceOptions[1] ? '✦' : '♡'}
               </div>
               <h3
                 style={{
@@ -411,7 +386,9 @@ export default function RSVPSection() {
                   margin: '0 auto',
                 }}
               >
-                {config.ui.rsvp.successMessage}
+                {submittedAttendance === config.ui.rsvp.attendanceOptions[1]
+                  ? config.ui.rsvp.declineMessage
+                  : config.ui.rsvp.successMessage}
               </p>
             </motion.div>
           )}

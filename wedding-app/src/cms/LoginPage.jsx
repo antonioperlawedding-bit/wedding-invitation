@@ -2,37 +2,21 @@ import { useState } from 'react';
 import { api } from './api';
 
 export default function LoginPage({ onAuth }) {
-  const [step, setStep] = useState('email'); // 'email' | 'otp'
-  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [info, setInfo] = useState('');
 
-  const handleSendOtp = async () => {
-    setLoading(true);
-    setError('');
-    setInfo('');
-    try {
-      const res = await api.sendOtp();
-      setStep('otp');
-      setInfo(res.note || 'A code has been sent to the admin email.');
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerify = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (code.length !== 6) return setError('Please enter the 6-digit code.');
+    if (!password) return setError('Please enter the password.');
     setLoading(true);
     setError('');
     try {
-      const res = await api.verifyOtp(code);
+      const res = await api.login(password);
       onAuth(res.token);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Incorrect password.');
     } finally {
       setLoading(false);
     }
@@ -45,73 +29,40 @@ export default function LoginPage({ onAuth }) {
           <h1>CMS</h1>
           <p className="subtitle">Wedding Management</p>
 
-          {step === 'email' ? (
-            <>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(58,46,34,0.5)', marginBottom: '2rem', lineHeight: 1.6 }}>
-                A one-time access code will be sent to the admin email address.
-              </p>
-              <button
-                className="cms-btn cms-btn-primary"
-                onClick={handleSendOtp}
-                disabled={loading}
-                style={{ width: '100%', justifyContent: 'center', padding: '0.85rem' }}
-              >
-                {loading ? 'Sending...' : 'Send Access Code'}
-              </button>
-            </>
-          ) : (
-            <form onSubmit={handleVerify}>
-              {info && (
-                <p style={{ fontSize: '0.82rem', color: '#87A96B', marginBottom: '1.5rem', lineHeight: 1.5 }}>
-                  {info}
-                </p>
-              )}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={6}
-                  value={code}
-                  onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  placeholder="000000"
-                  className="cms-input"
-                  style={{
-                    textAlign: 'center',
-                    fontSize: '2rem',
-                    letterSpacing: '0.5em',
-                    fontFamily: '"Cormorant Garamond", Georgia, serif',
-                    padding: '1rem',
-                    color: '#3a2e22',
-                  }}
-                  autoFocus
-                />
-              </div>
-              <button
-                type="submit"
-                className="cms-btn cms-btn-primary"
-                disabled={loading || code.length !== 6}
-                style={{ width: '100%', justifyContent: 'center', padding: '0.85rem' }}
-              >
-                {loading ? 'Verifying...' : 'Verify Code'}
-              </button>
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.5rem', position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                className="cms-input"
+                style={{ textAlign: 'left', letterSpacing: '0.1em', paddingRight: '3rem' }}
+                autoFocus
+                autoComplete="current-password"
+              />
               <button
                 type="button"
-                onClick={() => { setStep('email'); setCode(''); setError(''); }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'rgba(58,46,34,0.35)',
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  marginTop: '1.25rem',
-                  letterSpacing: '0.1em',
-                }}
+                onClick={() => setShowPassword(v => !v)}
+                style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(58,46,34,0.35)', padding: '0.25rem', lineHeight: 0 }}
+                tabIndex={-1}
               >
-                Resend code
+                {showPassword
+                  ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                }
               </button>
-            </form>
-          )}
+            </div>
+
+            <button
+              type="submit"
+              className="cms-btn cms-btn-primary"
+              disabled={loading}
+              style={{ width: '100%', justifyContent: 'center', padding: '0.85rem' }}
+            >
+              {loading ? 'Signing in…' : 'Sign In'}
+            </button>
+          </form>
 
           {error && (
             <p style={{ color: '#C41E3A', fontSize: '0.82rem', marginTop: '1.25rem' }}>{error}</p>

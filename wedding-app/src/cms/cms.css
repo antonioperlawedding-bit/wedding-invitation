@@ -197,6 +197,109 @@
   color: #C41E3A;
 }
 
+/* ── Card grid view ── */
+.cms-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.cms-card {
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139,115,85,0.12);
+  border-radius: 10px;
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.cms-card:hover {
+  box-shadow: 0 4px 20px rgba(139,115,85,0.1);
+}
+
+.cms-card-name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #3a2e22;
+  margin: 0 0 0.25rem;
+}
+
+.cms-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(58,46,34,0.6);
+}
+
+.cms-card-row svg {
+  flex-shrink: 0;
+  opacity: 0.4;
+}
+
+.cms-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(139,115,85,0.1);
+}
+
+.cms-card-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cms-card-edit-form input,
+.cms-card-edit-form select {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(250,248,240,0.9);
+  border: 1px solid rgba(139,115,85,0.3);
+  border-radius: 0;
+  color: #3a2e22;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.cms-card-edit-form input:focus,
+.cms-card-edit-form select:focus {
+  border-color: #87A96B;
+}
+
+/* ── View toggle ── */
+.cms-view-toggle {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(139,115,85,0.08);
+  border-radius: 6px;
+  padding: 3px;
+}
+
+.cms-view-toggle button {
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  cursor: pointer;
+  color: rgba(58,46,34,0.4);
+  line-height: 0;
+  transition: all 0.2s ease;
+}
+
+.cms-view-toggle button.active {
+  background: #fff;
+  color: #87A96B;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
 /* ── Buttons ── */
 .cms-btn {
   font-family: 'Jost', system-ui, sans-serif;

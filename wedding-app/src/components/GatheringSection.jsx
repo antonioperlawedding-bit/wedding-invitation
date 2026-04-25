@@ -47,7 +47,7 @@ function LocationCard({ data, label, viewMapText }) {
           fontFamily: '"Cormorant Garamond", serif', fontWeight: 500,
           fontSize: 'clamp(1rem, 4vw, 2.35rem)', color: '#87A96B',
           letterSpacing: '0.1em', marginTop: '0.5rem', marginBottom: '0rem',
-        }}>
+        }} dir="ltr">
           {data.time}
         </p>
       )}

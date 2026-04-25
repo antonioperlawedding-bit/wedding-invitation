@@ -31,6 +31,7 @@ export const translations = {
     // Events
     events: {
       viewMap: 'View Map',
+      churchLabel: 'Church',
     },
 
     // Gallery
@@ -51,6 +52,7 @@ export const translations = {
       sendRsvp: 'Send RSVP',
       contactDirect: 'Or contact us directly',
       thankYou: 'Thank You!',
+      declineMessage: 'We completely understand. We will miss you and hope to celebrate together another time.',
       emailSubject: 'Wedding RSVP',
       nameLabel: 'Name',
       phoneLabel: 'Phone',
@@ -77,7 +79,7 @@ export const translations = {
 
     // Chatbot
     chatbot: {
-      title: 'Wedding Concierge',
+      title: 'Zifef — Wedding Assistant',
       quickQuestions: 'Quick questions',
       q1: "What's the dress code?",
       q2: 'Where is the ceremony?',
@@ -120,6 +122,7 @@ export const translations = {
     // Events
     events: {
       viewMap: 'الخريطة',
+      churchLabel: 'كنيسة',
     },
 
     // Gallery
@@ -166,7 +169,7 @@ export const translations = {
 
     // Chatbot
     chatbot: {
-      title: 'مساعد حفل الزفاف',
+      title: 'زيفاف — مساعد الأفراح',
       quickQuestions: 'أسئلة سريعة',
       q1: 'ما هو الزي المطلوب؟',
       q2: 'أين تُقام مراسم الزفاف؟',
@@ -193,11 +196,13 @@ export const configAr = {
   },
   couple: {
     groom: {
-      parentsDisplay: 'إدوارد وسناء تنوري',
+      firstName: 'أنطونيو',
+      parentsDisplay: 'إدوار وسناء تنوري',
       bio: 'أنطونيو شخص ملتزم وشغوف بالذكاء الاصطناعي والبيانات. يحب ركوب الدراجات والمشي في الطبيعة. يُعرف بعقله التحليلي وإخلاصه لأحبائه وقدرته على إسعاد من حوله.',
     },
     bride: {
-      parentsDisplay: 'أنطوان ونور حايك',
+      firstName: 'بيرلا',
+      parentsDisplay: 'أنطوان ونور الحايك',
       bio: 'بيرلا روح دافئة ومفعمة بالحياة تُنير كل مكان تدخله. تُعرف بضحكتها المُعدية وروحها المبدعة وقلبها الطيب. هي مهندسة زراعية ومزارعة عضوية شغوفة بعملها.',
     },
   },
@@ -238,12 +243,13 @@ export const configAr = {
         'أعتذر عن الحضور',
       ],
       successMessage: 'تمّ إرسال تأكيدكم. نتطلّع للاحتفال معكم!',
+      declineMessage: 'نفهم تمامًا. نأمل أن تجمعنا مناسبة أخرى قريبًا.',
     },
     listeDeMariage: {
       tag: 'الهدايا',
       title: 'حضوركم هو أغلى هدية',
       message: 'حضوركم في يومنا المميّز هو أغلى هدية على الإطلاق. لمن يرغب، يمكنكم المساهمة عبر الحساب أدناه.',
-      accountLabel: 'حساب ويش',
+      accountLabel: 'حساب Whish',
     },
     footer: {
       quote: 'شخصان، نبضُ قلبٍ واحد، بدايةٌ جميلة واحدة إلى الأبد.',
@@ -266,7 +272,7 @@ export const configAr = {
       },
     },
     ceremony: {
-      venue: 'مار شربل - قاع الريم',
+      venue: 'كنيسة  مار شربل - قاع الريم',
       address: 'كنيسة مار شربل، قاع الريم، لبنان',
       description: 'انضمّوا إلينا في مراسم الزفاف في كنيسة مار شربل',
     },

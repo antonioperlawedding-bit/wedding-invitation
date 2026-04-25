@@ -6,18 +6,24 @@ import RsvpManager from './RsvpManager';
 export default function CmsApp() {
   const [token, setToken] = useState(() => localStorage.getItem('cms_token'));
 
+  // CMS is always English LTR regardless of invitation language preference
   useEffect(() => {
-    if (token) {
-      localStorage.setItem('cms_token', token);
-    } else {
-      localStorage.removeItem('cms_token');
-    }
-  }, [token]);
+    document.documentElement.lang = 'en';
+    document.documentElement.dir = 'ltr';
+  }, []);
 
-  const logout = () => setToken(null);
+  const handleAuth = (newToken) => {
+    localStorage.setItem('cms_token', newToken);
+    setToken(newToken);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('cms_token');
+    setToken(null);
+  };
 
   if (!token) {
-    return <LoginPage onAuth={setToken} />;
+    return <LoginPage onAuth={handleAuth} />;
   }
 
   return (

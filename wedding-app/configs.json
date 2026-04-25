@@ -61,7 +61,7 @@
     "ceremony": {
       "date": "2026-06-06",
       "time": "5:00 PM",
-      "venue": "Saint Charbel - Qaa El Rim",
+      "venue": "Saint Charbel Church - Qaa El Rim",
       "address": "Saint Charbel Church, Qaa El Rim, Lebanon",
       "mapUrl": "https://maps.app.goo.gl/ATQWWxeJvfBosNua9",
       "description": "Join us for a ceremony at Saint Charbel Church"
@@ -231,7 +231,8 @@
         "Joyfully Accepts",
         "Regretfully Declines"
       ],
-      "successMessage": "Your RSVP has been sent. We can't wait to celebrate with you!"
+      "successMessage": "Your RSVP has been sent. We can't wait to celebrate with you!",
+      "declineMessage": "We completely understand. We will miss you and hope to celebrate together another time."
     },
     "listeDeMariage": {
       "tag": "Gifts",

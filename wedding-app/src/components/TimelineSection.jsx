@@ -162,7 +162,7 @@ function TimelineItem({ item, index, totalItems }) {
           fontFamily: '"Cormorant Garamond", serif', fontWeight: 500,
           fontSize: 'clamp(1.1rem, 3vw, 1.4rem)', color: '#87A96B',
           letterSpacing: '0.05em', marginBottom: '0.3rem',
-        }}>
+        }} dir="ltr">
           {item.time}
         </p>
         <h4 style={{
