@@ -2,11 +2,19 @@
   base      = "wedding-app"
   command   = "npm run build"
   publish   = "dist"
+  functions = "netlify/functions"
 
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA fallback — all routes serve index.html
+# Netlify Functions power the CMS and RSVP backend.
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/api/:splat"
+  status = 200
+  force  = true
+
+# SPA fallback — invitation and /cms routes serve index.html
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
