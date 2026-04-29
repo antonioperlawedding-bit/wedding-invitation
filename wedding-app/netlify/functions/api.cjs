@@ -1,22 +1,19 @@
-import crypto from 'node:crypto';
-import { getStore } from '@netlify/blobs';
-import jwt from 'jsonwebtoken';
-import * as XLSX from 'xlsx';
-import baseConfig from '../../configs.json' with { type: 'json' };
+const crypto = require('node:crypto');
+const { getStore } = require('@netlify/blobs');
+const jwt = require('jsonwebtoken');
+const XLSX = require('xlsx');
+const baseConfig = require('../../configs.json');
 
 const ENV = process.env.ENV || 'production';
 const RSVP_KEY = `rsvps-${ENV}.json`;
 const JWT_SECRET = process.env.JWT_SECRET || 'wedding-cms-fallback-secret-change-me';
 
-export const config = {
-  path: '/api/*',
-};
-
-function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
+function json(data, statusCode = 200) {
+  return {
+    statusCode,
     headers: { 'Content-Type': 'application/json' },
-  });
+    body: JSON.stringify(data),
+  };
 }
 
 function getRsvpStore() {
@@ -38,8 +35,8 @@ function signToken() {
   return jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '24h' });
 }
 
-function requireAuth(request) {
-  const header = request.headers.get('authorization') || '';
+function requireAuth(event) {
+  const header = event.headers.authorization || event.headers.Authorization || '';
   if (!header.startsWith('Bearer ')) return false;
 
   try {
@@ -50,9 +47,9 @@ function requireAuth(request) {
   }
 }
 
-async function parseJson(request) {
+function parseJson(event) {
   try {
-    return await request.json();
+    return event.body ? JSON.parse(event.body) : {};
   } catch {
     return {};
   }
@@ -76,21 +73,24 @@ function normalizeRsvp(input, existing = {}) {
   };
 }
 
-function downloadResponse(body, filename, contentType) {
-  return new Response(body, {
+function downloadResponse(body, filename, contentType, isBase64Encoded = false) {
+  return {
+    statusCode: 200,
     headers: {
       'Content-Disposition': `attachment; filename="${filename}"`,
       'Content-Type': contentType,
     },
-  });
+    body,
+    isBase64Encoded,
+  };
 }
 
-async function handleAuth(request, parts) {
-  if (request.method !== 'POST' || parts[0] !== 'login') {
+async function handleAuth(event, parts) {
+  if (event.httpMethod !== 'POST' || parts[0] !== 'login') {
     return json({ error: 'Not found.' }, 404);
   }
 
-  const { password } = await parseJson(request);
+  const { password } = parseJson(event);
   if (!password) return json({ error: 'Password is required.' }, 400);
 
   const expected = process.env.CMS_PASSWORD;
@@ -106,25 +106,25 @@ async function handleAuth(request, parts) {
   return json({ ok: true, token: signToken() });
 }
 
-async function handleConfig(request) {
-  if (request.method === 'GET') return json(baseConfig);
-  if (request.method !== 'PUT') return json({ error: 'Not found.' }, 404);
-  if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
+async function handleConfig(event) {
+  if (event.httpMethod === 'GET') return json(baseConfig);
+  if (event.httpMethod !== 'PUT') return json({ error: 'Not found.' }, 404);
+  if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
 
-  // Runtime config editing is intentionally not persisted on Netlify.
   return json({ error: 'Config editing is not available on the Netlify deployment.' }, 501);
 }
 
-async function handleRsvp(request, parts, url) {
+async function handleRsvp(event, parts) {
   const id = parts[0];
+  const params = event.queryStringParameters || {};
 
-  if (request.method === 'GET' && !id) {
-    if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
+  if (event.httpMethod === 'GET' && !id) {
+    if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
     return json(await readRsvps());
   }
 
-  if (request.method === 'POST' && !id) {
-    const input = await parseJson(request);
+  if (event.httpMethod === 'POST' && !id) {
+    const input = parseJson(event);
     if (!input.name || !input.attendance) {
       return json({ error: 'Name and attendance are required.' }, 400);
     }
@@ -136,9 +136,9 @@ async function handleRsvp(request, parts, url) {
     return json({ ok: true, id: entry.id });
   }
 
-  if (request.method === 'PUT' && id) {
-    if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
-    const input = await parseJson(request);
+  if (event.httpMethod === 'PUT' && id) {
+    if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
+    const input = parseJson(event);
     if (!input.name || !input.attendance) {
       return json({ error: 'Name and attendance are required.' }, 400);
     }
@@ -152,8 +152,8 @@ async function handleRsvp(request, parts, url) {
     return json({ ok: true });
   }
 
-  if (request.method === 'DELETE' && id) {
-    if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
+  if (event.httpMethod === 'DELETE' && id) {
+    if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
     const rsvps = await readRsvps();
     const filtered = rsvps.filter((r) => r.id !== id);
     if (filtered.length === rsvps.length) return json({ error: 'RSVP not found.' }, 404);
@@ -162,9 +162,9 @@ async function handleRsvp(request, parts, url) {
     return json({ ok: true });
   }
 
-  if (request.method === 'GET' && id === 'export') {
-    if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
-    const format = url.searchParams.get('format') === 'xlsx' ? 'xlsx' : 'json';
+  if (event.httpMethod === 'GET' && id === 'export') {
+    if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
+    const format = params.format === 'xlsx' ? 'xlsx' : 'json';
     const rsvps = await readRsvps();
 
     if (format === 'json') {
@@ -184,12 +184,17 @@ async function handleRsvp(request, parts, url) {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), 'RSVPs');
     const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
-    return downloadResponse(buffer, 'rsvps.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    return downloadResponse(
+      buffer.toString('base64'),
+      'rsvps.xlsx',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      true
+    );
   }
 
-  if (request.method === 'POST' && id === 'import') {
-    if (!requireAuth(request)) return json({ error: 'Unauthorized' }, 401);
-    const { records } = await parseJson(request);
+  if (event.httpMethod === 'POST' && id === 'import') {
+    if (!requireAuth(event)) return json({ error: 'Unauthorized' }, 401);
+    const { records } = parseJson(event);
     if (!Array.isArray(records) || records.length === 0) {
       return json({ error: 'No records provided.' }, 400);
     }
@@ -231,22 +236,20 @@ async function handleRsvp(request, parts, url) {
   return json({ error: 'Not found.' }, 404);
 }
 
-export default async function handler(request) {
+exports.handler = async (event) => {
   try {
-    const url = new URL(request.url);
-    const apiPath = url.pathname
-      .replace(/^\/api\/?/, '')
-      .replace(/^\/\.netlify\/functions\/api\/?/, '');
+    const apiPath = (event.queryStringParameters && event.queryStringParameters.path)
+      || event.path.replace(/^\/api\/?/, '').replace(/^\/\.netlify\/functions\/api\/?/, '');
     const parts = apiPath.split('/').filter(Boolean);
     const resource = parts[0];
 
-    if (resource === 'auth') return await handleAuth(request, parts.slice(1));
-    if (resource === 'config') return await handleConfig(request);
-    if (resource === 'rsvp') return await handleRsvp(request, parts.slice(1), url);
+    if (resource === 'auth') return await handleAuth(event, parts.slice(1));
+    if (resource === 'config') return await handleConfig(event);
+    if (resource === 'rsvp') return await handleRsvp(event, parts.slice(1));
 
     return json({ error: 'Not found.' }, 404);
   } catch (err) {
     console.error('[api] Unhandled error:', err);
     return json({ error: 'Server error.' }, 500);
   }
-}
+};
