@@ -1,5 +1,5 @@
 const crypto = require('node:crypto');
-const { getStore } = require('@netlify/blobs');
+const { connectLambda, getStore } = require('@netlify/blobs');
 const jwt = require('jsonwebtoken');
 const XLSX = require('xlsx');
 const baseConfig = require('../../configs.json');
@@ -17,7 +17,7 @@ function json(data, statusCode = 200) {
 }
 
 function getRsvpStore() {
-  return getStore({ name: 'wedding-rsvps', consistency: 'strong' });
+  return getStore('wedding-rsvps');
 }
 
 async function readRsvps() {
@@ -238,6 +238,8 @@ async function handleRsvp(event, parts) {
 
 exports.handler = async (event) => {
   try {
+    connectLambda(event);
+
     const apiPath = (event.queryStringParameters && event.queryStringParameters.path)
       || event.path.replace(/^\/api\/?/, '').replace(/^\/\.netlify\/functions\/api\/?/, '');
     const parts = apiPath.split('/').filter(Boolean);
