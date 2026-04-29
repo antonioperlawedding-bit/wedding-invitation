@@ -82,6 +82,7 @@ export default function RSVPSection() {
     email: '',
     attendance: '',
     guests: '1',
+    song: '',
   });
 
   useEffect(() => {
@@ -114,6 +115,10 @@ export default function RSVPSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!form.attendance) {
+      setError(t('rsvp.attendanceError') || 'Please select your attendance option.');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
@@ -258,6 +263,8 @@ export default function RSVPSection() {
                   </div>
 
                   <FloatingInput label={t('rsvp.numGuests')} name="guests" type="number" value={form.guests} onChange={handleChange} />
+
+                  <FloatingInput label={t('rsvp.song')} name="song" value={form.song} onChange={handleChange} placeholder=" " />
 
                   <div style={{ textAlign: 'center', marginTop: '1rem' }}>
                     <button

@@ -48,6 +48,8 @@ export const translations = {
       email: 'Email Address (optional)',
       attendance: 'Attendance',
       numGuests: 'Number of Guests',
+      song: 'A song you\'d like to hear in the wedding party',
+      attendanceError: 'Please select your attendance option.',
       sending: 'Sending...',
       sendRsvp: 'Send RSVP',
       contactDirect: 'Or contact us directly',
@@ -139,6 +141,8 @@ export const translations = {
       email: 'البريد الإلكتروني (اختياري)',
       attendance: 'الحضور',
       numGuests: 'عدد المدعوّين',
+      song: 'أغنية تودّون سماعها في حفلة الزفاف',
+      attendanceError: 'يُرجى اختيار خيار الحضور.',
       sending: 'جارٍ الإرسال...',
       sendRsvp: 'إرسال التأكيد',
       contactDirect: 'أو تواصلوا معنا مباشرةً',
@@ -201,9 +205,9 @@ export const configAr = {
       bio: 'أنطونيو شخص ملتزم وشغوف بالذكاء الاصطناعي والبيانات. يحب ركوب الدراجات والمشي في الطبيعة. يُعرف بعقله التحليلي وإخلاصه لأحبائه وقدرته على إسعاد من حوله.',
     },
     bride: {
-      firstName: 'بيرلا',
+      firstName: 'برلا',
       parentsDisplay: 'أنطوان ونور الحايك',
-      bio: 'بيرلا روح دافئة ومفعمة بالحياة تُنير كل مكان تدخله. تُعرف بضحكتها المُعدية وروحها المبدعة وقلبها الطيب. هي مهندسة زراعية ومزارعة عضوية شغوفة بعملها.',
+      bio: 'برلا روح دافئة ومفعمة بالحياة تُنير كل مكان تدخله. تُعرف بضحكتها المُعدية وروحها المبدعة وقلبها الطيب. هي مهندسة زراعية ومزارعة عضوية شغوفة بعملها.',
     },
   },
   ui: {
@@ -308,7 +312,7 @@ export const configAr = {
       },
     ],
     chatbot: {
-      welcomeMessage: 'مرحبًا! 👋 أنا هنا لمساعدتكم في أي استفسار حول حفل زفاف بيرلا وأنطونيو. لا تتردّدوا في السؤال!',
+      welcomeMessage: 'مرحبًا! 👋 أنا هنا لمساعدتكم في أي استفسار حول حفل زفاف برلا وأنطونيو. لا تتردّدوا في السؤال!',
       placeholderText: 'اسألني عن حفل الزفاف...',
     },
     chatbot_faqs: [

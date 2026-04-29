@@ -156,11 +156,21 @@ export default function FooterSection() {
               fontWeight: 100,
               fontSize: '0.65rem',
               letterSpacing: '0.25em',
-              color: 'rgba(255,255,255,0.7)',
+              color: 'rgba(255,255,255,0.9)',
               textTransform: 'uppercase',
             }}
           >
-            {t('footer.madeWith')} {config.couple.bride.firstName} &amp; {config.couple.groom.firstName}
+            {t('footer.madeWith').split('♡').map((part, idx, arr) =>
+              idx === 0 ? (
+                <span key={idx}>{part}</span>
+              ) : (
+                <span key={idx}>
+                  <span style={{ color: 'rgb(255, 227, 100)' }}>♡</span>
+                  {part}
+                </span>
+              )
+            )}
+            {' '}{config.couple.bride.firstName} &amp; {config.couple.groom.firstName}
           </p>
         </div>
       </div>

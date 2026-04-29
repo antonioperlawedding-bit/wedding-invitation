@@ -19,7 +19,7 @@ router.get('/', requireAuth, (_req, res) => {
 /* POST /api/rsvp — public (wedding guests submit) */
 router.post('/', (req, res) => {
   try {
-    const { name, phone, email, attendance, guests } = req.body;
+    const { name, phone, email, attendance, guests, song } = req.body;
     if (!name || !attendance) {
       return res.status(400).json({ error: 'Name and attendance are required.' });
     }
@@ -38,6 +38,7 @@ router.post('/', (req, res) => {
       attendance: String(attendance).slice(0, 100),
       status: isDecline ? 'declined' : 'accepted',
       guests: Math.min(Math.max(parseInt(guests, 10) || 1, 1), 20),
+      song: song ? String(song).slice(0, 200) : '',
       submittedAt: new Date().toISOString(),
     };
     rsvps.push(entry);
@@ -51,7 +52,7 @@ router.post('/', (req, res) => {
 /* PUT /api/rsvp/:id — auth required */
 router.put('/:id', requireAuth, (req, res) => {
   try {
-    const { name, phone, email, attendance, guests } = req.body;
+    const { name, phone, email, attendance, guests, song } = req.body;
     if (!name || !attendance) {
       return res.status(400).json({ error: 'Name and attendance are required.' });
     }
@@ -68,6 +69,7 @@ router.put('/:id', requireAuth, (req, res) => {
       attendance: String(attendance).slice(0, 100),
       status: isDecline ? 'declined' : 'accepted',
       guests: Math.min(Math.max(parseInt(guests, 10) || 1, 1), 20),
+      song: song ? String(song).slice(0, 200) : '',
     };
     writeJSON(RSVP_FILE, rsvps);
     res.json({ ok: true });
@@ -110,6 +112,7 @@ router.get('/export', requireAuth, (req, res) => {
     Attendance: r.attendance || '',
     Status: r.status || '',
     Guests: r.guests ?? '',
+    Song: r.song || '',
     'Submitted At': r.submittedAt ? new Date(r.submittedAt).toLocaleString() : '',
   }));
   const wb = XLSX.utils.book_new();

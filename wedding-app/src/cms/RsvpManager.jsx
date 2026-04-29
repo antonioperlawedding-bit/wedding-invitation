@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { api } from './api';
 
-const EMPTY_FORM = { name: '', phone: '', email: '', attendance: 'Joyfully Accepts', guests: 1 };
+const EMPTY_FORM = { name: '', phone: '', email: '', attendance: 'Joyfully Accepts', guests: 1, song: '' };
 
 const SORT_OPTIONS = [
   { value: 'date-desc',   label: 'Newest first' },
@@ -81,7 +81,7 @@ export default function RsvpManager() {
 
   const startEdit = (r) => {
     setEditingId(r.id);
-    setEditForm({ name: r.name, phone: r.phone || '', email: r.email || '', attendance: r.attendance, guests: r.guests ?? 1 });
+    setEditForm({ name: r.name, phone: r.phone || '', email: r.email || '', attendance: r.attendance, guests: r.guests ?? 1, song: r.song || '' });
   };
 
   const cancelEdit = () => { setEditingId(null); setEditForm({}); };
@@ -303,6 +303,10 @@ export default function RsvpManager() {
             <label style={{ display: 'block', fontSize: '0.7rem', letterSpacing: '0.1em', color: 'rgba(58,46,34,0.5)', marginBottom: '0.3rem', textTransform: 'uppercase' }}>Guests</label>
             <input className="cms-input" style={{ textAlign: 'left', letterSpacing: 0 }} type="number" min="1" max="20" value={form.guests} onChange={(e) => setForm((f) => ({ ...f, guests: e.target.value }))} />
           </div>
+          <div>
+            <label style={{ display: 'block', fontSize: '0.7rem', letterSpacing: '0.1em', color: 'rgba(58,46,34,0.5)', marginBottom: '0.3rem', textTransform: 'uppercase' }}>Song</label>
+            <input className="cms-input" style={{ textAlign: 'left', letterSpacing: 0 }} value={form.song || ''} onChange={(e) => setForm((f) => ({ ...f, song: e.target.value }))} placeholder="Song request" />
+          </div>
           <div style={{ display: 'flex', alignItems: 'flex-end' }}>
             <button type="submit" className="cms-btn cms-btn-primary cms-btn-sm" disabled={saving} style={{ width: '100%' }}>
               {saving ? 'Saving…' : 'Save'}
@@ -340,6 +344,7 @@ export default function RsvpManager() {
                       <option value="Regretfully Declines">Regretfully Declines</option>
                     </select>
                     <input type="number" min="1" max="20" value={editForm.guests} onChange={(e) => setEditForm((f) => ({ ...f, guests: e.target.value }))} placeholder="Guests" />
+                    <input value={editForm.song || ''} onChange={(e) => setEditForm((f) => ({ ...f, song: e.target.value }))} placeholder="Song request" />
                   </div>
                 ) : (
                   <>
@@ -357,6 +362,7 @@ export default function RsvpManager() {
                       <span>{r.guests} guest{r.guests !== 1 ? 's' : ''}</span>
                       <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'rgba(58,46,34,0.35)' }}>{new Date(r.submittedAt).toLocaleDateString()}</span>
                     </div>
+                    {r.song && <div className="cms-card-row" style={{ color: '#87A96B' }}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg><span>Song: {r.song}</span></div>}
                   </>
                 )}
                 <div className="cms-card-actions">
